@@ -73,7 +73,10 @@ a{color:inherit}
 
 /* ---------- marca ---------- */
 .marca-hero{display:block;height:clamp(34px,5.4vw,46px);width:auto;margin-bottom:22px}
-.marca-rodape{display:block;height:30px;width:auto;margin-bottom:6px;opacity:.92}
+/* align-self obrigatorio: o rodape e flex em coluna, e com align-items
+   stretch (o padrao) a imagem e esticada ate a largura do container,
+   ignorando o width:auto. A altura fica em 30px e a marca deforma. */
+.marca-rodape{display:block;height:30px;width:auto;align-self:flex-start;margin-bottom:6px;opacity:.92}
 
 /* ---------- herói ---------- */
 .hero{background:linear-gradient(170deg,var(--navy-deep),var(--navy) 62%);color:#fff}
@@ -335,8 +338,8 @@ footer .fwrap{display:flex;flex-direction:column;gap:9px}
         <div class="aprov">
           <span>Delegado de Polícia — SP</span>
           <span>Delegado de Polícia — MG</span>
-          <span>Agente Policial — PC/SP</span>
-          <span>Escrevente Técnico — TJ/SP</span>
+          <span>Agente da Polícia Civil — SP</span>
+          <span>Escrevente Técnico Judiciário — TJ/SP</span>
           <span>Agente Administrativo — Pref. S. J. Rio Preto</span>
         </div>
       </div>
