@@ -163,10 +163,12 @@ details p{padding-bottom:16px;color:var(--muted);font-size:15px}
 footer{background:var(--navy-deep);color:#8C9BAB;font-size:13px;padding-block:28px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 footer a{color:#9FB6CB}
 footer .fwrap{display:flex;flex-direction:column;gap:9px}
-.assinatura-dev{display:flex;align-items:center;gap:14px;margin-top:20px;padding-top:20px;border-top:1px solid rgba(185,203,220,.16)}
-.assinatura-dev img{height:26px;width:auto;opacity:.95;flex:none}
-.assinatura-dev strong{display:block;font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#B9CBDC}
-.assinatura-dev small{display:block;font-size:11px;color:#6F7E8C;margin-top:3px}
+.rodape-fim{margin-top:18px;padding-top:20px;border-top:1px solid rgba(185,203,220,.16)}
+.direitos{font-size:13.5px;color:#9FB0C0;margin:0 0 14px}
+.assinatura-dev{display:flex;align-items:center;gap:16px}
+.assinatura-dev img{height:58px;width:auto;flex:none;background:#0F2234;border-radius:14px;padding:8px}
+.assinatura-dev span{font-size:13px;line-height:1.6;color:#8C9BAB}
+.assinatura-dev b{color:var(--ouro-claro);font-weight:600}
 @media(max-width:560px){.assinatura-dev{align-items:flex-start}}
 
 /* ---------- formulário de cadastro ---------- */
@@ -484,12 +486,15 @@ footer .fwrap{display:flex;flex-direction:column;gap:9px}
     <p>Dados da prova conforme o Edital nº 01/2026-GMM e a retificação nº 02/2026, da Prefeitura Municipal de Marabá e da Fadesp.</p>
 
     <!-- Assinatura do parceiro desenvolvedor, mesmo padrão da Estância do Lago. -->
-    <div class="assinatura-dev">
-      <img src="marca/carajas-hubtech.webp" alt="Carajás Hubtech" width="453" height="123">
-      <span>
-        <strong>Parceiro desenvolvedor: CARAJÁS HUBTECH</strong>
-        <small>Soluções Tecnológicas · P&amp;F Inovações Tecnológicas LTDA · © 2026</small>
-      </span>
+    <div class="rodape-fim">
+      <p class="direitos">© 2026 Juris Elite · Todos os direitos reservados</p>
+      <div class="assinatura-dev">
+        <img src="marca/carajas-hubtech.webp" alt="Carajás Hubtech" width="259" height="240">
+        <span>
+          Parceiro desenvolvedor: <b>Carajás Hubtech</b> · Soluções Tecnológicas<br>
+          (94) 99253-1512 · @carajashubtech
+        </span>
+      </div>
     </div>
   </div>
 </footer>

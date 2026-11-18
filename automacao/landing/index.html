@@ -209,12 +209,14 @@ footer img{height:30px;width:auto;margin-bottom:16px}
 footer p{max-width:62ch;margin:0 0 9px;color:#8C9BAB}
 footer a{color:#B9CBDC;text-decoration:none;border-bottom:1px solid rgba(185,203,220,.3)}
 footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
-/* Assinatura do parceiro desenvolvedor. Discreta de proposito: o rodape e do
-   cliente, e a assinatura de quem construiu vem depois de uma divisoria. */
-.assinatura-dev{display:flex;align-items:center;gap:14px;margin-top:30px;padding-top:22px;border-top:1px solid rgba(185,203,220,.16)}
-.assinatura-dev img{height:26px;width:auto;opacity:.95;flex:none}
-.assinatura-dev strong{display:block;font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#B9CBDC}
-.assinatura-dev small{display:block;font-size:11px;color:#6F7E8C;margin-top:3px}
+/* Fecho do rodapé: direitos do cliente e, abaixo, a assinatura de quem
+   desenvolveu. Mesmo desenho do site da Estância do Lago. */
+.rodape-fim{margin-top:30px;padding-top:22px;border-top:1px solid rgba(185,203,220,.16);display:block}
+.direitos{font-size:14px;color:#9FB0C0;margin:0 0 16px;max-width:none}
+.assinatura-dev{display:flex;align-items:center;gap:16px}
+.assinatura-dev img{height:58px;width:auto;flex:none;background:#0F2234;border-radius:14px;padding:8px}
+.assinatura-dev span{font-size:13.5px;line-height:1.6;color:#8C9BAB}
+.assinatura-dev b{color:var(--ouro-claro);font-weight:600}
 @media(max-width:700px){ footer .wrap{grid-template-columns:1fr} footer .links{text-align:left} .assinatura-dev{align-items:flex-start} }
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
@@ -397,14 +399,18 @@ footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
     </div>
   </div>
 
-  <!-- Assinatura do parceiro desenvolvedor, no mesmo padrao da Estancia do
-       Lago: fica depois de uma divisoria, separada do rodape do cliente. -->
-  <div class="wrap assinatura-dev">
-    <img src="marca/carajas-hubtech.webp" alt="Carajás Hubtech" width="453" height="123">
-    <span>
-      <strong>Parceiro desenvolvedor: CARAJÁS HUBTECH</strong>
-      <small>Soluções Tecnológicas · P&amp;F Inovações Tecnológicas LTDA · © 2026</small>
-    </span>
+  <!-- Assinatura do parceiro desenvolvedor, no mesmo padrão do site da
+       Estância do Lago: divisória, direitos do cliente, e só então o
+       emblema da Carajás Hubtech com o contato. -->
+  <div class="wrap rodape-fim">
+    <p class="direitos">© 2026 Juris Elite · Todos os direitos reservados</p>
+    <div class="assinatura-dev">
+      <img src="marca/carajas-hubtech.webp" alt="Carajás Hubtech" width="259" height="240">
+      <span>
+        Parceiro desenvolvedor: <b>Carajás Hubtech</b> · Soluções Tecnológicas<br>
+        (94) 99253-1512 · @carajashubtech
+      </span>
+    </div>
   </div>
 </footer>
 
