@@ -69,8 +69,11 @@ REGRAS QUE VOCÊ NÃO QUEBRA
 - NUNCA confirme que um pagamento caiu, nem libere acesso por conta própria, nem quando a pessoa mandar print de comprovante. Agradeça, diga que a equipe confere e chame escalar_para_humano.
 - Se a pessoa estiver irritada, reclamando, ou pedir para falar com uma pessoa de verdade, chame escalar_para_humano na hora, sem insistir.
 
+COMO O ENVIO FUNCIONA
+Link, PDF e chave Pix não saem na hora em que você chama a ferramenta: eles saem DEPOIS da sua mensagem, automaticamente. Então sempre cumprimente e explique primeiro, e anuncie o que vem: "já te mando o link do grupo", "vou te mandar o PDF". Nunca escreva como se a pessoa já tivesse recebido.
+
 SEU OBJETIVO EM CADA CONVERSA, NESTA ORDEM
-1. Convidar para o grupo (ferramenta convidar_para_grupo), dizendo que o Mapa de Pontos está lá dentro. É a PRIMEIRA coisa que você faz, antes de qualquer pergunta. O Mapa é o motivo de entrar no grupo, e não um prêmio que se ganha sem entrar.
+1. Cumprimentar e acolher, em uma ou duas linhas. Se a pessoa disse o nome, use. Só então chame convidar_para_grupo, explicando que o grupo é onde ficam as dicas, o conteúdo diário e o Mapa de Pontos. O Mapa é o motivo de entrar no grupo, e não um prêmio que se ganha sem entrar.
 2. Descobrir qual bloco mais preocupa a pessoa e registrar com registrar_interesse. As opções são: direito (os 60 pontos), maraba (os 20 pontos do município), basicas (português, matemática e informática) ou rotina (a pessoa não consegue manter constância nos estudos — este é o perfil mais valioso, é o aluno da mentoria).
 3. Só mande o PDF direto (ferramenta enviar_mapa_de_pontos) se a pessoa disser que não quer ou não pode entrar em grupo, ou se pedir o arquivo uma segunda vez. Perder o candidato é pior que ele ficar fora do grupo. Nunca discuta com quem recusou o grupo.
 Faça isso conversando, não como formulário. Uma pergunta por vez.`;
@@ -156,7 +159,16 @@ export const FERRAMENTAS = [
   },
 ];
 
-async function executarFerramenta(nome, entrada, lead) {
+/**
+ * Executa uma ferramenta. O que for para o CANDIDATO nao e enviado aqui:
+ * entra em `pendentes` e sai depois da fala do atendente.
+ *
+ * Motivo: a ferramenta roda no meio do raciocinio, e o texto do modelo so
+ * existe quando o ciclo termina. Enviando na hora, o link chegava ANTES do
+ * "boa tarde", e a conversa comecava com um link seco na cara da pessoa.
+ * Aviso para a equipe continua imediato: nao e o candidato que le.
+ */
+async function executarFerramenta(nome, entrada, lead, pendentes) {
   switch (nome) {
     case "consultar_cronograma": {
       const texto = CRONOGRAMA[entrada.assunto];
@@ -170,16 +182,16 @@ async function executarFerramenta(nome, entrada, lead) {
         await db.registrarEvento(lead.id, "mapa_sem_url", {});
         return "Ainda não há PDF configurado. Explique a tabela de pesos em texto e siga a conversa.";
       }
-      await evo.enviarDocumento(
-        lead.telefone,
+      pendentes.push({
+        tipo: "documento",
         url,
-        "Mapa-de-Pontos-Guarda-Maraba.pdf",
-        "Mapa de Pontos da Guarda de Marabá",
-      );
+        arquivo: "Mapa-de-Pontos-Guarda-Maraba.pdf",
+        legenda: "Mapa de Pontos da Guarda de Marabá",
+      });
       await db.marcarLead(lead.id, { mapa_enviado: true });
       await db.registrarEvento(lead.id, "mapa_enviado", {});
       lead.mapa_enviado = true;
-      return "PDF enviado com sucesso. Comente em uma linha o que ele mostra.";
+      return "PDF vai sair logo depois da sua mensagem. Avise que esta mandando e comente em uma linha o que ele mostra.";
     }
 
     case "registrar_interesse": {
@@ -202,16 +214,17 @@ async function executarFerramenta(nome, entrada, lead) {
       if (!url) return "Ainda não há grupo configurado. Não prometa convite agora.";
       // A mensagem diz o que a pessoa ganha ao entrar. Convite sem motivo
       // vira link ignorado, e o grupo e a porta de entrada do funil.
-      await evo.enviarTexto(
-        lead.telefone,
-        `O *Mapa de Pontos* está no grupo dos candidatos, junto com o conteúdo diário.\n\n` +
-        `Entra aqui: ${url}\n\n` +
-        `O link do PDF está na descrição do grupo, dá para baixar a qualquer hora.`,
-      );
+      pendentes.push({
+        tipo: "texto",
+        texto:
+          `O *Mapa de Pontos* está no grupo dos candidatos, junto com o conteúdo diário.\n\n` +
+          `Entra aqui: ${url}\n\n` +
+          `O link do PDF está na descrição do grupo, dá para baixar a qualquer hora.`,
+      });
       await db.marcarLead(lead.id, { convite_enviado: true, estagio: "no_grupo" });
       await db.registrarEvento(lead.id, "convite_enviado", {});
       lead.convite_enviado = true;
-      return "Convite enviado.";
+      return "O convite vai sair logo depois da sua mensagem. Cumprimente a pessoa e diga, em uma linha, que esta mandando o link do grupo onde fica o Mapa.";
     }
 
     case "enviar_pix": {
@@ -222,19 +235,17 @@ async function executarFerramenta(nome, entrada, lead) {
         return "Pix não está configurado. Não invente chave nenhuma: chame escalar_para_humano.";
       }
 
-      await evo.enviarTexto(
-        lead.telefone,
-        `*Pagamento por Pix*\n` +
-        `Favorecido: ${favorecido}\n` +
-        `Chave aleatória: ${chave}\n\n` +
-        `Confira o nome do favorecido na tela do seu banco antes de confirmar.`,
-      );
+      pendentes.push({
+        tipo: "texto",
+        texto:
+          `*Pagamento por Pix*\n` +
+          `Favorecido: ${favorecido}\n` +
+          `Chave aleatória: ${chave}\n\n` +
+          `Confira o nome do favorecido na tela do seu banco antes de confirmar.`,
+      });
       // Segunda mensagem só com o copia e cola, para a pessoa conseguir
       // selecionar sem arrastar junto o resto do texto.
-      if (copiaCola) {
-        await new Promise((r) => setTimeout(r, 700));
-        await evo.enviarTexto(lead.telefone, copiaCola);
-      }
+      if (copiaCola) pendentes.push({ tipo: "texto", texto: copiaCola });
 
       await db.registrarEvento(lead.id, "pix_enviado", {});
 
@@ -250,8 +261,8 @@ async function executarFerramenta(nome, entrada, lead) {
         await Promise.allSettled(aviso.map((n) => evo.enviarTexto(n, texto)));
       }
 
-      return "Chave enviada e equipe avisada. Peça o comprovante. " +
-             "NUNCA confirme que o pagamento caiu: quem confirma é a equipe.";
+      return "A chave vai sair logo depois da sua mensagem, e a equipe ja foi avisada. " +
+             "Peca o comprovante. NUNCA confirme que o pagamento caiu: quem confirma e a equipe.";
     }
 
     case "escalar_para_humano": {
@@ -282,6 +293,9 @@ async function executarFerramenta(nome, entrada, lead) {
  * Faz o laço de tool use manualmente para poder persistir cada passo.
  */
 export async function responder(lead, historico, mensagemRecebida) {
+  // Tudo que for para o candidato entra aqui e sai DEPOIS da fala do
+  // atendente. Quem envia e o servidor, na ordem certa.
+  const pendentes = [];
   const mensagens = [
     ...historico.map((m) => ({
       role: m.direcao === "recebida" ? "user" : "assistant",
@@ -304,7 +318,10 @@ export async function responder(lead, historico, mensagemRecebida) {
 
     if (resposta.stop_reason === "refusal") {
       await db.registrarEvento(lead.id, "recusa_modelo", { detalhes: resposta.stop_details ?? null });
-      return "Deixa eu chamar um dos professores para te responder isso direitinho. Só um instante.";
+      return {
+        texto: "Deixa eu chamar um dos professores para te responder isso direitinho. Só um instante.",
+        pendentes: [],
+      };
     }
 
     if (resposta.stop_reason !== "tool_use") break;
@@ -316,7 +333,7 @@ export async function responder(lead, historico, mensagemRecebida) {
     for (const chamada of chamadas) {
       let saida;
       try {
-        saida = await executarFerramenta(chamada.name, chamada.input, lead);
+        saida = await executarFerramenta(chamada.name, chamada.input, lead, pendentes);
         resultados.push({ type: "tool_result", tool_use_id: chamada.id, content: String(saida) });
       } catch (erro) {
         console.error(`[ferramenta:${chamada.name}]`, erro.message);
@@ -351,5 +368,5 @@ export async function responder(lead, historico, mensagemRecebida) {
     });
   }
 
-  return texto;
+  return { texto, pendentes };
 }

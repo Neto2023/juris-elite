@@ -24,6 +24,25 @@ function extrairTexto(message) {
   );
 }
 
+/** Pausa aleatória entre dois limites, em milissegundos. */
+function espera(min, max) {
+  return new Promise((r) => setTimeout(r, min + Math.random() * (max - min)));
+}
+
+/**
+ * Mostra "digitando..." por um tempo proporcional ao tamanho do texto, e só
+ * então devolve. Mensagem longa que aparece no mesmo instante que uma curta
+ * é o que faz a conversa parecer máquina.
+ *
+ * Cerca de 30 caracteres por segundo, que é datilografia rápida de celular,
+ * com piso de 1,2s e teto de 6s: ninguém espera meio minuto por um "oi".
+ */
+async function digitando(telefone, texto) {
+  const ms = Math.min(6000, Math.max(1200, 400 + (texto?.length || 0) * 33));
+  await evo.simularDigitacao(telefone, ms);
+  await new Promise((r) => setTimeout(r, ms));
+}
+
 app.get("/health", async (_req, res) => {
   try {
     await db.ping();
@@ -188,17 +207,33 @@ app.post("/webhook", async (req, res) => {
     const anteriores = await db.historico(lead.id);
     await db.salvarMensagem(lead.id, "recebida", texto);
 
-    await evo.simularDigitacao(telefone, 1500);
+    // Uma pausa antes de começar a "pensar". Resposta instantânea é a coisa
+    // que mais denuncia automação: ninguém lê e responde em 300ms.
+    await espera(900, 1800);
 
-    const resposta = await responder(lead, anteriores, texto);
-    if (!resposta) return;
+    const { texto: resposta, pendentes } = await responder(lead, anteriores, texto);
+    if (!resposta && !pendentes.length) return;
 
     // Quebra em parágrafos para parecer conversa, não comunicado.
-    const partes = resposta.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+    const partes = (resposta || "").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
     for (const parte of partes) {
+      await digitando(telefone, parte);
       await evo.enviarTexto(telefone, parte);
       await db.salvarMensagem(lead.id, "enviada", parte);
-      if (partes.length > 1) await new Promise((r) => setTimeout(r, 900));
+    }
+
+    // Só agora sai o que as ferramentas prepararam: link, PDF, chave Pix.
+    // Depois da fala, nunca antes dela.
+    for (const item of pendentes) {
+      await espera(700, 1400);
+      if (item.tipo === "documento") {
+        await evo.enviarDocumento(telefone, item.url, item.arquivo, item.legenda || "");
+        await db.salvarMensagem(lead.id, "enviada", `[documento] ${item.arquivo}`);
+      } else {
+        await digitando(telefone, item.texto);
+        await evo.enviarTexto(telefone, item.texto);
+        await db.salvarMensagem(lead.id, "enviada", item.texto);
+      }
     }
   } catch (erro) {
     console.error("[webhook] falhou:", erro);
