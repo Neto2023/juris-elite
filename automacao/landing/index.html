@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Juris Elite — Guarda Municipal de Marabá 2027</title>
-<meta name="description" content="60 dos 100 pontos da prova da Guarda Municipal de Marabá são Direito. Receba grátis o Mapa de Pontos e descubra onde estão os pontos da sua prova.">
+<title>Juris Elite · Preparação para carreiras jurídicas</title>
+<meta name="description" content="Preparatório e mentoria para carreiras jurídicas e concursos em Marabá, Pará. Não vendemos mais conteúdo: vendemos direção de estudo, com método e material que nenhum curso nacional produz.">
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://juriselite.com.br/">
 <link rel="icon" href="marca/juris-elite-icone-32.png" sizes="32x32">
@@ -14,604 +14,385 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Juris Elite">
-<meta property="og:title" content="60 dos 100 pontos da prova da Guarda são Direito">
-<meta property="og:description" content="Quem acerta tudo nas outras matérias e zera Direito faz 40 pontos. O corte é 60. Receba o Mapa de Pontos grátis no WhatsApp.">
+<meta property="og:title" content="Juris Elite · Preparação para carreiras jurídicas">
+<meta property="og:description" content="Conhecimento que prepara. Estratégia que aprova. Mentoria com método para concursos e carreiras jurídicas, em Marabá.">
 <meta property="og:url" content="https://juriselite.com.br/">
+<meta property="og:image" content="marca/juris-elite-icone-512.png">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
-
-<!-- ============================================================
-     PIXEL DO META (Facebook/Instagram Ads)
-     Troque SEU_PIXEL_ID pelo ID real e remova este comentário.
-     Sem isso, as campanhas não medem conversão.
-     ============================================================ -->
-<!--
-<script>
-!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','SEU_PIXEL_ID'); fbq('track','PageView');
-</script>
--->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap">
 
 <style>
+/* =====================================================================
+   JURIS ELITE / PÁGINA DA CASA
+   A marca é a Juris Elite. Mentoria GMM Marabá, OAB e carreiras jurídicas
+   são frentes dentro dela, e é assim que esta página fala. Campanha de
+   edital tem página própria, em guarda-maraba.html.
+   Paleta e tipografia seguem a proposta de identidade: creme como papel,
+   marinho como tinta, ouro como assinatura. Âmbar só na frente aberta.
+   ===================================================================== */
 :root{
-  --bg:#FBF9F5; --surface:#FFFFFF; --surface-2:#F4F0E8;
-  --fg:#24282C; --muted:#55606B; --line:#E3DCCD;
-  --navy:#15314C; --navy-deep:#0A1A2A; --ouro:#B89A63; --ouro-claro:#D4BC8E;
-  --ambar:#E4A139; --brass:#7B6338; --brass-soft:#F7F1E3;
-  --good:#1C7A4B; --crit:#A52222; --crit-soft:#FBEBEB;
+  --papel:#F4F0E8; --papel-claro:#FBF9F5; --branco:#FFFFFF;
+  --marinho:#10283F; --marinho-fundo:#0A1A2A; --marinho-claro:#1B3F61;
+  --ouro:#B89A63; --ouro-claro:#D4BC8E; --ouro-texto:#7B6338;
+  --ambar:#E4A139; --ambar-texto:#B87D22;
+  --tinta:#24282C; --tinta-suave:#55606B; --linha:#E3DCCD;
   --display:"Playfair Display",Georgia,"Times New Roman",serif;
-  --body:"Inter","Segoe UI",system-ui,sans-serif;
-  --gut:max(18px,env(safe-area-inset-left,0px));
+  --corpo:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+  --gut:max(20px,env(safe-area-inset-left,0px));
+  --gut-dir:max(20px,env(safe-area-inset-right,0px));
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
-img{max-width:100%}
-h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.005em;line-height:1.14}
-h1{font-size:clamp(29px,7vw,52px);font-weight:800}
-h2{font-size:clamp(23px,4.6vw,34px);font-weight:700}
-h3{font-size:clamp(17px,2.4vw,20px);font-weight:700;letter-spacing:0}
-p{margin:0}
+/* O topo e fixo: sem isto a ancora para debaixo dele e o titulo da
+   secao fica escondido. */
+section[id],div[id]{scroll-margin-top:84px}
+body{
+  margin:0;background:var(--papel-claro);color:var(--tinta);
+  font-family:var(--corpo);font-size:17px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%;height:auto;display:block}
 a{color:inherit}
-.wrap{max-width:900px;margin:0 auto;padding-left:var(--gut);padding-right:max(18px,env(safe-area-inset-right,0px))}
-.band{padding-block:clamp(44px,7vw,78px)}
-.eyebrow{font-family:var(--body);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.faixa{padding-block:clamp(56px,7vw,96px);padding-left:var(--gut);padding-right:var(--gut-dir)}
+.wrap{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);color:var(--marinho);line-height:1.16;margin:0;text-wrap:balance}
+h1{font-size:clamp(32px,4.6vw,52px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(26px,3.6vw,40px);font-weight:700}
+h3{font-size:clamp(19px,2.2vw,22px);font-weight:600}
+p{margin:0 0 16px;max-width:66ch}
+.rot{
+  font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ouro-texto);margin-bottom:12px;
+}
+.suave{color:var(--tinta-suave)}
+.filete{width:56px;height:3px;background:var(--ouro);border-radius:2px;margin:0 0 22px}
 
-/* ---------- barra de urgência ---------- */
-.topbar{background:var(--ambar);color:var(--navy-deep);font-size:13.5px;font-weight:700;text-align:center;padding:9px var(--gut);padding-top:calc(9px + env(safe-area-inset-top,0px))}
-
-/* ---------- marca ---------- */
-.marca-hero{display:block;height:clamp(34px,5.4vw,46px);width:auto;margin-bottom:22px}
-.marca-rodape{display:block;height:30px;width:auto;margin-bottom:6px;opacity:.92}
+/* ---------- topo ---------- */
+.topo{
+  position:sticky;top:0;z-index:50;background:rgba(251,249,245,.92);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--linha);
+  padding:12px var(--gut-dir) 12px var(--gut);
+}
+.topo .wrap{display:flex;align-items:center;gap:26px}
+.topo img{height:34px;width:auto}
+.menu{display:flex;gap:26px;margin-left:auto;align-items:center}
+.menu a{
+  font-size:14.5px;font-weight:500;color:var(--tinta-suave);text-decoration:none;
+  padding:6px 0;border-bottom:2px solid transparent;transition:color .14s,border-color .14s;
+}
+.menu a:hover{color:var(--marinho);border-bottom-color:var(--ouro)}
+.menu .botao{
+  background:var(--marinho);color:var(--papel);border:0;border-radius:9px;
+  padding:10px 18px;font-weight:600;font-size:14.5px;
+}
+.menu .botao:hover{background:var(--marinho-claro);border-bottom-color:transparent;color:var(--papel)}
+@media(max-width:860px){ .menu a:not(.botao){display:none} .topo .wrap{gap:14px} }
+@media(max-width:480px){ .menu .botao{font-size:13px;padding:9px 13px;white-space:nowrap} .topo img{height:28px} }
 
 /* ---------- herói ---------- */
-.hero{background:linear-gradient(170deg,var(--navy-deep),var(--navy) 62%);color:#fff}
-.hero .eyebrow{color:var(--ouro-claro)}
-.hero h1{margin-bottom:16px}
-.hero h1 b{color:var(--ouro-claro);font-weight:800}
-.hero .sub{font-size:clamp(16px,2.4vw,19.5px);color:#C4D3E2;max-width:40ch;margin-bottom:26px}
-.hero-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:34px;align-items:center}
-@media(max-width:760px){.hero-grid{grid-template-columns:1fr;gap:26px}}
-.hero-grid>*{min-width:0}
+.heroi{background:var(--papel);position:relative;overflow:hidden}
+.heroi .wrap{display:grid;grid-template-columns:1.16fr .84fr;gap:clamp(32px,5vw,72px);align-items:center}
+.heroi h1 b{color:var(--ouro-texto);font-weight:700}
+.heroi .linha{font-size:clamp(17px,2vw,19.5px);color:var(--tinta-suave);max-width:52ch;margin:22px 0 30px}
+.acoes{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  font-family:var(--corpo);font-weight:600;font-size:16px;text-decoration:none;
+  padding:15px 26px;border-radius:11px;border:1px solid transparent;
+  transition:transform .12s ease,box-shadow .12s ease,background .14s;
+}
+.btn:focus-visible{outline:3px solid var(--ouro-claro);outline-offset:3px}
+.btn-primario{background:var(--marinho);color:var(--papel);box-shadow:0 6px 20px rgba(16,40,63,.2)}
+.btn-primario:hover{background:var(--marinho-claro);transform:translateY(-1px)}
+.btn-linha{background:transparent;color:var(--marinho);border-color:var(--linha)}
+.btn-linha:hover{border-color:var(--ouro);background:var(--branco)}
+.btn-ambar{background:var(--ambar);color:#2A1C04;box-shadow:0 6px 20px rgba(228,161,57,.3)}
+.btn-ambar:hover{transform:translateY(-1px)}
 
-/* placar do herói */
-.placar{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:20px;backdrop-filter:blur(2px)}
-.placar .lbl{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9FB6CB;margin-bottom:12px}
-.barra{display:flex;flex-direction:column;gap:9px}
-.barra .item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:13.5px}
-.barra .trilho{grid-column:1/-1;height:9px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden}
-.barra .preenche{display:block;height:100%;border-radius:99px;background:var(--ouro)}
-.barra .preenche.fraco{background:rgba(255,255,255,.34)}
-.barra .nome{color:#DCE7F1;font-weight:500}
-.barra .pts{font-family:var(--body);font-weight:700;font-variant-numeric:tabular-nums;color:#fff}
+/* O arco dourado do logotipo, virado elemento gráfico da página. */
+.vitrine{position:relative;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
+.vitrine .placa{
+  position:relative;z-index:2;background:var(--marinho-fundo);border-radius:20px;
+  padding:clamp(28px,4vw,42px);width:100%;max-width:420px;
+  box-shadow:0 24px 64px rgba(10,26,42,.28);overflow:hidden;
+}
+.vitrine .placa::after{
+  content:"";position:absolute;right:-64px;bottom:-96px;width:260px;height:260px;
+  border:2px solid var(--ouro);border-radius:50%;opacity:.4;
+}
+.vitrine .placa img{height:30px;width:auto;margin-bottom:26px}
+.vitrine .placa .frase{
+  font-family:var(--display);font-size:clamp(21px,2.6vw,26px);color:var(--papel);
+  line-height:1.3;margin:0 0 6px;max-width:none;
+}
+.vitrine .placa .frase em{color:var(--ouro-claro);font-style:italic}
+.vitrine .placa .nota{font-size:13.5px;color:#A9B6C4;margin:18px 0 0;max-width:none}
+@media(max-width:900px){
+  .heroi .wrap{grid-template-columns:1fr}
+  .vitrine{aspect-ratio:auto;margin-top:8px}
+}
 
-/* ---------- botões ---------- */
-.cta{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:#1FA855;color:#fff;font-family:var(--body);font-weight:700;font-size:clamp(15.5px,2.2vw,17.5px);padding:16px 26px;border-radius:12px;text-decoration:none;box-shadow:0 6px 20px rgba(31,168,85,.28);transition:transform .12s ease,box-shadow .12s ease}
-.cta:hover{transform:translateY(-1px);box-shadow:0 9px 26px rgba(31,168,85,.36)}
-.cta:focus-visible{outline:3px solid var(--ouro-claro);outline-offset:3px}
-.cta svg{flex:none}
-.cta-nota{font-size:13px;color:#9FB6CB;margin-top:11px}
-.cta-escuro{background:var(--navy)}
-.cta-escuro{box-shadow:0 6px 20px rgba(21,57,91,.25)}
+/* ---------- cartões ---------- */
+.grade{display:grid;gap:20px;margin-top:38px}
+.grade-3{grid-template-columns:repeat(auto-fit,minmax(272px,1fr))}
+.cartao{
+  background:var(--branco);border:1px solid var(--linha);border-radius:16px;
+  padding:28px 26px;transition:border-color .14s,transform .14s,box-shadow .14s;
+}
+.cartao:hover{border-color:var(--ouro);transform:translateY(-2px);box-shadow:0 10px 30px rgba(16,40,63,.07)}
+.cartao .n{
+  font-family:var(--display);font-size:30px;color:var(--ouro);line-height:1;
+  display:block;margin-bottom:14px;
+}
+.cartao p{font-size:15.5px;color:var(--tinta-suave);margin:10px 0 0}
+.cartao h3{margin-bottom:0}
 
-/* ---------- tabela ---------- */
-.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
-table{border-collapse:collapse;width:100%;min-width:430px;font-size:15px}
-th,td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--line)}
-thead th{background:var(--navy);font-family:var(--body);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:#F4F0E8;border-bottom:2px solid var(--ouro);white-space:nowrap}
-tbody tr:last-child td{border-bottom:0}
-td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-tr.peso td{background:var(--brass-soft);font-weight:600}
-tr.peso td:first-child{box-shadow:inset 3px 0 0 var(--brass)}
-tr.tot td{background:var(--surface-2);font-weight:700}
-.vfail{color:var(--crit);font-weight:700}
-.vpass{color:var(--good);font-weight:700}
+/* ---------- frentes ---------- */
+.frente{
+  display:grid;grid-template-columns:184px 1fr auto;gap:22px;align-items:center;
+  background:var(--branco);border:1px solid var(--linha);border-radius:16px;
+  padding:24px 26px;margin-bottom:14px;
+}
+.frente .selo{
+  justify-self:start;font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 12px;border-radius:999px;white-space:nowrap;
+}
+.selo-aberta{background:var(--ambar);color:#2A1C04}
+.selo-breve{background:var(--papel);color:var(--tinta-suave);border:1px solid var(--linha)}
+.frente h3{margin-bottom:4px}
+.frente p{font-size:15px;color:var(--tinta-suave);margin:0}
+.frente .ir{
+  font-size:14.5px;font-weight:600;color:var(--marinho);text-decoration:none;white-space:nowrap;
+  border-bottom:2px solid var(--ouro);padding-bottom:2px;
+}
+.frente .ir:hover{color:var(--ouro-texto)}
+@media(max-width:760px){
+  .frente{grid-template-columns:1fr;gap:12px;text-align:left}
+  .frente .selo{justify-self:start}
+}
 
-/* ---------- blocos ---------- */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px}
-.card.destaque{background:var(--brass-soft);border-color:transparent}
-.card.alerta{background:var(--crit-soft);border-color:transparent}
-.g2{display:grid;grid-template-columns:repeat(auto-fit,minmax(252px,1fr));gap:16px}
-.g2>*{min-width:0}
-.num{font-family:var(--display);font-size:clamp(34px,8vw,50px);font-weight:800;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
-.stack{display:flex;flex-direction:column;gap:18px}
-.lista{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
+/* ---------- professores ---------- */
+.escuro{background:var(--marinho-fundo);color:#DCE4EC}
+.escuro h2{color:var(--papel)}
+.escuro .rot{color:var(--ouro-claro)}
+.escuro p{color:#B9CBDC}
+.professor{
+  background:rgba(255,255,255,.04);border:1px solid rgba(212,188,142,.26);
+  border-radius:16px;padding:28px 26px;
+}
+.professor h3{color:var(--papel);margin-bottom:6px}
+.professor .cargo{font-size:13px;color:var(--ouro-claro);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}
+.professor ul{margin:0;padding-left:18px;font-size:15px;color:#B9CBDC}
+.professor li{margin-bottom:6px}
 
-/* ---------- professor ---------- */
-.prof{background:var(--navy);color:#fff;border-radius:16px;padding:clamp(22px,4vw,34px);display:flex;flex-direction:column;gap:16px}
-.prof h2{color:#fff}
-.prof .aprov{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
-.prof .aprov span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:8px;padding:6px 11px;font-size:13px;font-weight:500}
-.prof p{color:#C9D8E6}
+/* ---------- chamada da campanha ---------- */
+.campanha{
+  background:var(--papel);border:1px solid var(--ouro);border-radius:20px;
+  padding:clamp(28px,4vw,44px);display:grid;grid-template-columns:1fr auto;
+  gap:28px;align-items:center;
+}
+.campanha .rot{color:var(--ambar-texto)}
+.campanha h2{font-size:clamp(23px,3vw,32px)}
+.campanha p{margin:12px 0 0;color:var(--tinta-suave);font-size:16px}
+@media(max-width:800px){ .campanha{grid-template-columns:1fr} }
 
-/* ---------- cronograma ---------- */
-.datas{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
-.data{display:grid;grid-template-columns:116px 1fr;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);align-items:baseline}
-.data:last-child{border-bottom:0}
-.data .d{font-family:var(--body);font-weight:700;font-size:14.5px;font-variant-numeric:tabular-nums;color:var(--navy)}
-.data .t{font-size:14.5px;color:var(--muted);min-width:0}
-.data.marco{background:var(--brass-soft)}
-.data.marco .d{color:var(--brass)}
-.data.marco .t{color:var(--fg);font-weight:600}
-@media(max-width:520px){.data{grid-template-columns:1fr;gap:2px}}
+/* ---------- rodapé ---------- */
+footer{
+  background:var(--marinho-fundo);color:#8C9BAB;font-size:13.5px;
+  padding:40px var(--gut-dir) calc(34px + env(safe-area-inset-bottom,0px)) var(--gut);
+}
+footer .wrap{display:grid;grid-template-columns:1fr auto;gap:26px;align-items:start}
+footer img{height:30px;width:auto;margin-bottom:16px}
+footer p{max-width:62ch;margin:0 0 9px;color:#8C9BAB}
+footer a{color:#B9CBDC;text-decoration:none;border-bottom:1px solid rgba(185,203,220,.3)}
+footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
+@media(max-width:700px){ footer .wrap{grid-template-columns:1fr} footer .links{text-align:left} }
 
-/* ---------- faq ---------- */
-details{border:1px solid var(--line);border-radius:11px;background:var(--surface);padding:0 16px}
-details+details{margin-top:9px}
-summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:15.5px;padding:15px 0;list-style:none}
-summary::-webkit-details-marker{display:none}
-summary::after{content:"+";float:right;color:var(--brass);font-size:20px;line-height:1}
-details[open] summary::after{content:"−"}
-details p{padding-bottom:16px;color:var(--muted);font-size:15px}
-
-/* ---------- fechamento ---------- */
-.fechar{background:var(--navy-deep);color:#fff;text-align:center}
-.fechar h2{color:#fff;margin-bottom:12px}
-.fechar p{color:#B9CBDC;max-width:46ch;margin:0 auto 24px}
-
-footer{background:var(--navy-deep);color:#8C9BAB;font-size:13px;padding-block:28px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
-footer a{color:#9FB6CB}
-footer .fwrap{display:flex;flex-direction:column;gap:9px}
-
-/* ---------- formulário de cadastro ---------- */
-.form-cartao{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px 24px;max-width:520px;margin:0 auto;text-align:left;box-shadow:0 10px 36px rgba(10,26,42,.22)}
-.form-cartao .rot{font-family:var(--body);font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--brass);margin-bottom:6px}
-.form-cartao .tit{font-family:var(--display);font-size:clamp(21px,3.4vw,26px);color:var(--navy);line-height:1.22;margin:0 0 16px}
-.campo{margin-bottom:14px}
-.campo label{display:block;font-family:var(--body);font-size:13px;font-weight:600;color:var(--fg);margin-bottom:5px}
-.campo input,.campo select{width:100%;box-sizing:border-box;font-family:var(--body);font-size:16px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 13px;transition:border-color .12s ease,box-shadow .12s ease}
-.campo input:focus,.campo select:focus{outline:none;border-color:var(--ouro);box-shadow:0 0 0 3px rgba(184,154,99,.22)}
-.campo .dica{font-size:12.5px;color:var(--muted);margin-top:5px}
-.campo.erro input,.campo.erro select{border-color:var(--crit);background:var(--crit-soft)}
-.campo .aviso{display:none;font-size:12.5px;color:var(--crit);margin-top:5px;font-weight:600}
-.campo.erro .aviso{display:block}
-.consent{display:flex;gap:11px;align-items:flex-start;margin:18px 0 6px}
-.consent input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--navy)}
-.consent label{font-size:13px;line-height:1.5;color:var(--muted);font-weight:400}
-.form-cartao .cta{width:100%;margin-top:12px}
-.form-cartao .cta[disabled]{opacity:.6;pointer-events:none}
-.form-nota{font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5}
-.mel{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-.feito{display:none;text-align:center}
-.feito.ativo{display:block}
-.feito .marca-ok{width:46px;height:46px;border-radius:50%;background:var(--good);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:12px}
-.form-cartao.enviado .form-corpo{display:none}
-.falhou{display:none;background:var(--crit-soft);border:1px solid var(--crit);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--crit);margin-bottom:14px}
-.falhou.ativo{display:block}
-
-/* barra fixa de CTA no celular */
-.sticky{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(251,251,252,.94);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:10px var(--gut);padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));display:none}
-.sticky .cta{width:100%;padding:14px}
-@media(max-width:760px){.sticky{display:block} body{padding-bottom:84px}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 
-<div class="topbar">Inscrições até 28/12/2026 · Prova em 24/01/2027 · 127 vagas</div>
-
-<!-- HERÓI -->
-<header class="hero band">
-  <div class="wrap hero-grid">
-    <div>
-      <img class="marca-hero" src="marca/juris-elite-horizontal-negativo.png" alt="Juris Elite — preparação para carreiras jurídicas" width="2003" height="426">
-      <div class="eyebrow" style="color:var(--ouro-claro)">Guarda Municipal de Marabá</div>
-      <h1 style="margin-top:12px"><b>60 dos 100 pontos</b> da sua prova são Direito.</h1>
-      <p class="sub">Quem acerta tudo em Português, Matemática, Informática e Marabá — e zera Direito — faz 40 pontos. O corte é 60. Está eliminado.</p>
-      <a class="cta" id="cta-hero" href="https://wa.me/5594991277972?text=Quero%20receber%20o%20Mapa%20de%20Pontos%20da%20Guarda%20de%20Marab%C3%A1" target="_blank" rel="noopener">
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.372-.025-.521-.074-.149-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-        Receber o Mapa de Pontos
-      </a>
-      <p class="cta-nota">Grátis, direto no seu WhatsApp. Não cobramos nada por isso.</p>
-    </div>
-
-    <div class="placar">
-      <div class="lbl">Onde estão os 100 pontos</div>
-      <div class="barra">
-        <div class="item"><span class="nome">Direito</span><span class="pts">60</span><span class="trilho"><span class="preenche" style="width:100%"></span></span></div>
-        <div class="item"><span class="nome">Marabá</span><span class="pts">20</span><span class="trilho"><span class="preenche" style="width:33.3%"></span></span></div>
-        <div class="item"><span class="nome">Português</span><span class="pts">10</span><span class="trilho"><span class="preenche fraco" style="width:16.6%"></span></span></div>
-        <div class="item"><span class="nome">Matemática</span><span class="pts">5</span><span class="trilho"><span class="preenche fraco" style="width:8.3%"></span></span></div>
-        <div class="item"><span class="nome">Informática</span><span class="pts">5</span><span class="trilho"><span class="preenche fraco" style="width:8.3%"></span></span></div>
-      </div>
-    </div>
+<header class="topo">
+  <div class="wrap">
+    <a href="#inicio" aria-label="Juris Elite, início">
+      <img src="marca/juris-elite-horizontal.png" alt="Juris Elite, preparação para carreiras jurídicas" width="2003" height="426">
+    </a>
+    <nav class="menu">
+      <a href="#mentorias">Mentorias</a>
+      <a href="#oab">OAB</a>
+      <a href="#carreiras">Carreiras jurídicas</a>
+      <a href="#metodo">Método</a>
+      <a class="botao" href="guarda-maraba.html">Guarda de Marabá 2027</a>
+    </nav>
   </div>
 </header>
 
-<!-- A CONTA -->
-<section class="band">
-  <div class="wrap stack">
-    <div>
-      <div class="eyebrow" style="color:var(--brass)">A conta que ninguém te mostrou</div>
-      <h2 style="margin-top:10px">O edital não distribui os pontos por igual</h2>
-    </div>
-    <p style="max-width:62ch;color:var(--muted)">A prova tem 40 questões. Mas cada questão vale um peso diferente — e a diferença é enorme. Uma questão de Direito vale <strong style="color:var(--fg)">quatro</strong> questões de Informática. Está no item 10.2 do Edital 01/2026.</p>
-
-    <div class="tscroll">
-      <table>
-        <thead><tr><th>Disciplina</th><th class="n">Questões</th><th class="n">Peso</th><th class="n">Pontos</th></tr></thead>
-        <tbody>
-          <tr class="peso"><td>Conhecimentos Específicos <span style="color:var(--muted);font-weight:400">(Direito)</span></td><td class="n">15</td><td class="n">4</td><td class="n">60</td></tr>
-          <tr class="peso"><td>Conhecimentos de Marabá</td><td class="n">10</td><td class="n">2</td><td class="n">20</td></tr>
-          <tr><td>Língua Portuguesa</td><td class="n">5</td><td class="n">2</td><td class="n">10</td></tr>
-          <tr><td>Matemática e Raciocínio Lógico</td><td class="n">5</td><td class="n">1</td><td class="n">5</td></tr>
-          <tr><td>Noções de Informática</td><td class="n">5</td><td class="n">1</td><td class="n">5</td></tr>
-          <tr class="tot"><td>Total</td><td class="n">40</td><td class="n">—</td><td class="n">100</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="g2">
-      <div class="card destaque">
-        <h3>Direito + Marabá</h3>
-        <div class="num" style="color:var(--brass)">80 pts</div>
-        <p style="color:var(--muted)">Oitenta dos cem pontos estão em dois blocos. Se você divide seu tempo de estudo igualmente entre as cinco matérias, está jogando aprovação fora.</p>
-      </div>
-      <div class="card alerta">
-        <h3>Nota de corte</h3>
-        <div class="num" style="color:var(--crit)">60 pts</div>
-        <p style="color:var(--muted)">Abaixo disso, eliminado (item 11.3). E mesmo com 60, só os 254 primeiros seguem para o teste físico — o dobro das vagas.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CENÁRIOS -->
-<section class="band" style="background:var(--surface-2)">
-  <div class="wrap stack">
-    <h2>Faça a conta você mesmo</h2>
-    <p style="max-width:62ch;color:var(--muted)">Quatro candidatos, quatro formas de estudar. Os pesos são os do edital.</p>
-
-    <div class="tscroll">
-      <table>
-        <thead><tr><th>Candidato</th><th class="n">Total</th><th>Resultado</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><strong>Acertou tudo, menos Direito</strong><br><span style="color:var(--muted);font-size:14px">100% em Português, Matemática, Informática e Marabá. Zero em Direito.</span></td>
-            <td class="n"><strong>40</strong></td><td class="vfail">Eliminado</td>
-          </tr>
-          <tr>
-            <td><strong>Estudou só Direito</strong><br><span style="color:var(--muted);font-size:14px">15 de 15 em Direito. Zero em todo o resto.</span></td>
-            <td class="n"><strong>60</strong></td><td class="vpass">Habilitado</td>
-          </tr>
-          <tr>
-            <td><strong>Estudou sem direção</strong><br><span style="color:var(--muted);font-size:14px">Dividiu o tempo por igual. Acertou pouco em Direito e em Marabá.</span></td>
-            <td class="n"><strong>47</strong></td><td class="vfail">Eliminado</td>
-          </tr>
-          <tr class="peso">
-            <td><strong>O mesmo candidato, com direção</strong><br><span style="color:var(--muted);font-size:14px">Mesmo esforço. Só mudou a ordem: 4 acertos a mais em Direito e 4 em Marabá.</span></td>
-            <td class="n"><strong>71</strong></td><td class="vpass">Bem classificado</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="card destaque">
-      <p style="font-size:clamp(16px,2.4vw,18.5px)"><strong>Oito questões de diferença. Vinte e quatro pontos.</strong> Entre o terceiro e o quarto candidato não mudou o esforço — mudou onde ele foi aplicado. É isso que o Mapa de Pontos te mostra.</p>
-    </div>
-  </div>
-</section>
-
-<!-- PROFESSOR -->
-<section class="band">
+<!-- HERÓI -->
+<section class="faixa heroi" id="inicio">
   <div class="wrap">
-    <div class="prof">
-      <div class="eyebrow" style="color:var(--ouro-claro)">Quem ensina</div>
-      <h2>Um delegado de polícia em atividade</h2>
-      <p style="max-width:58ch">Das 15 questões de Direito, 9 são de Penal, Processo Penal e Legislação Extravagante: inquérito, flagrante, cadeia de custódia, busca e apreensão, Lei de Drogas, Maria da Penha, Abuso de Autoridade, Estatuto do Desarmamento, ECA. Não é matéria decorada de apostila — é o expediente de quem lavra o auto.</p>
-      <div>
-        <p style="font-size:13.5px;color:#9FB6CB;margin-bottom:8px">Concursos em que foi aprovado:</p>
-        <div class="aprov">
-          <span>Delegado de Polícia — SP</span>
-          <span>Delegado de Polícia — MG</span>
-          <span>Agente Policial — PC/SP</span>
-          <span>Escrevente Técnico — TJ/SP</span>
-          <span>Agente Administrativo — Pref. S. J. Rio Preto</span>
+    <div>
+      <div class="rot">Preparação para carreiras jurídicas · Marabá, Pará</div>
+      <h1>Conhecimento que prepara.<br><b>Estratégia que aprova.</b></h1>
+      <p class="linha">A maioria dos candidatos não é reprovada por falta de conteúdo.
+        É reprovada por estudar na ordem errada. A Juris Elite existe para corrigir
+        a ordem: método de direção de estudo, mentoria por edital e o material que
+        nenhum curso nacional produz.</p>
+      <div class="acoes">
+        <a class="btn btn-primario" href="#mentorias">Conheça as mentorias</a>
+        <a class="btn btn-linha" href="#metodo">Como funciona o método</a>
+      </div>
+    </div>
+
+    <div class="vitrine">
+      <div class="placa">
+        <img src="marca/juris-elite-horizontal-negativo.png" alt="Juris Elite" width="2003" height="426">
+        <p class="frase">Não vendemos mais conteúdo.<br>Vendemos <em>direção</em>.</p>
+        <p class="nota">Você já tem apostila, vídeo e PDF suficientes para três
+          concursos. O que falta é saber o que estudar primeiro, por quanto tempo,
+          e quando revisar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÉTODO -->
+<section class="faixa" id="metodo">
+  <div class="wrap">
+    <div class="rot">O método da casa</div>
+    <h2>Direção de estudo, e não mais uma pilha de aula</h2>
+    <div class="filete" style="margin-top:20px"></div>
+    <p class="suave">Três peças que trabalham juntas. Nenhuma delas é videoaula.</p>
+
+    <div class="grade grade-3">
+      <article class="cartao">
+        <span class="n">01</span>
+        <h3>Mapa de Pontos</h3>
+        <p>O edital decomposto por peso e por incidência histórica da banca. Mostra
+          onde estão de fato os pontos da sua prova, e o que pode esperar.</p>
+      </article>
+      <article class="cartao">
+        <span class="n">02</span>
+        <h3>Ciclo nas suas horas reais</h3>
+        <p>Não o ciclo de quem estuda dez horas por dia. O ciclo dimensionado para
+          as horas que você tem, com revisão programada e simulado no peso da prova.</p>
+      </article>
+      <article class="cartao">
+        <span class="n">03</span>
+        <h3>O que só existe aqui</h3>
+        <p>Legislação municipal, história e geografia da cidade, estrutura do órgão.
+          Nenhuma plataforma nacional produz material de uma cidade só. Nós produzimos.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- FRENTES -->
+<section class="faixa" id="mentorias" style="background:var(--papel)">
+  <div class="wrap">
+    <div class="rot">Frentes de preparação</div>
+    <h2>Da primeira aprovação à carreira jurídica</h2>
+    <div class="filete" style="margin-top:20px"></div>
+    <p class="suave">O método é o mesmo. O que muda é o edital.</p>
+
+    <div style="margin-top:34px">
+      <div class="frente">
+        <span class="selo selo-aberta">Inscrições abertas</span>
+        <div>
+          <h3>Mentoria GMM Marabá</h3>
+          <p>Guarda Municipal de Marabá, Edital nº 01/2026. Prova em 24 de janeiro
+            de 2027, banca Fadesp. 127 vagas.</p>
         </div>
+        <a class="ir" href="guarda-maraba.html">Ver a mentoria</a>
       </div>
-      <p style="max-width:58ch">E mais: os 20 pontos de Conhecimentos de Marabá — bairros, hidrografia, história, patrimônio — e as 5 leis municipais da Guarda. Nenhuma plataforma nacional produz esse material, porque não compensa fazer para uma cidade só. Nós somos daqui.</p>
+
+      <div class="frente" id="oab">
+        <span class="selo selo-breve">Em breve</span>
+        <div>
+          <h3>OAB, 1ª e 2ª fase</h3>
+          <p>Preparação para o Exame de Ordem com a mesma lógica de peso e
+            incidência, e correção de peça com devolutiva individual.</p>
+        </div>
+        <a class="ir" href="#avisos">Entrar na lista</a>
+      </div>
+
+      <div class="frente" id="carreiras">
+        <span class="selo selo-breve">Mentoria individual</span>
+        <div>
+          <h3>Carreiras jurídicas</h3>
+          <p>Delegado, magistratura, promotoria e defensoria. Acompanhamento de
+            quem já passou por esse caminho, do planejamento à prova oral.</p>
+        </div>
+        <a class="ir" href="#avisos">Falar com a equipe</a>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- CRONOGRAMA -->
-<section class="band" style="background:var(--surface-2)">
-  <div class="wrap stack">
-    <h2>As datas que você não pode perder</h2>
-    <div class="datas">
-      <div class="data marco"><span class="d">28/12/2026</span><span class="t">Último dia de inscrição e de pagamento do boleto, até as 17h</span></div>
-      <div class="data"><span class="d">06/01/2027</span><span class="t">Resultado preliminar das inscrições homologadas</span></div>
-      <div class="data"><span class="d">13/01/2027</span><span class="t">Publicação da concorrência — candidatos por vaga</span></div>
-      <div class="data"><span class="d">18/01/2027</span><span class="t">Cartão de inscrição com o local de prova</span></div>
-      <div class="data marco"><span class="d">24/01/2027</span><span class="t">Prova objetiva, domingo de manhã — ingresso das 7h às 8h</span></div>
-      <div class="data"><span class="d">06 e 07/03</span><span class="t">Teste de Aptidão Física</span></div>
-      <div class="data"><span class="d">03 e 04/04</span><span class="t">Avaliação psicológica</span></div>
-    </div>
-    <p style="font-size:14px;color:var(--muted)">Datas do Anexo III do Edital 01/2026-GMM. Sujeitas a alteração pela banca — acompanhe o portal da Fadesp.</p>
-  </div>
-</section>
-
-<!-- FAQ -->
-<section class="band">
-  <div class="wrap stack">
-    <h2>Perguntas que todo mundo faz</h2>
-
-    <div>
-      <details open>
-        <summary>O Mapa de Pontos é mesmo grátis?</summary>
-        <p>É. Você manda uma mensagem no WhatsApp e recebe o PDF, sem pagar nada e sem cadastro. Depois, se quiser, a gente conversa sobre o material completo — mas o Mapa é seu de qualquer forma.</p>
-      </details>
-      <details>
-        <summary>Eu já pago outro curso. Serve para mim?</summary>
-        <p>Serve, e é exatamente para isso. Não vendemos videoaula e não competimos com os cursos grandes. A gente diz <em>o que</em> estudar, <em>em que ordem</em> e <em>por quanto tempo</em> — usando o material que você já tem. Mais o conteúdo de Marabá, que nenhum curso de fora produz.</p>
-      </details>
-      <details>
-        <summary>Vocês garantem aprovação?</summary>
-        <p>Não. Ninguém honesto garante. O que mostramos é onde estão os pontos da sua prova, segundo o próprio edital — e isso você pode conferir sozinho no item 10.2. A aprovação depende do seu estudo.</p>
-      </details>
-      <details>
-        <summary>Tenho 17 anos. Posso me inscrever?</summary>
-        <p>Pode. A retificação do Edital 02/2026, de 17/11/2026, mudou a regra: basta completar 18 anos até o início do Curso de Formação. O candidato menor precisa de autorização do responsável, com firma reconhecida em cartório (Anexo VI).</p>
-      </details>
-      <details>
-        <summary>Sou de fora de Marabá. Consigo acompanhar?</summary>
-        <p>Consegue. Tudo é online, e o bloco de Conhecimentos de Marabá é justamente o que mais ajuda quem não é da cidade — são 20 pontos que o candidato local costuma achar que sabe e erra.</p>
-      </details>
-    </div>
-  </div>
-</section>
-
-<!-- FECHAMENTO E CADASTRO -->
-<section class="band fechar" id="cadastro">
+<!-- PROFESSORES -->
+<section class="faixa escuro">
   <div class="wrap">
-    <h2>Pegue o Mapa de Pontos antes de abrir a próxima apostila</h2>
-    <p>São dez minutos de leitura que mudam a ordem do seu estudo nas semanas que faltam.</p>
+    <div class="rot">Quem ensina</div>
+    <h2>Dois juristas que fizeram o caminho</h2>
+    <div class="filete" style="margin-top:20px"></div>
 
-    <div class="form-cartao" id="cartao">
-      <div class="form-corpo">
-        <div class="rot">Cadastro gratuito</div>
-        <p class="tit">Diga para onde eu mando o Mapa</p>
+    <div class="grade grade-3" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+      <article class="professor">
+        <h3>Prof. Diego Souza</h3>
+        <div class="cargo">Delegado de polícia em atividade</div>
+        <ul>
+          <li>Quatro anos de carreira na delegacia</li>
+          <li>Aprovado em delegado de polícia em São Paulo e em Minas Gerais</li>
+          <li>Aprovado em agente policial da Polícia Civil de São Paulo</li>
+          <li>Aprovado em escrevente técnico judiciário do TJ-SP</li>
+        </ul>
+      </article>
+      <article class="professor">
+        <h3>Prof. Walter Ruiz</h3>
+        <div class="cargo">Bogaz Neto</div>
+        <ul>
+          <li>Experiência em cursinho presencial na região de Marabá</li>
+          <li>Responsável pelo método de direção de estudo da casa</li>
+          <li>Produção do material hiperlocal, que nenhuma plataforma cobre</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
 
-        <div class="falhou" id="falhou"></div>
-
-        <form id="form-cadastro" novalidate>
-          <div class="campo" id="c-nome">
-            <label for="nome">Seu nome</label>
-            <input id="nome" name="nome" type="text" autocomplete="given-name"
-                   maxlength="80" placeholder="Como você quer ser chamado">
-            <span class="aviso">Escreva pelo menos o primeiro nome.</span>
-          </div>
-
-          <div class="campo" id="c-telefone">
-            <label for="telefone">WhatsApp com DDD</label>
-            <input id="telefone" name="telefone" type="tel" inputmode="numeric"
-                   autocomplete="tel-national" maxlength="16" placeholder="(94) 99999-9999">
-            <span class="dica">É para onde o Mapa vai. Celular, não fixo.</span>
-            <span class="aviso">Confira o número: faltou DDD ou dígito.</span>
-          </div>
-
-          <div class="campo" id="c-email">
-            <label for="email">E-mail</label>
-            <input id="email" name="email" type="email" autocomplete="email"
-                   maxlength="120" placeholder="voce@email.com">
-            <span class="dica">Para o caso de o WhatsApp falhar, e para os avisos de edital.</span>
-            <span class="aviso">Esse e-mail não parece válido.</span>
-          </div>
-
-          <div class="campo">
-            <label for="interesse">O que mais te preocupa hoje</label>
-            <select id="interesse" name="interesse">
-              <option value="">Escolha uma opção</option>
-              <option value="direito">Direito, que vale 60 pontos</option>
-              <option value="maraba">As leis de Marabá, que valem 20</option>
-              <option value="basicas">Português, matemática e informática</option>
-              <option value="rotina">Não consigo manter constância nos estudos</option>
-            </select>
-            <span class="dica">Isso define o que eu te mando depois. Pode deixar em branco.</span>
-          </div>
-
-          <!-- Armadilha para robô. Pessoa nenhuma vê este campo. -->
-          <div class="mel" aria-hidden="true">
-            <label for="site">Não preencha este campo</label>
-            <input id="site" name="site" type="text" tabindex="-1" autocomplete="off">
-          </div>
-
-          <div class="consent" id="c-consent">
-            <input id="consentimento" name="consentimento" type="checkbox">
-            <label for="consentimento" id="texto-consentimento">Autorizo a Juris Elite a guardar
-              meu nome, WhatsApp e e-mail para me enviar o Mapa de Pontos, avisos sobre o
-              concurso da Guarda Municipal de Marabá e ofertas da mentoria. Posso pedir a
-              exclusão a qualquer momento, pelo mesmo WhatsApp.</label>
-          </div>
-          <div class="campo" id="c-consent-aviso" style="margin:0">
-            <span class="aviso">Preciso desse aceite para poder te enviar o material.</span>
-          </div>
-
-          <button class="cta" type="submit" id="botao-enviar">
-            <svg width="21" height="21" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.52.149-.174.198-.298.297-.497.099-.198.05-.372-.025-.521-.074-.149-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-            Receber o Mapa de Pontos
-          </button>
-
-          <p class="form-nota">Grátis. Não cobramos nada por isso e não repassamos seus dados a
-            terceiros. Responsável: Juris Elite, Marabá (PA).</p>
-        </form>
+<!-- CAMPANHA ABERTA -->
+<section class="faixa" id="avisos">
+  <div class="wrap">
+    <div class="campanha">
+      <div>
+        <div class="rot">Frente aberta agora</div>
+        <h2>Guarda Municipal de Marabá, prova em janeiro</h2>
+        <p>60 dos 100 pontos dessa prova são Direito, e quase ninguém estuda nessa
+          proporção. Pegue o Mapa de Pontos gratuito e veja a conta por você mesmo.</p>
       </div>
-
-      <div class="feito" id="feito">
-        <div class="marca-ok" aria-hidden="true">&#10003;</div>
-        <p class="tit" id="feito-titulo">Cadastro recebido</p>
-        <p style="color:var(--muted);font-size:14.5px;line-height:1.55;margin-bottom:18px"
-           id="feito-texto">Abra a conversa para receber o Mapa de Pontos agora.</p>
-        <a class="cta" id="ir-whatsapp" href="#" target="_blank" rel="noopener">
-          Abrir o WhatsApp e receber
-        </a>
-      </div>
+      <a class="btn btn-ambar" href="guarda-maraba.html">Ver a conta do edital</a>
     </div>
   </div>
 </section>
 
 <footer>
-  <div class="wrap fwrap">
-    <img class="marca-rodape" src="marca/juris-elite-horizontal-negativo.png" alt="Juris Elite" width="2003" height="426">
-    <p>Preparação para carreiras jurídicas e concursos públicos — Marabá, Pará.</p>
-    <p>Dados da prova conforme o Edital nº 01/2026-GMM e a retificação nº 02/2026, da Prefeitura Municipal de Marabá e da Fadesp. Não temos vínculo com a banca nem com a Prefeitura. Não garantimos aprovação.</p>
+  <div class="wrap">
+    <div>
+      <img src="marca/juris-elite-horizontal-negativo.png" alt="Juris Elite" width="2003" height="426">
+      <p>Preparação para carreiras jurídicas e concursos públicos. Marabá, Pará.</p>
+      <p>Não temos vínculo com bancas examinadoras nem com órgãos públicos.
+        Não garantimos aprovação em concurso.</p>
+    </div>
+    <div class="links">
+      <a href="guarda-maraba.html">Guarda de Marabá 2027</a>
+      <a href="mapa-de-pontos.html">Mapa de Pontos</a>
+      <a href="https://wa.me/5594991277972" target="_blank" rel="noopener">WhatsApp da equipe</a>
+    </div>
   </div>
 </footer>
 
-<div class="sticky">
-  <a class="cta" id="cta-fixo" href="https://wa.me/5594991277972?text=Quero%20receber%20o%20Mapa%20de%20Pontos%20da%20Guarda%20de%20Marab%C3%A1" target="_blank" rel="noopener">Receber o Mapa de Pontos grátis</a>
-</div>
-
-<script>
-(function () {
-  "use strict";
-
-  // Endereço do agente. Mesmo domínio da página, para não precisar de CORS no
-  // caminho feliz. Em teste local a chamada falha, e o formulário cai no plano
-  // B, que é mandar a pessoa direto para o WhatsApp.
-  var API = "/api/cadastro";
-  var ZAP = "5594991277972";
-
-  var form = document.getElementById("form-cadastro");
-  var cartao = document.getElementById("cartao");
-  var botao = document.getElementById("botao-enviar");
-  var falhou = document.getElementById("falhou");
-
-  // Os CTAs do alto e da barra fixa param de pular direto para o WhatsApp:
-  // agora levam ao formulário. É o único jeito de o cadastro existir.
-  ["cta-hero", "cta-fixo"].forEach(function (id) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    el.setAttribute("href", "#cadastro");
-    el.removeAttribute("target");
-    el.addEventListener("click", function (e) {
-      e.preventDefault();
-      document.getElementById("cadastro").scrollIntoView({ behavior: "smooth" });
-      setTimeout(function () { var n = document.getElementById("nome"); if (n) n.focus(); }, 420);
-      try { if (window.fbq) fbq("track", "InitiateCheckout", { content_name: id }); } catch (_) {}
-    });
-  });
-
-  // Máscara de telefone, só visual. A validação de verdade é no servidor.
-  var tel = document.getElementById("telefone");
-  tel.addEventListener("input", function () {
-    var d = tel.value.replace(/\D/g, "").slice(0, 11);
-    tel.value = d.length <= 2 ? d
-      : d.length <= 7 ? "(" + d.slice(0, 2) + ") " + d.slice(2)
-      : "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
-  });
-
-  function marcar(idCampo, ruim) {
-    var el = document.getElementById(idCampo);
-    if (el) el.classList.toggle("erro", !!ruim);
-    return !ruim;
-  }
-
-  function telefoneOk(v) {
-    var d = v.replace(/\D/g, "");
-    return d.length === 11 && Number(d.slice(0, 2)) >= 11 && d[2] === "9";
-  }
-
-  function mensagemZap(nome) {
-    var t = nome
-      ? "Oi! Sou " + nome + ", acabei de me cadastrar no site e quero o Mapa de Pontos."
-      : "Quero receber o Mapa de Pontos da Guarda de Marabá";
-    return "https://wa.me/" + ZAP + "?text=" + encodeURIComponent(t);
-  }
-
-  function concluir(nome, aviso) {
-    document.getElementById("ir-whatsapp").setAttribute("href", mensagemZap(nome));
-    if (aviso) {
-      // Sem o certo verde: falha com símbolo de sucesso é mentira visual.
-      var marca = document.querySelector(".marca-ok");
-      marca.textContent = "!";
-      marca.style.background = "var(--ambar)";
-      document.getElementById("feito-titulo").textContent = "Quase lá";
-      document.getElementById("feito-texto").textContent = aviso;
-    } else if (nome) {
-      document.getElementById("feito-titulo").textContent = nome + ", cadastro recebido";
-    }
-    cartao.classList.add("enviado");
-    document.getElementById("feito").classList.add("ativo");
-    cartao.scrollIntoView({ behavior: "smooth", block: "center" });
-    // O pixel só marca Lead quando o cadastro REALMENTE gravou. Marcar na
-    // falha enche o relatório de conversão que não existe.
-    if (!aviso) {
-      try { if (window.fbq) fbq("track", "Lead", { content_name: "formulario" }); } catch (_) {}
-    }
-  }
-
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    falhou.classList.remove("ativo");
-
-    var nome = document.getElementById("nome").value.trim();
-    var email = document.getElementById("email").value.trim();
-    var consent = document.getElementById("consentimento").checked;
-
-    var ok = marcar("c-nome", nome.length < 2);
-    ok = marcar("c-telefone", !telefoneOk(tel.value)) && ok;
-    ok = marcar("c-email", !/^[^\s@]+@[^\s@.]+\.[^\s@]{2,}$/.test(email)) && ok;
-    ok = marcar("c-consent-aviso", !consent) && ok;
-    if (!ok) {
-      var primeiro = document.querySelector(".campo.erro input, .campo.erro select");
-      if (primeiro) primeiro.focus();
-      return;
-    }
-
-    botao.setAttribute("disabled", "disabled");
-    botao.textContent = "Enviando...";
-
-    var dados = {
-      nome: nome,
-      telefone: tel.value.replace(/\D/g, ""),
-      email: email,
-      interesse: document.getElementById("interesse").value || null,
-      consentimento: true,
-      consentimento_texto: document.getElementById("texto-consentimento").textContent
-        .replace(/\s+/g, " ").trim(),
-      site: document.getElementById("site").value
-    };
-
-    var controlador = new AbortController();
-    var desistir = setTimeout(function () { controlador.abort(); }, 9000);
-
-    fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dados),
-      signal: controlador.signal
-    })
-      .then(function (r) {
-        if (!r.ok) throw new Error("http " + r.status);
-        return r.json();
-      })
-      .then(function () {
-        clearTimeout(desistir);
-        concluir(nome.split(" ")[0], null);
-      })
-      .catch(function () {
-        clearTimeout(desistir);
-        // O cadastro não gravou. Em vez de perder a pessoa, mandamos para o
-        // WhatsApp, onde o atendimento recomeça. Dito com todas as letras,
-        // porque fingir que deu certo é pior do que admitir que não deu.
-        concluir(nome.split(" ")[0],
-          "Não consegui salvar seu cadastro agora. Abra a conversa no WhatsApp que a gente "
-          + "resolve por lá e eu te mando o Mapa na hora.");
-      })
-      .finally(function () {
-        botao.removeAttribute("disabled");
-        botao.textContent = "Receber o Mapa de Pontos";
-      });
-  });
-})();
-</script>
 </body>
 </html>
