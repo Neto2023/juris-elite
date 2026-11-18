@@ -75,7 +75,7 @@ SEU OBJETIVO EM CADA CONVERSA, NESTA ORDEM
 3. Convidar para o grupo (ferramenta convidar_para_grupo).
 Faça isso conversando, não como formulário. Uma pergunta por vez.`;
 
-const FERRAMENTAS = [
+export const FERRAMENTAS = [
   {
     name: "consultar_cronograma",
     description:
@@ -111,9 +111,15 @@ const FERRAMENTAS = [
       additionalProperties: false,
       properties: {
         nome: { type: ["string", "null"], description: "Primeiro nome do candidato, se ele disse." },
+        // anyOf, e nao type com lista mais enum: a API recusa enum de strings
+        // quando o type declarado inclui null ("Enum value 'direito' does not
+        // match declared type"). Com schema invalido a chamada inteira falha,
+        // o agente nao responde nada, e o candidato fica no vacuo.
         etiqueta: {
-          type: ["string", "null"],
-          enum: ["direito", "maraba", "basicas", "rotina", null],
+          anyOf: [
+            { type: "string", enum: ["direito", "maraba", "basicas", "rotina"] },
+            { type: "null" },
+          ],
           description:
             "direito = os 60 pontos de Conhecimentos Específicos; maraba = os 20 pontos do município; basicas = português, matemática e informática; rotina = não consegue manter constância no estudo.",
         },
