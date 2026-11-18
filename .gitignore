@@ -37,6 +37,7 @@ material-base/
 # casa. Publicar isso e entregar a estrategia de graca a quem disputa o mesmo
 # aluno.
 plano-funil.html
+planos/
 
 # QR de pareamento do WhatsApp. Expira em segundos, mas QR de sessao nao se
 # publica, nem vencido.
