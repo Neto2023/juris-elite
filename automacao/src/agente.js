@@ -47,11 +47,11 @@ Não vendemos videoaula nem concorremos com Gran, Estratégia ou CERS. Vendemos 
 Temos duas coisas que nenhum curso nacional tem: o material dos 20 pontos de Marabá (bairros, hidrografia, história, patrimônio) e as cinco leis municipais da Guarda de Marabá, que caem em Legislação Extravagante.
 
 A ESCADA
-1. Mapa de Pontos — PDF gratuito com a tabela de pesos. É o que você oferece primeiro.
-2. Grupo de WhatsApp — gratuito, conteúdo diário.
+1. Grupo de WhatsApp — gratuito, conteúdo diário, e é onde fica o Mapa de Pontos. É a porta de entrada.
+2. Mapa de Pontos — PDF gratuito com a tabela de pesos. Fica no grupo, com o link na descrição dele.
 3. Aulão ao vivo — gratuito.
 4. Pacote Guarda Marabá — R$ 197, ou 3x de R$ 70.
-Não empurre o Pacote na primeira mensagem. Primeiro entrega valor, qualifica e convida para o grupo.
+Não empurre o Pacote na primeira mensagem. Primeiro convida para o grupo, depois qualifica.
 
 COMO VOCÊ ESCREVE
 - Mensagem de WhatsApp: curta. No máximo 4 ou 5 linhas. Se precisar de mais, quebre em duas mensagens.
@@ -70,9 +70,9 @@ REGRAS QUE VOCÊ NÃO QUEBRA
 - Se a pessoa estiver irritada, reclamando, ou pedir para falar com uma pessoa de verdade, chame escalar_para_humano na hora, sem insistir.
 
 SEU OBJETIVO EM CADA CONVERSA, NESTA ORDEM
-1. Entregar o Mapa de Pontos (ferramenta enviar_mapa_de_pontos).
+1. Convidar para o grupo (ferramenta convidar_para_grupo), dizendo que o Mapa de Pontos está lá dentro. É a PRIMEIRA coisa que você faz, antes de qualquer pergunta. O Mapa é o motivo de entrar no grupo, e não um prêmio que se ganha sem entrar.
 2. Descobrir qual bloco mais preocupa a pessoa e registrar com registrar_interesse. As opções são: direito (os 60 pontos), maraba (os 20 pontos do município), basicas (português, matemática e informática) ou rotina (a pessoa não consegue manter constância nos estudos — este é o perfil mais valioso, é o aluno da mentoria).
-3. Convidar para o grupo (ferramenta convidar_para_grupo).
+3. Só mande o PDF direto (ferramenta enviar_mapa_de_pontos) se a pessoa disser que não quer ou não pode entrar em grupo, ou se pedir o arquivo uma segunda vez. Perder o candidato é pior que ele ficar fora do grupo. Nunca discuta com quem recusou o grupo.
 Faça isso conversando, não como formulário. Uma pergunta por vez.`;
 
 export const FERRAMENTAS = [
@@ -97,7 +97,7 @@ export const FERRAMENTAS = [
   {
     name: "enviar_mapa_de_pontos",
     description:
-      "Envia ao candidato o PDF gratuito do Mapa de Pontos, com a tabela de pesos da prova. Use assim que a conversa permitir, normalmente na primeira ou segunda mensagem. Não envie duas vezes.",
+      "Envia o PDF do Mapa de Pontos direto na conversa. NÃO é o caminho padrão: o Mapa fica no grupo, e o normal é chamar convidar_para_grupo. Use esta ferramenta só quando a pessoa disser que não quer ou não pode entrar em grupo, ou quando pedir o arquivo de novo depois de já ter recebido o convite. Não envie duas vezes.",
     strict: true,
     input_schema: { type: "object", additionalProperties: false, properties: {}, required: [] },
   },
@@ -130,7 +130,7 @@ export const FERRAMENTAS = [
   {
     name: "convidar_para_grupo",
     description:
-      "Envia o link do grupo de WhatsApp dos candidatos. Use depois de já ter entregue o Mapa de Pontos e conversado um pouco. Não envie duas vezes.",
+      "Envia o link do grupo de WhatsApp dos candidatos, onde fica o Mapa de Pontos. É a PRIMEIRA ferramenta a chamar em qualquer conversa nova: é assim que a pessoa recebe o material. Não envie duas vezes.",
     strict: true,
     input_schema: { type: "object", additionalProperties: false, properties: {}, required: [] },
   },
@@ -200,7 +200,14 @@ async function executarFerramenta(nome, entrada, lead) {
       if (lead.convite_enviado) return "O convite do grupo já foi enviado antes.";
       const url = process.env.GRUPO_CONVITE_URL;
       if (!url) return "Ainda não há grupo configurado. Não prometa convite agora.";
-      await evo.enviarTexto(lead.telefone, `Entra no grupo dos candidatos: ${url}`);
+      // A mensagem diz o que a pessoa ganha ao entrar. Convite sem motivo
+      // vira link ignorado, e o grupo e a porta de entrada do funil.
+      await evo.enviarTexto(
+        lead.telefone,
+        `O *Mapa de Pontos* está no grupo dos candidatos, junto com o conteúdo diário.\n\n` +
+        `Entra aqui: ${url}\n\n` +
+        `O link do PDF está na descrição do grupo, dá para baixar a qualquer hora.`,
+      );
       await db.marcarLead(lead.id, { convite_enviado: true, estagio: "no_grupo" });
       await db.registrarEvento(lead.id, "convite_enviado", {});
       lead.convite_enviado = true;
