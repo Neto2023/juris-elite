@@ -1,0 +1,310 @@
+/* =====================================================================
+   JURIS ELITE / IMPRESSO
+   Folha A4 de material didatico: capa, secao, dispositivo, questao, tabela.
+   Depende de fontes.css, tokens.css e componentes.css, nessa ordem.
+   Nasceu no Dossie Maraba e vale para todo caderno da casa.
+   Gere o PDF com identidade/sistema/gerar-pdf.py, nunca abrindo o
+   arquivo direto no navegador.
+   ===================================================================== */
+/* ---- DOSSIÊ: folha A4, documento de estudo e de impressão ---- */
+  @page { size: A4; margin: 16mm 15mm 14mm; }
+
+  *{ box-sizing: border-box }
+  html,body{ margin:0; padding:0 }
+  body{
+    background: var(--je-fundo);
+    color: var(--je-texto);
+    font-family: var(--je-ui);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .folha{
+    max-width: 190mm;
+    margin: 0 auto;
+    padding: var(--je-e-6) var(--je-e-5) var(--je-e-7);
+  }
+  .bloco{ break-inside: avoid }
+  .nova-pagina{ break-before: page }
+
+  /* Cabeçalho de peça */
+  .topo{
+    display:flex; align-items:center; justify-content:space-between;
+    gap: var(--je-e-5);
+    padding-bottom: var(--je-e-3);
+    border-bottom: 2px solid var(--je-ouro);
+    margin-bottom: var(--je-e-5);
+  }
+  .topo img{ height: 34px; width:auto; display:block }
+  .topo .ident{ text-align:right; font-size: var(--je-t-xs); color: var(--je-texto-suave); line-height:1.4 }
+
+  /* Capa */
+  .capa{
+    background: var(--je-marinho);
+    color: var(--je-creme);
+    padding: 30mm 18mm 16mm;
+    position: relative;
+    overflow: hidden;
+    break-after: page;
+  }
+  .capa::after{
+    content:""; position:absolute; right:-60px; bottom:-120px;
+    width: 340px; height: 340px; border-radius: 50%;
+    border: 3px solid rgba(184,154,99,.35);
+  }
+  .capa img{ height: 58px; width:auto; display:block; margin-bottom: var(--je-e-8) }
+  .capa .rot{
+    font-size: var(--je-t-xs); font-weight:600; letter-spacing: var(--je-caixa-alta);
+    text-transform: uppercase; color: var(--je-ouro-claro); margin-bottom: var(--je-e-4);
+  }
+  .capa h1{
+    font-family: var(--je-display); font-weight:700; color: var(--je-creme);
+    font-size: 54px; line-height:1.05; margin:0 0 var(--je-e-4);
+  }
+  .capa .linha{
+    font-family: var(--je-leitura); font-style: italic; font-size: var(--je-t-xl);
+    color: var(--je-ouro); margin: 0 0 var(--je-e-7); max-width: 44ch;
+  }
+  .capa .selo{
+    display:inline-block; border:1px solid var(--je-ouro);
+    padding: var(--je-e-3) var(--je-e-5); border-radius: var(--je-r);
+    font-size: var(--je-t-sm); color: var(--je-creme);
+  }
+  .capa .selo b{ color: var(--je-ouro-claro) }
+  .capa .assina{
+    margin-top: 34mm; font-size: var(--je-t-sm); color:#C4D0DC; line-height:1.6;
+    position: relative; z-index: 1;
+  }
+
+  /* Tipografia do corpo */
+  h2.secao{
+    font-family: var(--je-display); color: var(--je-titulo);
+    font-size: var(--je-t-2xl); line-height:1.15; margin: var(--je-e-7) 0 var(--je-e-2);
+    break-after: avoid;
+  }
+  h2.secao .n{
+    font-family: var(--je-ui); font-size: var(--je-t-sm); font-weight:700;
+    letter-spacing:.1em; color: var(--je-ouro-texto); display:block; margin-bottom: 6px;
+  }
+  h3.sub{
+    font-family: var(--je-display); color: var(--je-titulo);
+    font-size: var(--je-t-xl); margin: var(--je-e-6) 0 var(--je-e-2); break-after: avoid;
+  }
+  h4.mini{
+    font-family: var(--je-ui); font-size: var(--je-t-xs); font-weight:700;
+    letter-spacing: var(--je-caixa-alta); text-transform: uppercase;
+    color: var(--je-ouro-texto); margin: var(--je-e-5) 0 var(--je-e-2);
+  }
+  p, li{
+    font-family: var(--je-leitura); font-size: var(--je-t-base);
+    line-height: var(--je-entrelinha-larga);
+  }
+  p{ margin: 0 0 var(--je-e-3); max-width: 76ch }
+  ul,ol{ margin: 0 0 var(--je-e-4); padding-left: var(--je-e-5); max-width: 76ch }
+  li{ margin-bottom: 6px }
+  strong{ font-weight:600; color: var(--je-titulo) }
+  .fonte{
+    font-family: var(--je-ui); font-size: var(--je-t-xs); color: var(--je-texto-suave);
+    margin: calc(-1 * var(--je-e-1)) 0 var(--je-e-5);
+  }
+
+  table{ width:100%; border-collapse: collapse; font-family: var(--je-ui); font-size: var(--je-t-sm); margin: var(--je-e-4) 0 var(--je-e-3) }
+  caption{
+    text-align:left; padding-bottom: var(--je-e-2); font-size: var(--je-t-xs);
+    letter-spacing: var(--je-caixa-alta); text-transform: uppercase; font-weight:600;
+    color: var(--je-ouro-texto);
+  }
+  th{
+    background: var(--je-marinho); color: var(--je-creme); text-align:left;
+    font-weight:600; padding: 8px 10px; border-bottom: 2px solid var(--je-ouro);
+  }
+  td{ padding: 7px 10px; border-bottom: 1px solid var(--je-borda); vertical-align: top }
+  tbody tr:nth-child(even){ background: var(--je-fundo-alt) }
+  .num{ text-align:right; font-variant-numeric: tabular-nums; white-space:nowrap }
+  tfoot td{ font-weight:700; background: var(--je-fundo-alt); border-top: 2px solid var(--je-ouro) }
+
+  /* Dispositivos */
+  .alerta{
+    background: var(--je-alerta-fundo);
+    border-left: 3px solid var(--je-alerta);
+    border-radius: 0 var(--je-r-sm) var(--je-r-sm) 0;
+    padding: var(--je-e-3) var(--je-e-5);
+    margin: var(--je-e-4) 0;
+    break-inside: avoid;
+  }
+  .alerta .t{
+    font-family: var(--je-ui); font-size: var(--je-t-sm); font-weight:700;
+    letter-spacing:.04em; text-transform: uppercase; color: var(--je-alerta);
+    margin: 0 0 6px;
+  }
+  .alerta p{ margin-bottom:0; max-width:none }
+
+  .mnemo{
+    background: var(--je-fundo-alt);
+    border: 1px solid var(--je-ouro);
+    border-radius: var(--je-r);
+    padding: var(--je-e-3) var(--je-e-5);
+    margin: var(--je-e-4) 0;
+    break-inside: avoid;
+  }
+  .mnemo .sigla{
+    font-family: var(--je-display); font-size: var(--je-t-xl); font-weight:700;
+    letter-spacing:.05em; color: var(--je-ouro-texto); display:block; margin-bottom: 4px;
+  }
+  .mnemo p{ margin-bottom:0; max-width:none }
+
+  .cartao{
+    background: var(--je-superficie); border: 1px solid var(--je-borda);
+    border-radius: var(--je-r); padding: var(--je-e-5); margin: var(--je-e-5) 0;
+    break-inside: avoid;
+  }
+  .cartao--marinho{
+    background: var(--je-marinho); border-color: var(--je-marinho-claro);
+    color: var(--je-creme);
+  }
+  .cartao--marinho h3, .cartao--marinho h4{ color: var(--je-creme) }
+  .cartao--marinho p, .cartao--marinho li{ color: #DCE4EC }
+  .cartao--marinho strong{ color: var(--je-ouro-claro) }
+
+  .grade{ display:grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: var(--je-e-4) }
+  .dado .v{
+    font-family: var(--je-display); font-size: 30px; font-weight:700; line-height:1;
+    color: var(--je-titulo); font-variant-numeric: tabular-nums; display:block;
+  }
+  .dado .r{
+    font-family: var(--je-ui); font-size: var(--je-t-xs); color: var(--je-texto-suave);
+    display:block; margin-top: 6px; line-height:1.35;
+  }
+  .cartao--marinho .dado .v{ color: var(--je-ouro-claro) }
+  .cartao--marinho .dado .r{ color:#A9B6C4 }
+
+  /* Questões */
+  .questao{ margin: var(--je-e-6) 0; padding-top: var(--je-e-4); border-top: 1px solid var(--je-borda); break-inside: avoid }
+  /* Questão comentada longa (enunciado, cinco alternativas, comentário,
+     texto de lei e esquema) passa de meia folha. Com break-inside: avoid
+     ela é empurrada inteira para a folha seguinte, deixa um vão enorme
+     atrás de si e estoura a folha de todo jeito. Aqui o bloco pode partir,
+     e quem não parte são as caixas de dentro, que têm regra própria.
+     Isso dobrou o número de páginas dos cadernos antigos antes de eu
+     medir a paginação; não repita. */
+  .questao--livre{ break-inside: auto; page-break-inside: auto }
+  .questao--livre .cab, .questao--livre .etiquetas{ break-after: avoid }
+  /* Classificação da questão no conteúdo programático. Vai em linha, e não
+     em pílula: a pílula é rótulo curto e tem white-space: nowrap, de modo
+     que uma frase de cem caracteres estoura a largura da folha. Quando algo
+     estoura a folha, o Chrome encolhe a peça INTEIRA para caber, e o PDF sai
+     com tipo menor e menos páginas, sem erro nenhum na tela. Foi assim que
+     três cadernos sairam com paginação diferente dos outros três. */
+  .questao .edital{
+    font-family: var(--je-ui); font-size: var(--je-t-xs); line-height: 1.45;
+    color: var(--je-texto-suave); margin: 4px 0 0; max-width: none;
+  }
+  .questao .cab{ font-family: var(--je-display); font-size: var(--je-t-lg); font-weight:700;
+    /* titulo, e nao marinho cru: no modo escuro o marinho some dentro do
+       proprio fundo marinho e o numero da questao fica invisivel na tela.
+       Na impressao o token ja vale marinho, entao o PDF nao muda. */
+    color: var(--je-titulo) }
+  .etiquetas{ display:flex; flex-wrap:wrap; gap: 6px; margin: 8px 0 var(--je-e-3) }
+  .et{
+    font-family: var(--je-ui); font-size: 10.5px; font-weight:600; letter-spacing:.05em;
+    text-transform: uppercase; padding: 2px 10px; border-radius: var(--je-r-full);
+    background: var(--je-fundo-alt); border:1px solid var(--je-borda); color: var(--je-texto-suave);
+    white-space:nowrap;
+  }
+  .et--peso{ background: var(--je-marinho); border-color: var(--je-marinho); color: var(--je-creme) }
+  .et--inc{ background: transparent; border-color: var(--je-ouro); color: var(--je-ouro-texto) }
+  .alt{ list-style:none; padding-left:0; margin: var(--je-e-2) 0 var(--je-e-3) }
+  .alt li{ margin-bottom: 4px; padding-left: 2em; text-indent: -2em }
+  .gab{
+    background: var(--je-acerto-fundo); border-left: 3px solid var(--je-acerto);
+    padding: var(--je-e-3) var(--je-e-5); border-radius: 0 var(--je-r-sm) var(--je-r-sm) 0;
+    break-inside: avoid;
+  }
+  .gab .t{
+    font-family: var(--je-ui); font-size: var(--je-t-sm); font-weight:700;
+    text-transform: uppercase; letter-spacing:.04em; color: var(--je-acerto); margin:0 0 6px;
+  }
+  .gab p{ margin-bottom: 6px; max-width:none }
+  .gab p:last-child{ margin-bottom:0 }
+
+  .rodape{
+    margin-top: var(--je-e-7); padding-top: var(--je-e-3);
+    border-top: 1px solid var(--je-borda);
+    font-family: var(--je-ui); font-size: var(--je-t-xs); color: var(--je-texto-suave);
+    display:flex; justify-content:space-between; gap: var(--je-e-4); flex-wrap:wrap;
+  }
+
+  @media (max-width: 700px){
+    .capa{ padding: 40px 20px 28px }
+    .capa h1{ font-size: 34px }
+    .capa .assina{ margin-top: 48px }
+    .folha{ padding: var(--je-e-5) var(--je-e-4) var(--je-e-6) }
+    .tscroll{ overflow-x:auto }
+  }
+  @media print{
+    body{ background:#fff }
+    .folha{ max-width:none; padding:0 }
+    .capa{ padding: 34mm 20mm 20mm; min-height: 240mm }
+    a{ color: inherit; text-decoration: none }
+  }
+
+/* --- DISPOSITIVOS DE CADERNO DE QUESTOES ---------------------------- */
+
+/* Texto base de questao de interpretacao. */
+.texto-base{
+  background: var(--je-fundo-alt);
+  border-left: 3px solid var(--je-ouro);
+  border-radius: 0 var(--je-r-sm) var(--je-r-sm) 0;
+  padding: var(--je-e-4) var(--je-e-5);
+  margin: var(--je-e-4) 0;
+  break-inside: avoid;
+}
+.texto-base p{ font-size: var(--je-t-base); margin-bottom: var(--je-e-3); max-width: none }
+.texto-base p:last-child{ margin-bottom: 0 }
+.texto-base .credito{
+  font-family: var(--je-ui); font-size: var(--je-t-xs); color: var(--je-texto-suave);
+  display: block; margin-top: var(--je-e-3);
+}
+
+/* Formula ou regra fechada. O aluno leva isso para a prova. */
+.formula{
+  background: var(--je-superficie);
+  border: 1px solid var(--je-ouro);
+  border-radius: var(--je-r);
+  padding: var(--je-e-3) var(--je-e-5);
+  margin: var(--je-e-4) 0;
+  font-family: var(--je-ui);
+  font-variant-numeric: tabular-nums;
+  break-inside: avoid;
+}
+.formula .nome{
+  display: block; font-size: var(--je-t-xs); font-weight: 700;
+  letter-spacing: var(--je-caixa-alta); text-transform: uppercase;
+  color: var(--je-ouro-texto); margin-bottom: var(--je-e-2);
+}
+/* Expressao em Source Serif, nao em Playfair, por dois motivos: serifa de texto
+   compoe formula melhor que serifa de display, e a Playfair nao tem alfabeto
+   grego. Peso 600 porque e o peso que o corpo do texto ja usa no <strong>:
+   face nao usada em outro lugar da pagina nao e buscada pelo Chrome so para
+   servir de fallback, e o pi e o delta caem em fonte de sistema no PDF. */
+.formula .exp{
+  display: block; font-family: var(--je-leitura); font-size: var(--je-t-xl);
+  font-weight: 600; color: var(--je-titulo); line-height: 1.3;
+}
+.formula .obs{
+  display: block; font-size: var(--je-t-sm); color: var(--je-texto-suave);
+  margin-top: var(--je-e-2); line-height: 1.4;
+}
+
+/* Resolucao passo a passo. */
+.passos{ counter-reset: passo; list-style: none; padding-left: 0; margin: var(--je-e-3) 0 }
+.passos li{
+  counter-increment: passo; position: relative;
+  padding-left: var(--je-e-6); margin-bottom: var(--je-e-2);
+  font-family: var(--je-ui); font-size: var(--je-t-sm); line-height: 1.5;
+}
+.passos li::before{
+  content: counter(passo); position: absolute; left: 0; top: 1px;
+  width: 20px; height: 20px; border-radius: var(--je-r-full);
+  background: var(--je-marinho); color: var(--je-creme);
+  font-size: 11px; font-weight: 700; line-height: 20px; text-align: center;
+}

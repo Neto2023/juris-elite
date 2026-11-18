@@ -1,0 +1,56 @@
+# ---------------------------------------------------------------------------
+# NUNCA versionar: credenciais
+# ---------------------------------------------------------------------------
+# Este repositorio e publico. O que entra aqui sai indexado, clonado e
+# espelhado, e apagar depois nao desfaz nada. Segredo que vaza, vaza para
+# sempre: o conserto e trocar o segredo, nunca remover o commit.
+Credenciais*
+~$*
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*_rsa
+*_ed25519
+*.p12
+*.pfx
+
+# ---------------------------------------------------------------------------
+# Material comercial
+# ---------------------------------------------------------------------------
+# Os cadernos, o dossie e o e-book sao o produto que a casa vende. O sistema
+# que os gera esta aqui; as pecas prontas, nao.
+#
+# Nao basta ignorar o PDF e o .docx: o HTML de cada peca tem o conteudo
+# INTEIRO, as 50 questoes com comentario e gabarito. Publicar o HTML e
+# publicar o produto, so que em outro formato.
+material/
+
+
+# Acervo de origem: material dos professores, PDFs de lei e a matriz de
+# questoes da Estrategia, que e insumo interno e nao se distribui.
+material-base/
+
+# Plano comercial: escada de precos, verba de anuncio, projecao de receita,
+# posicionamento contra concorrente e os riscos do projeto. E o playbook da
+# casa. Publicar isso e entregar a estrategia de graca a quem disputa o mesmo
+# aluno.
+plano-funil.html
+
+# QR de pareamento do WhatsApp. Expira em segundos, mas QR de sessao nao se
+# publica, nem vencido.
+automacao/qr-whatsapp.png
+
+# ---------------------------------------------------------------------------
+# Lixo de maquina
+# ---------------------------------------------------------------------------
+node_modules/
+npm-debug.log*
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.bak

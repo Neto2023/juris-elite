@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Mapa de Pontos — Guarda Municipal de Marabá</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+@page{ size:A4; margin:0 }
+:root{
+  --navy:#15314C; --navy-deep:#0A1A2A; --ouro:#B89A63; --ouro-claro:#D4BC8E;
+  --ambar:#E4A139; --brass:#7B6338; --brass-soft:#F7F1E3;
+  --ink:#24282C; --muted:#55606B; --line:#E3DCCD; --soft:#F4F0E8;
+  --crit:#A52222; --crit-soft:#FBEBEB; --good:#1C7A4B; --good-soft:#E9F4EE;
+  --disp:"Playfair Display",Georgia,"Times New Roman",serif;
+  --body:"Inter","Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+body{margin:0;font-family:var(--body);color:var(--ink);font-size:10.4pt;line-height:1.5}
+.pg{width:210mm;min-height:297mm;padding:0 0 14mm;position:relative;page-break-after:always;overflow:hidden}
+.pg:last-child{page-break-after:auto}
+.in{padding:0 16mm}
+h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:-.01em;line-height:1.15}
+h1{font-size:21pt;font-weight:800}
+h2{font-size:13pt;font-weight:700;color:var(--navy)}
+h3{font-size:10.5pt;font-weight:700}
+p{margin:0}
+.stack{display:flex;flex-direction:column;gap:5mm}
+
+/* faixa de marca */
+.marca{background:var(--navy-deep);color:#fff;padding:7mm 16mm 6mm}
+.marca .top{display:flex;justify-content:space-between;align-items:baseline;gap:8mm;border-bottom:1px solid rgba(255,255,255,.18);padding-bottom:3mm;margin-bottom:4mm}
+.marca .nome{font-family:var(--body);font-weight:600;font-size:9pt;letter-spacing:.16em;text-transform:uppercase;color:#C8D4E0}
+.marca .logo{display:block;height:11mm;width:auto;margin-bottom:4mm}
+.marca .profs{font-size:8.4pt;color:#A9BFD4}
+.marca h1{color:#fff}
+.marca .sub{color:var(--ouro-claro);font-family:var(--body);font-weight:600;font-size:9pt;letter-spacing:.1em;text-transform:uppercase;margin-top:2mm}
+
+.lede{font-size:11pt;color:var(--muted)}
+.lede b{color:var(--ink)}
+
+table{border-collapse:collapse;width:100%;font-size:9.8pt}
+th,td{padding:2.6mm 3mm;text-align:left;border-bottom:1px solid var(--line)}
+thead th{background:var(--navy);color:#F4F0E8;font-family:var(--body);font-size:8pt;font-weight:600;text-transform:uppercase;letter-spacing:.09em;border-bottom:1.5px solid var(--ouro)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+tr.hi td{background:var(--brass-soft);font-weight:600}
+tr.hi td:first-child{box-shadow:inset 2.5px 0 0 var(--brass)}
+tr.tot td{background:var(--soft);font-weight:700;border-top:1.5px solid var(--navy)}
+.tab{border:1px solid var(--line);border-radius:2mm;overflow:hidden}
+
+.cx{border-radius:2mm;padding:4mm 5mm;display:flex;flex-direction:column;gap:2mm}
+.cx.alerta{background:var(--crit-soft);border-left:3px solid var(--crit)}
+.cx.chave{background:var(--brass-soft);border-left:3px solid var(--ouro)}
+.cx.mnem{background:var(--soft);border-left:3px solid var(--navy)}
+.cx .rot{font-family:var(--body);font-size:8.2pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
+.cx.alerta .rot{color:var(--crit)}
+.cx.chave .rot{color:var(--brass)}
+.cx.mnem .rot{color:var(--navy)}
+.cx p{font-size:9.8pt}
+
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:4mm}
+.num{font-family:var(--disp);font-weight:800;font-size:26pt;line-height:1;font-variant-numeric:tabular-nums}
+.fail{color:var(--crit);font-weight:700}
+.pass{color:var(--good);font-weight:700}
+.mini{font-size:8.6pt;color:var(--muted)}
+
+.passos{display:flex;flex-direction:column;gap:3mm}
+.passo{display:grid;grid-template-columns:7mm 1fr;gap:3mm;align-items:start}
+.passo .b{font-family:var(--disp);font-weight:800;color:var(--brass);font-size:11pt;line-height:1.2}
+.passo .t{font-size:9.8pt}
+
+.rod{position:absolute;left:16mm;right:16mm;bottom:7mm;border-top:1px solid var(--line);padding-top:2.5mm;font-size:7.6pt;color:var(--muted);display:flex;justify-content:space-between;gap:6mm}
+.cta{background:var(--navy);color:#fff;border-radius:2mm;padding:5mm;display:flex;flex-direction:column;gap:2mm}
+.cta h3{color:var(--ouro-claro);font-size:11pt}
+.cta p{font-size:9.8pt;color:#D4E0EB}
+</style>
+</head>
+<body>
+
+<!-- ================= PÁGINA 1 ================= -->
+<section class="pg">
+  <div class="marca">
+    <img class="logo" src="marca/juris-elite-horizontal-negativo.png" alt="Juris Elite">
+    <div class="top">
+      <span class="nome">Mentoria GMM Marabá</span>
+      <span class="profs">Prof. Walter Ruiz &amp; Prof. Diego Souza</span>
+    </div>
+    <h1>Mapa de Pontos</h1>
+    <div class="sub">Guarda Municipal de Marabá · Edital nº 01/2026 · Banca FADESP</div>
+  </div>
+
+  <div class="in stack" style="padding-top:7mm">
+    <p class="lede">Quase todo candidato estuda na ordem errada — e não por preguiça. É porque ninguém leu o <b>item 10.2 do edital</b>, onde a banca diz, em uma tabela de cinco linhas, quanto vale cada questão. As questões <b>não valem a mesma coisa</b>. Este material mostra onde estão os seus pontos.</p>
+
+    <div>
+      <h2 style="margin-bottom:3mm">Como a FADESP distribui os 100 pontos</h2>
+      <div class="tab">
+        <table>
+          <thead><tr><th>Disciplina</th><th class="n">Questões</th><th class="n">Peso</th><th class="n">Pontos</th><th class="n">% da prova</th></tr></thead>
+          <tbody>
+            <tr class="hi"><td><strong>Conhecimentos Específicos</strong> — todo Direito</td><td class="n">15</td><td class="n">4</td><td class="n">60</td><td class="n">60%</td></tr>
+            <tr class="hi"><td><strong>Conhecimentos do Município de Marabá</strong></td><td class="n">10</td><td class="n">2</td><td class="n">20</td><td class="n">20%</td></tr>
+            <tr><td>Língua Portuguesa</td><td class="n">5</td><td class="n">2</td><td class="n">10</td><td class="n">10%</td></tr>
+            <tr><td>Matemática e Raciocínio Lógico</td><td class="n">5</td><td class="n">1</td><td class="n">5</td><td class="n">5%</td></tr>
+            <tr><td>Noções de Informática</td><td class="n">5</td><td class="n">1</td><td class="n">5</td><td class="n">5%</td></tr>
+            <tr class="tot"><td>Total</td><td class="n">40</td><td class="n">—</td><td class="n">100</td><td class="n">100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mini" style="margin-top:2mm">Fonte: Edital nº 01/2026-GMM, item 10.2. Prova de 4 horas, 5 alternativas por questão.</p>
+    </div>
+
+    <div class="duo">
+      <div class="cx chave">
+        <span class="rot">A conta que decide</span>
+        <span class="num" style="color:var(--brass)">80 de 100</span>
+        <p>Direito e Marabá, juntos, valem <strong>80 dos 100 pontos</strong>. Português, Matemática e Informática somam 20 — e consomem, na rotina da maioria, metade do tempo de estudo.</p>
+      </div>
+      <div class="cx alerta">
+        <span class="rot">O corte</span>
+        <span class="num" style="color:var(--crit)">60 pontos</span>
+        <p>Abaixo disso, eliminado (item 11.3). E mesmo com 60, só os <strong>254 primeiros</strong> — o dobro das vagas — seguem para o TAF (itens 11.4 e 11.7).</p>
+      </div>
+    </div>
+
+    <div class="cx alerta">
+      <span class="rot">Alerta de Pegadinha FADESP</span>
+      <p><strong>Uma questão de Direito vale quatro de Informática.</strong> Errar uma de peso 4 custa o mesmo que errar quatro de peso 1. Quem distribui o tempo de estudo igualmente entre as cinco matérias está, na prática, trocando pontos caros por pontos baratos — e descobre isso no dia do resultado.</p>
+    </div>
+
+  </div>
+
+  <div class="rod">
+    <span>Mapa de Pontos · Guarda Municipal de Marabá · Edital nº 01/2026</span>
+    <span>Página 1 de 3</span>
+  </div>
+</section>
+
+<!-- ================= PÁGINA 2 ================= -->
+<section class="pg">
+  <div class="in stack" style="padding-top:14mm">
+
+    <div>
+      <h2 style="margin-bottom:3mm">Quantas questões de Direito você precisa acertar</h2>
+      <p class="mini" style="margin-bottom:3mm">Para chegar aos 60 pontos do corte, conforme o seu desempenho nas outras quatro disciplinas.</p>
+      <div class="tab">
+        <table>
+          <thead><tr><th>Se no resto da prova você for…</th><th class="n">Pontos do resto</th><th class="n">Faltam</th><th class="n">Direito</th></tr></thead>
+          <tbody>
+            <tr><td>Perfeito — acerta 100% de tudo o mais</td><td class="n">40</td><td class="n">20</td><td class="n"><strong>5 de 15</strong></td></tr>
+            <tr><td>Bom — acerta cerca de 75%</td><td class="n">30</td><td class="n">30</td><td class="n"><strong>8 de 15</strong></td></tr>
+            <tr class="hi"><td>Mediano — acerta cerca de metade</td><td class="n">22</td><td class="n">38</td><td class="n"><strong>10 de 15</strong></td></tr>
+            <tr><td>Fraco — acerta cerca de 25%</td><td class="n">10</td><td class="n">50</td><td class="n"><strong>13 de 15</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mini" style="margin-top:2mm">Repare: mesmo gabaritando Português, Matemática, Informática e Marabá, você ainda precisa de 5 questões de Direito. <strong>Não existe aprovação sem o bloco jurídico.</strong></p>
+    </div>
+  </div>
+
+    <div>
+      <h2 style="margin-bottom:3mm">A prova de que a ordem importa mais que o esforço</h2>
+      <div class="tab">
+        <table>
+          <thead><tr><th>Quatro candidatos</th><th class="n">Nota</th><th>Resultado</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Acertou tudo, menos Direito</strong><br><span class="mini">100% em Português, Matemática, Informática e Marabá. Zero em Direito.</span></td><td class="n"><strong>40</strong></td><td class="fail">Eliminado</td></tr>
+            <tr><td><strong>Estudou só Direito</strong><br><span class="mini">15 de 15 em Direito. Zero em todo o resto.</span></td><td class="n"><strong>60</strong></td><td class="pass">Habilitado</td></tr>
+            <tr><td><strong>Estudou sem direção</strong><br><span class="mini">Dividiu o tempo por igual entre as matérias.</span></td><td class="n"><strong>47</strong></td><td class="fail">Eliminado</td></tr>
+            <tr class="hi"><td><strong>O mesmo candidato, com direção</strong><br><span class="mini">Mesmo esforço, mesma hora de estudo. Só acertou 4 questões a mais em Direito e 4 a mais em Marabá.</span></td><td class="n"><strong>71</strong></td><td class="pass">Bem classificado</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mini" style="margin-top:2mm">Entre o terceiro e o quarto candidato há <strong>8 questões e 24 pontos</strong> de diferença. Não mudou o esforço: mudou onde ele foi aplicado.</p>
+    </div>
+
+    <div class="cx mnem">
+      <span class="rot">Mnemônico de fixação</span>
+      <p style="font-family:var(--disp);font-weight:800;font-size:15pt;letter-spacing:.06em;color:var(--navy)">60 · 20 · 10 · 5 · 5</p>
+      <p><strong>D</strong>ireito 60, <strong>M</strong>arabá 20, <strong>P</strong>ortuguês 10, <strong>M</strong>atemática 5, <strong>I</strong>nformática 5. Decore essa sequência: ela é o seu critério para decidir, em qualquer dia de estudo, o que abrir primeiro.</p>
+    </div>
+
+  </div>
+
+  <div class="rod">
+    <span>Mapa de Pontos · Guarda Municipal de Marabá · Edital nº 01/2026</span>
+    <span>Página 2 de 3</span>
+  </div>
+</section>
+
+<!-- ================= PÁGINA 3 ================= -->
+<section class="pg">
+  <div class="in stack" style="padding-top:14mm">
+
+    <div>
+      <h2 style="margin-bottom:3mm">Como dividir o tempo que você tem</h2>
+      <div class="tab">
+        <table>
+          <thead><tr><th>Disciplina</th><th class="n">Do seu tempo</th><th>Por quê</th></tr></thead>
+          <tbody>
+            <tr class="hi"><td>Direito</td><td class="n">50%</td><td>Vale 60 pontos e é a matéria que mais exige repetição e questões.</td></tr>
+            <tr class="hi"><td>Marabá</td><td class="n">20%</td><td>Vale 20 pontos e é memorização pura de fatos locais — o melhor retorno por hora de estudo da prova inteira.</td></tr>
+            <tr><td>Português</td><td class="n">15%</td><td>Vale 10 pontos, mas também sustenta a interpretação dos enunciados das outras matérias.</td></tr>
+            <tr><td>Matemática e RL</td><td class="n">8%</td><td>Vale 5 pontos. Cuidado: é a matéria que mais rouba tempo de quem tem dificuldade.</td></tr>
+            <tr><td>Informática</td><td class="n">7%</td><td>Vale 5 pontos e é a de aprendizado mais rápido. Deixe para o fim.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div>
+      <h2 style="margin-bottom:3mm">As datas que decidem o resto</h2>
+      <div class="tab">
+        <table>
+          <tbody>
+            <tr class="hi"><td style="width:34mm"><strong>28/12/2026</strong></td><td>Último dia de inscrição e de pagamento do boleto, até as 17h</td></tr>
+            <tr><td><strong>13/01/2027</strong></td><td>Publicação da concorrência — quantos candidatos por vaga</td></tr>
+            <tr><td><strong>18/01/2027</strong></td><td>Cartão de inscrição com o local de prova</td></tr>
+            <tr class="hi"><td><strong>24/01/2027</strong></td><td>Prova objetiva, domingo — ingresso das 7h às 8h, prova das 8h30 às 12h30</td></tr>
+            <tr><td><strong>06 e 07/03</strong></td><td>Teste de Aptidão Física — elimina, mas não pontua</td></tr>
+            <tr><td><strong>03 e 04/04</strong></td><td>Avaliação psicológica</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="mini" style="margin-top:2mm">Anexo III do Edital nº 01/2026-GMM. A nota final do concurso é <strong>apenas a da prova objetiva</strong> (item 21.1): TAF e psicológica eliminam, mas não somam pontos. E só os 60 primeiros entram na primeira turma do Curso de Formação.</p>
+    </div>
+
+    <div class="cta">
+      <h3>O que fazer com isto a partir de hoje</h3>
+      <div class="passos" style="margin-top:1mm">
+        <div class="passo"><span class="b">1</span><span class="t" style="color:#D4E0EB">Abra seu material e separe o que é Direito e o que é Marabá. São 80 dos seus 100 pontos.</span></div>
+        <div class="passo"><span class="b">2</span><span class="t" style="color:#D4E0EB">Refaça sua divisão de horas pela tabela acima — por peso de ponto, não por número de questões.</span></div>
+        <div class="passo"><span class="b">3</span><span class="t" style="color:#D4E0EB">Marque no calendário as datas da página: 28/12 e 24/01 não se negocia.</span></div>
+      </div>
+      <p style="margin-top:3mm;color:#fff"><strong>Quer o cronograma semanal montado para a sua rotina real?</strong> Responda <strong>ROTINA</strong> no WhatsApp em que você recebeu este material. São poucas perguntas sobre seus horários — e a partir delas montamos a divisão de estudo que cabe na sua semana.</p>
+    </div>
+
+    <p class="mini">Material gratuito da Mentoria GMM Marabá. Dados conforme o Edital nº 01/2026-GMM e a retificação nº 02/2026, da Prefeitura Municipal de Marabá e da FADESP, conferidos em 17/11/2026. Não temos vínculo com a banca nem com a Prefeitura, e <strong>não garantimos aprovação</strong> — o que garantimos é que você vai saber onde estão os seus pontos.</p>
+  </div>
+
+  <div class="rod">
+    <span>Prof. Walter Ruiz &amp; Prof. Diego Souza · Mentoria GMM Marabá</span>
+    <span>Página 3 de 3</span>
+  </div>
+</section>
+
+</body>
+</html>

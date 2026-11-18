@@ -1,0 +1,131 @@
+/* =====================================================================
+   JURIS ELITE — TOKENS DE IDENTIDADE
+   Fonte única de verdade para cor, tipografia, espaço e forma.
+   Nenhum material da casa define cor em hexadecimal solto: usa variável.
+   ===================================================================== */
+
+:root{
+  color-scheme: light dark;
+
+  /* --- COR: paleta primária ---------------------------------------- */
+  --je-marinho:        #10283F;  /* cor-mãe. Fundos institucionais, títulos */
+  --je-marinho-escuro: #0A1A2A;  /* capas, rodapés, modo escuro            */
+  --je-marinho-claro:  #1B3F61;  /* cartões sobre marinho, bordas internas  */
+
+  --je-ouro:           #B89A63;  /* a marca. Filetes, selos, monograma      */
+  --je-ouro-claro:     #D4BC8E;  /* filetes sobre marinho                   */
+  --je-ouro-texto:     #7B6338;  /* ÚNICO ouro válido para TEXTO em fundo claro
+                                    (5,02:1 sobre creme). O #B89A63 reprova. */
+
+  --je-ambar:          #E4A139;  /* ação e urgência. CTA, anúncio, contagem */
+  --je-ambar-escuro:   #B87D22;  /* texto âmbar em fundo claro              */
+
+  --je-creme:          #F4F0E8;  /* papel da casa                           */
+  --je-creme-fundo:    #FBF9F5;  /* folha de leitura longa                  */
+  --je-creme-borda:    #E3DCCD;  /* divisórias em fundo claro               */
+
+  --je-grafite:        #24282C;  /* texto corrido                           */
+  --je-grafite-suave:  #55606B;  /* legenda, apoio, metadado                */
+  --je-branco:         #FFFFFF;
+
+  /* --- COR: sinalização didática ----------------------------------- */
+  --je-alerta:         #C0392B;  /* pegadinha de banca                      */
+  --je-alerta-fundo:   #FBEAE7;
+  --je-acerto:         #1E7A54;  /* gabarito, confirmação                   */
+  --je-acerto-fundo:   #E7F4EE;
+
+  /* --- COR: papéis semânticos (o que o material realmente usa) ------ */
+  --je-fundo:          var(--je-creme-fundo);
+  --je-fundo-alt:      var(--je-creme);
+  --je-superficie:     var(--je-branco);
+  --je-texto:          var(--je-grafite);
+  --je-texto-suave:    var(--je-grafite-suave);
+  --je-titulo:         var(--je-marinho);
+  --je-borda:          var(--je-creme-borda);
+  --je-filete:         var(--je-ouro);
+  --je-acao:           var(--je-marinho);
+  --je-acao-texto:     var(--je-creme);
+
+  /* --- TIPOGRAFIA --------------------------------------------------- */
+  /* Display: parentesco direto com o logotipo. Só título e capa.       */
+  /* Source Serif 4 entra depois da Playfair como fonte da casa no lugar de uma
+     fonte de sistema: a Playfair não tem alfabeto grego nem cirílico. */
+  --je-display: "Playfair Display", "Source Serif 4", "Times New Roman", Georgia, serif;
+  /* Leitura: corpo de caderno, e-book, apostila. Serifa de texto.      */
+  --je-leitura: "Source Serif 4", Cambria, Georgia, serif;
+  /* Interface: rótulo, tabela, legenda, botão, web.                    */
+  --je-ui: Inter, "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+
+  --je-t-xs:   0.75rem;   /* 12px — crédito, nota de rodapé   */
+  --je-t-sm:   0.875rem;  /* 14px — legenda, rótulo           */
+  --je-t-base: 1rem;      /* 16px — corpo                     */
+  --je-t-lg:   1.125rem;  /* 18px — corpo de leitura longa    */
+  --je-t-xl:   1.375rem;  /* 22px — subtítulo                 */
+  --je-t-2xl:  1.75rem;   /* 28px — título de seção           */
+  --je-t-3xl:  2.25rem;   /* 36px — título de página          */
+  --je-t-4xl:  3rem;      /* 48px — capa, hero                */
+
+  --je-entrelinha-justa:  1.2;
+  --je-entrelinha:        1.5;
+  --je-entrelinha-larga:  1.65;  /* corpo impresso                   */
+  --je-caixa-alta: 0.12em;       /* entreletra de rótulo em versal   */
+
+  --je-medida: 68ch;             /* largura máxima de leitura        */
+
+  /* --- ESPAÇO (base 4px) -------------------------------------------- */
+  --je-e-1: 4px;   --je-e-2: 8px;   --je-e-3: 12px;  --je-e-4: 16px;
+  --je-e-5: 24px;  --je-e-6: 32px;  --je-e-7: 48px;  --je-e-8: 64px;
+  --je-e-9: 96px;
+
+  /* --- FORMA --------------------------------------------------------- */
+  --je-r-sm: 4px;  --je-r: 8px;  --je-r-lg: 16px;  --je-r-full: 999px;
+  --je-sombra:   0 1px 2px rgba(16,40,63,.06), 0 4px 16px rgba(16,40,63,.08);
+  --je-sombra-f: 0 8px 32px rgba(16,40,63,.16);
+  --je-filete-largura: 3px;
+}
+
+/* --- MODO ESCURO ---------------------------------------------------- */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --je-fundo:       #0A1A2A;
+    --je-fundo-alt:   #10283F;
+    --je-superficie:  #15314C;
+    --je-texto:       #ECE7DC;
+    --je-texto-suave: #A9B6C4;
+    --je-titulo:      #F4F0E8;
+    --je-borda:       #27465F;
+    --je-acao:        var(--je-ouro);
+    --je-acao-texto:  #0A1A2A;
+    --je-ouro-texto:  var(--je-ouro-claro);
+    --je-ambar-escuro: var(--je-ambar);
+    --je-alerta-fundo: #3A1F1B;
+    --je-acerto-fundo: #0F3326;
+  }
+}
+:root[data-theme="dark"]{
+  --je-fundo:       #0A1A2A;
+  --je-fundo-alt:   #10283F;
+  --je-superficie:  #15314C;
+  --je-texto:       #ECE7DC;
+  --je-texto-suave: #A9B6C4;
+  --je-titulo:      #F4F0E8;
+  --je-borda:       #27465F;
+  --je-acao:        var(--je-ouro);
+  --je-acao-texto:  #0A1A2A;
+  --je-ouro-texto:  var(--je-ouro-claro);
+  --je-ambar-escuro: var(--je-ambar);
+  --je-alerta-fundo: #3A1F1B;
+  --je-acerto-fundo: #0F3326;
+}
+
+/* --- IMPRESSÃO: a casa imprime em papel claro, sempre --------------- */
+@media print{
+  :root{
+    --je-fundo: #FFFFFF;  --je-fundo-alt: #F4F0E8;  --je-superficie: #FFFFFF;
+    --je-texto: #24282C;  --je-texto-suave: #55606B; --je-titulo: #10283F;
+    --je-borda: #E3DCCD;  --je-acao: #10283F;        --je-acao-texto: #F4F0E8;
+    --je-ouro-texto: #7B6338;
+    color-scheme: light;
+  }
+  *{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

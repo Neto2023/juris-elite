@@ -1,0 +1,323 @@
+/* =====================================================================
+   JURIS ELITE — COMPONENTES
+   Depende de tokens.css. Cada classe corresponde a um dispositivo que já
+   existe nos materiais da casa (alerta de pegadinha, mnemônico, tabela de
+   incidência, questão comentada). Material novo não inventa componente:
+   usa um destes ou propõe a inclusão aqui.
+   ===================================================================== */
+
+/* --- BASE ----------------------------------------------------------- */
+.je{
+  background: var(--je-fundo);
+  color: var(--je-texto);
+  font-family: var(--je-ui);
+  font-size: var(--je-t-base);
+  line-height: var(--je-entrelinha);
+}
+.je-leitura{
+  font-family: var(--je-leitura);
+  font-size: var(--je-t-lg);
+  line-height: var(--je-entrelinha-larga);
+  max-width: var(--je-medida);
+}
+.je h1, .je h2, .je h3, .je-titulo{
+  font-family: var(--je-display);
+  color: var(--je-titulo);
+  line-height: var(--je-entrelinha-justa);
+  font-weight: 700;
+  text-wrap: balance;
+}
+.je h1{ font-size: var(--je-t-3xl) }
+.je h2{ font-size: var(--je-t-2xl) }
+.je h3{ font-size: var(--je-t-xl) }
+
+/* Rótulo em versal: a voz institucional da casa. Nunca em texto corrido. */
+.je-rotulo{
+  font-family: var(--je-ui);
+  font-size: var(--je-t-xs);
+  font-weight: 600;
+  letter-spacing: var(--je-caixa-alta);
+  text-transform: uppercase;
+  color: var(--je-ouro-texto);
+}
+
+/* Filete de ouro: a assinatura gráfica. Separa, nunca decora sozinho. */
+.je-filete{
+  border: 0;
+  height: var(--je-filete-largura);
+  width: 64px;
+  background: var(--je-ouro);
+  margin: var(--je-e-4) 0;
+}
+.je-filete--largo{ width: 100% }
+
+/* --- MARCA ---------------------------------------------------------- */
+.je-marca{ display: block; height: 44px; width: auto }
+.je-marca--pequena{ height: 28px }
+.je-marca--grande{ height: 72px }
+/* Área de respiro: nunca menos que a altura do monograma em volta da marca */
+.je-marca-area{ padding: calc(var(--je-e-4) * 1.25) }
+
+/* --- CARTÃO E SUPERFÍCIE -------------------------------------------- */
+.je-cartao{
+  background: var(--je-superficie);
+  border: 1px solid var(--je-borda);
+  border-radius: var(--je-r);
+  padding: var(--je-e-5);
+  box-shadow: var(--je-sombra);
+}
+.je-cartao--marinho{
+  background: var(--je-marinho);
+  border-color: var(--je-marinho-claro);
+  color: var(--je-creme);
+  box-shadow: none;
+}
+.je-cartao--marinho h1,
+.je-cartao--marinho h2,
+.je-cartao--marinho h3{ color: var(--je-creme) }
+.je-cartao--marinho .je-rotulo{ color: var(--je-ouro-claro) }
+
+/* --- DISPOSITIVOS DIDÁTICOS ----------------------------------------- */
+
+/* Alerta de pegadinha de banca. Vermelho sóbrio, nunca vermelho de erro. */
+.je-alerta{
+  background: var(--je-alerta-fundo);
+  border-left: var(--je-filete-largura) solid var(--je-alerta);
+  border-radius: 0 var(--je-r-sm) var(--je-r-sm) 0;
+  padding: var(--je-e-4) var(--je-e-5);
+  margin: var(--je-e-5) 0;
+}
+.je-alerta__titulo{
+  font-family: var(--je-ui);
+  font-size: var(--je-t-sm);
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--je-alerta);
+  margin: 0 0 var(--je-e-2);
+}
+
+/* Mnemônico de fixação. Ouro, porque é o que o aluno leva para a prova. */
+.je-mnemonico{
+  background: var(--je-fundo-alt);
+  border: 1px solid var(--je-ouro);
+  border-radius: var(--je-r);
+  padding: var(--je-e-4) var(--je-e-5);
+  margin: var(--je-e-5) 0;
+}
+.je-mnemonico__sigla{
+  font-family: var(--je-display);
+  font-size: var(--je-t-2xl);
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--je-ouro-texto);
+  display: block;
+  margin-bottom: var(--je-e-2);
+}
+
+/* Citação de dispositivo legal ou jurisprudência. Sempre ancorada. */
+.je-citacao{
+  font-family: var(--je-leitura);
+  font-size: var(--je-t-base);
+  border-left: 2px solid var(--je-ouro);
+  padding-left: var(--je-e-5);
+  margin: var(--je-e-5) 0;
+  color: var(--je-texto);
+}
+.je-citacao__fonte{
+  display: block;
+  margin-top: var(--je-e-2);
+  font-family: var(--je-ui);
+  font-size: var(--je-t-sm);
+  color: var(--je-texto-suave);
+}
+
+/* Bloco de questão inédita. */
+.je-questao{
+  margin: var(--je-e-6) 0;
+  padding-top: var(--je-e-5);
+  border-top: 1px solid var(--je-borda);
+}
+.je-questao__numero{
+  font-family: var(--je-display);
+  font-size: var(--je-t-xl);
+  font-weight: 700;
+  color: var(--je-marinho);
+}
+.je-questao__meta{
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--je-e-2);
+  margin: var(--je-e-3) 0 var(--je-e-4);
+}
+.je-etiqueta{
+  font-family: var(--je-ui);
+  font-size: var(--je-t-xs);
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 3px var(--je-e-3);
+  border-radius: var(--je-r-full);
+  background: var(--je-fundo-alt);
+  border: 1px solid var(--je-borda);
+  color: var(--je-texto-suave);
+  white-space: nowrap;
+}
+.je-etiqueta--peso{
+  background: var(--je-marinho);
+  border-color: var(--je-marinho);
+  color: var(--je-creme);
+}
+.je-etiqueta--incidencia{
+  background: transparent;
+  border-color: var(--je-ouro);
+  color: var(--je-ouro-texto);
+}
+.je-gabarito{
+  background: var(--je-acerto-fundo);
+  border-left: var(--je-filete-largura) solid var(--je-acerto);
+  padding: var(--je-e-4) var(--je-e-5);
+  border-radius: 0 var(--je-r-sm) var(--je-r-sm) 0;
+}
+
+/* --- TABELA (incidência, pontuação, cronograma) ---------------------- */
+.je-tabela{
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--je-ui);
+  font-size: var(--je-t-sm);
+}
+.je-tabela caption{
+  text-align: left;
+  padding-bottom: var(--je-e-3);
+  font-size: var(--je-t-xs);
+  letter-spacing: var(--je-caixa-alta);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--je-ouro-texto);
+}
+.je-tabela th{
+  background: var(--je-marinho);
+  color: var(--je-creme);
+  text-align: left;
+  font-weight: 600;
+  padding: var(--je-e-3) var(--je-e-4);
+  border-bottom: 2px solid var(--je-ouro);
+}
+.je-tabela td{
+  padding: var(--je-e-3) var(--je-e-4);
+  border-bottom: 1px solid var(--je-borda);
+}
+.je-tabela tbody tr:nth-child(even){ background: var(--je-fundo-alt) }
+.je-tabela .num{ text-align: right; font-variant-numeric: tabular-nums }
+.je-tabela tfoot td{
+  font-weight: 700;
+  background: var(--je-fundo-alt);
+  border-top: 2px solid var(--je-ouro);
+}
+
+/* --- DADO EM DESTAQUE (peso, pontos, vagas) -------------------------- */
+.je-numero{
+  font-family: var(--je-display);
+  font-size: var(--je-t-4xl);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--je-marinho);
+  font-variant-numeric: tabular-nums;
+}
+.je-numero__rotulo{ display: block; margin-top: var(--je-e-2) }
+
+/* Barra de peso. Usada no Mapa de Pontos. */
+.je-barra{
+  display: block;
+  height: 10px;
+  width: 100%;
+  background: var(--je-borda);
+  border-radius: var(--je-r-full);
+  overflow: hidden;
+}
+.je-barra__preenche{
+  display: block;
+  height: 100%;
+  background: var(--je-marinho);
+  border-radius: inherit;
+}
+.je-barra__preenche--ouro{ background: var(--je-ouro) }
+.je-barra__preenche--ambar{ background: var(--je-ambar) }
+
+/* --- AÇÃO ------------------------------------------------------------ */
+.je-botao{
+  display: inline-flex;
+  align-items: center;
+  gap: var(--je-e-2);
+  font-family: var(--je-ui);
+  font-size: var(--je-t-base);
+  font-weight: 600;
+  padding: var(--je-e-3) var(--je-e-5);
+  border-radius: var(--je-r);
+  border: 1px solid transparent;
+  background: var(--je-acao);
+  color: var(--je-acao-texto);
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.je-botao:hover{ transform: translateY(-1px); box-shadow: var(--je-sombra) }
+.je-botao--ambar{ background: var(--je-ambar); color: var(--je-marinho-escuro) }
+.je-botao--contorno{
+  background: transparent;
+  color: var(--je-titulo);
+  border-color: var(--je-ouro);
+}
+
+/* --- CABEÇALHO E RODAPÉ DE PEÇA -------------------------------------- */
+.je-cabecalho{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--je-e-5);
+  padding-bottom: var(--je-e-4);
+  border-bottom: 2px solid var(--je-ouro);
+}
+.je-rodape{
+  margin-top: var(--je-e-7);
+  padding-top: var(--je-e-4);
+  border-top: 1px solid var(--je-borda);
+  font-size: var(--je-t-xs);
+  color: var(--je-texto-suave);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--je-e-4);
+}
+
+/* --- CAPA ------------------------------------------------------------ */
+.je-capa{
+  background: var(--je-marinho);
+  color: var(--je-creme);
+  padding: var(--je-e-9) var(--je-e-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--je-e-5);
+  min-height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.je-capa h1{ color: var(--je-creme); font-size: var(--je-t-4xl) }
+.je-capa .je-rotulo{ color: var(--je-ouro-claro) }
+.je-capa__linha{
+  color: var(--je-ouro);
+  font-family: var(--je-leitura);
+  font-style: italic;
+  font-size: var(--je-t-xl);
+}
+.je-capa__assinatura{
+  margin-top: auto;
+  font-size: var(--je-t-sm);
+  color: #C4D0DC;
+}
+
+@media (max-width: 640px){
+  .je h1{ font-size: var(--je-t-2xl) }
+  .je-capa{ padding: var(--je-e-7) var(--je-e-5) }
+  .je-cabecalho{ flex-wrap: wrap }
+}
