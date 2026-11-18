@@ -196,13 +196,17 @@ async function executarFerramenta(nome, entrada, lead) {
     case "escalar_para_humano": {
       await db.marcarLead(lead.id, { escalado: true });
       await db.registrarEvento(lead.id, "escalado", entrada);
-      const equipe = process.env.EQUIPE_WHATSAPP;
-      if (equipe) {
+      // Lista separada por virgula, e nao um numero so: com um plantao
+      // unico, celular desligado significa candidato esperando sem que
+      // ninguem saiba. Falha de um envio nao impede os outros.
+      const equipe = (process.env.EQUIPE_WHATSAPP || "")
+        .split(",").map((n) => n.trim()).filter(Boolean);
+      if (equipe.length) {
         const aviso =
           `*Atendimento precisa de vocês*\n` +
           `Candidato: ${lead.nome || "sem nome"} (${lead.telefone})\n` +
           `Motivo: ${entrada.motivo}`;
-        await evo.enviarTexto(equipe, aviso).catch(() => {});
+        await Promise.allSettled(equipe.map((n) => evo.enviarTexto(n, aviso)));
       }
       return "Equipe avisada. Diga ao candidato que um dos professores responde em breve, e não tente resolver sozinho.";
     }
