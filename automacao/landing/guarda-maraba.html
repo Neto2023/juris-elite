@@ -163,6 +163,11 @@ details p{padding-bottom:16px;color:var(--muted);font-size:15px}
 footer{background:var(--navy-deep);color:#8C9BAB;font-size:13px;padding-block:28px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
 footer a{color:#9FB6CB}
 footer .fwrap{display:flex;flex-direction:column;gap:9px}
+.assinatura-dev{display:flex;align-items:center;gap:14px;margin-top:20px;padding-top:20px;border-top:1px solid rgba(185,203,220,.16)}
+.assinatura-dev img{height:26px;width:auto;opacity:.95;flex:none}
+.assinatura-dev strong{display:block;font-size:11.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:#B9CBDC}
+.assinatura-dev small{display:block;font-size:11px;color:#6F7E8C;margin-top:3px}
+@media(max-width:560px){.assinatura-dev{align-items:flex-start}}
 
 /* ---------- formulário de cadastro ---------- */
 .form-cartao{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:26px 24px;max-width:520px;margin:0 auto;text-align:left;box-shadow:0 10px 36px rgba(10,26,42,.22)}
@@ -477,6 +482,15 @@ footer .fwrap{display:flex;flex-direction:column;gap:9px}
     <img class="marca-rodape" src="marca/juris-elite-horizontal-negativo.png" alt="Juris Elite" width="2003" height="426">
     <p>Preparação para carreiras jurídicas e concursos públicos — Marabá, Pará.</p>
     <p>Dados da prova conforme o Edital nº 01/2026-GMM e a retificação nº 02/2026, da Prefeitura Municipal de Marabá e da Fadesp.</p>
+
+    <!-- Assinatura do parceiro desenvolvedor, mesmo padrão da Estância do Lago. -->
+    <div class="assinatura-dev">
+      <img src="marca/carajas-hubtech.webp" alt="Carajás Hubtech" width="453" height="123">
+      <span>
+        <strong>Parceiro desenvolvedor: CARAJÁS HUBTECH</strong>
+        <small>Soluções Tecnológicas · P&amp;F Inovações Tecnológicas LTDA · © 2026</small>
+      </span>
+    </div>
   </div>
 </footer>
 
