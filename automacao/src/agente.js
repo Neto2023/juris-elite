@@ -65,6 +65,8 @@ REGRAS QUE VOCÊ NÃO QUEBRA
 - NUNCA invente data, prazo, número de vaga, valor de taxa ou conteúdo do edital. Para QUALQUER informação do edital, chame a ferramenta consultar_cronograma antes de responder. Se a ferramenta não tiver a informação, diga que vai confirmar e chame escalar_para_humano.
 - NUNCA dê consultoria jurídica individual, nem opine sobre a situação processual, criminal ou trabalhista de ninguém. Se puxarem esse assunto, chame escalar_para_humano.
 - Não invente preço. O único preço que existe é o Pacote a R$ 197, ou 3x de R$ 70. Se pedirem desconto, condição especial ou falarem de dinheiro além disso, chame escalar_para_humano.
+- Pagamento: quando a pessoa disser que quer fechar o Pacote e perguntar como paga, chame enviar_pix. Nunca digite a chave você mesmo, nem de memória: só a ferramenta manda a chave.
+- NUNCA confirme que um pagamento caiu, nem libere acesso por conta própria, nem quando a pessoa mandar print de comprovante. Agradeça, diga que a equipe confere e chame escalar_para_humano.
 - Se a pessoa estiver irritada, reclamando, ou pedir para falar com uma pessoa de verdade, chame escalar_para_humano na hora, sem insistir.
 
 SEU OBJETIVO EM CADA CONVERSA, NESTA ORDEM
@@ -125,6 +127,12 @@ const FERRAMENTAS = [
       "Envia o link do grupo de WhatsApp dos candidatos. Use depois de já ter entregue o Mapa de Pontos e conversado um pouco. Não envie duas vezes.",
     strict: true,
     input_schema: { type: "object", additionalProperties: false, properties: {}, required: [] },
+  },
+  {
+    name: "enviar_pix",
+    description:
+      "Envia a chave Pix da Juris Elite para quem JÁ decidiu fechar o Pacote Guarda Marabá e perguntou como pagar. Use somente depois de a pessoa dizer, com clareza, que quer comprar. NÃO use com quem está só perguntando o preço, pedindo desconto, negociando condição ou ainda decidindo: nesses casos use escalar_para_humano. Nunca cite valor diferente do preço oficial do Pacote.",
+    input_schema: { type: "object", properties: {}, required: [] },
   },
   {
     name: "escalar_para_humano",
@@ -191,6 +199,46 @@ async function executarFerramenta(nome, entrada, lead) {
       await db.registrarEvento(lead.id, "convite_enviado", {});
       lead.convite_enviado = true;
       return "Convite enviado.";
+    }
+
+    case "enviar_pix": {
+      const chave = process.env.PIX_CHAVE;
+      const favorecido = process.env.PIX_FAVORECIDO;
+      const copiaCola = process.env.PIX_COPIA_COLA;
+      if (!chave || !favorecido) {
+        return "Pix não está configurado. Não invente chave nenhuma: chame escalar_para_humano.";
+      }
+
+      await evo.enviarTexto(
+        lead.telefone,
+        `*Pagamento por Pix*\n` +
+        `Favorecido: ${favorecido}\n` +
+        `Chave aleatória: ${chave}\n\n` +
+        `Confira o nome do favorecido na tela do seu banco antes de confirmar.`,
+      );
+      // Segunda mensagem só com o copia e cola, para a pessoa conseguir
+      // selecionar sem arrastar junto o resto do texto.
+      if (copiaCola) {
+        await new Promise((r) => setTimeout(r, 700));
+        await evo.enviarTexto(lead.telefone, copiaCola);
+      }
+
+      await db.registrarEvento(lead.id, "pix_enviado", {});
+
+      // A equipe precisa saber que tem pagamento a caminho, senão ninguém
+      // confere e o aluno paga sem receber acesso.
+      const aviso = (process.env.EQUIPE_WHATSAPP || "")
+        .split(",").map((n) => n.trim()).filter(Boolean);
+      if (aviso.length) {
+        const texto =
+          `*Pix enviado a um candidato*\n` +
+          `${lead.nome || "sem nome"} (${lead.telefone})\n` +
+          `Fiquem de olho no comprovante.`;
+        await Promise.allSettled(aviso.map((n) => evo.enviarTexto(n, texto)));
+      }
+
+      return "Chave enviada e equipe avisada. Peça o comprovante. " +
+             "NUNCA confirme que o pagamento caiu: quem confirma é a equipe.";
     }
 
     case "escalar_para_humano": {
