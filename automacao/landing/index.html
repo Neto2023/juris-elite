@@ -22,7 +22,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&display=swap">
 
 <style>
 /* =====================================================================
@@ -39,8 +39,8 @@
   --ouro:#B89A63; --ouro-claro:#D4BC8E; --ouro-texto:#7B6338;
   --ambar:#E4A139; --ambar-texto:#B87D22;
   --tinta:#24282C; --tinta-suave:#55606B; --linha:#E3DCCD;
-  --display:"Playfair Display",Georgia,"Times New Roman",serif;
-  --corpo:"Inter","Segoe UI",system-ui,-apple-system,sans-serif;
+  --display:"Libre Caslon Display",Georgia,"Times New Roman",serif;
+  --corpo:"DM Sans","Segoe UI",system-ui,-apple-system,sans-serif;
   --gut:max(20px,env(safe-area-inset-left,0px));
   --gut-dir:max(20px,env(safe-area-inset-right,0px));
 }
@@ -51,88 +51,207 @@ html{scroll-behavior:smooth}
 section[id],div[id]{scroll-margin-top:84px}
 body{
   margin:0;background:var(--papel-claro);color:var(--tinta);
-  font-family:var(--corpo);font-size:17px;line-height:1.62;
+  font-family:var(--corpo);font-size:16px;line-height:1.72;
   -webkit-font-smoothing:antialiased;
 }
 img{max-width:100%;height:auto;display:block}
 a{color:inherit}
 .faixa{padding-block:clamp(56px,7vw,96px);padding-left:var(--gut);padding-right:var(--gut-dir)}
 .wrap{max-width:1120px;margin:0 auto}
-h1,h2,h3{font-family:var(--display);color:var(--marinho);line-height:1.16;margin:0;text-wrap:balance}
-h1{font-size:clamp(32px,4.6vw,52px);font-weight:700;letter-spacing:-.01em}
-h2{font-size:clamp(26px,3.6vw,40px);font-weight:700}
-h3{font-size:clamp(19px,2.2vw,22px);font-weight:600}
+h1,h2,h3{font-family:var(--display);color:var(--marinho);font-weight:400;margin:0;text-wrap:balance}
+h1{font-size:clamp(62px,6.5vw,94px);line-height:.99;letter-spacing:-.035em}
+h2{font-size:clamp(40px,4vw,58px);line-height:1.04;letter-spacing:-.022em}
+h3{font-size:clamp(23px,2.5vw,28px);line-height:1.08;letter-spacing:-.012em}
+@media(max-width:860px){ h1{font-size:74px;letter-spacing:-.031em} h2{font-size:44px} }
+@media(max-width:420px){ h1{font-size:67px} h2{font-size:40px} }
 p{margin:0 0 16px;max-width:66ch}
 .rot{
-  font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;
+  font-size:10px;font-weight:600;letter-spacing:.21em;text-transform:uppercase;
   color:var(--ouro-texto);margin-bottom:12px;
 }
+.rot::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
 .suave{color:var(--tinta-suave)}
 .filete{width:56px;height:3px;background:var(--ouro);border-radius:2px;margin:0 0 22px}
 
 /* ---------- topo ---------- */
 .topo{
-  position:sticky;top:0;z-index:50;background:rgba(251,249,245,.92);
-  backdrop-filter:blur(10px);border-bottom:1px solid var(--linha);
-  padding:12px var(--gut-dir) 12px var(--gut);
+  position:sticky;top:0;z-index:50;background:rgba(250,249,246,.96);
+  backdrop-filter:blur(14px);border-bottom:1px solid #E4E2DC;
+  padding-left:var(--gut);padding-right:var(--gut-dir);
 }
-.topo .wrap{display:flex;align-items:center;gap:26px}
-.topo img{height:34px;width:auto}
-.menu{display:flex;gap:26px;margin-left:auto;align-items:center}
-.menu a{
-  font-size:14.5px;font-weight:500;color:var(--tinta-suave);text-decoration:none;
-  padding:6px 0;border-bottom:2px solid transparent;transition:color .14s,border-color .14s;
+.topo .wrap{height:94px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+.topo .logo{display:inline-flex;align-items:center;width:230px;flex:none}
+.topo .logo img{width:100%;height:auto}
+.menu{display:flex;align-items:center;gap:30px;font-size:13px;font-weight:500}
+.menu a{text-decoration:none;color:var(--tinta);transition:color .2s}
+.menu a:hover{color:#906E30}
+.botao-topo{
+  display:inline-flex;align-items:center;justify-content:center;gap:20px;flex:none;
+  background:var(--marinho);color:#fff;border:1px solid var(--marinho);
+  padding:11px 15px;min-height:42px;font-size:12px;font-weight:600;
+  text-decoration:none;transition:background .2s,transform .2s;
 }
-.menu a:hover{color:var(--marinho);border-bottom-color:var(--ouro)}
-.menu .botao{
-  background:var(--marinho);color:var(--papel);border:0;border-radius:9px;
-  padding:10px 18px;font-weight:600;font-size:14.5px;
+.botao-topo:hover{background:#23445E;transform:translateY(-2px)}
+.rotulo-curto{display:none}
+.abre-menu{display:none;border:0;background:transparent;padding:8px;color:var(--marinho);flex:none}
+@media(max-width:1150px){ .topo .logo{width:200px} .menu{gap:18px} }
+@media(max-width:860px){
+  .topo .wrap{height:79px;gap:12px}
+  .topo .logo{width:186px}
+  .abre-menu{display:flex}
+  .menu{
+    display:none;position:absolute;top:79px;
+    left:calc(var(--gut) * -1);right:calc(var(--gut-dir) * -1);
+    background:var(--papel-claro);padding:24px var(--gut-dir) 24px var(--gut);
+    border-bottom:1px solid var(--linha);box-shadow:0 15px 20px rgba(16,40,63,.08);
+  }
+  .menu.aberto{display:flex;flex-direction:column;align-items:flex-start;gap:22px;font-size:15px}
 }
-.menu .botao:hover{background:var(--marinho-claro);border-bottom-color:transparent;color:var(--papel)}
-@media(max-width:860px){ .menu a:not(.botao){display:none} .topo .wrap{gap:14px} }
-@media(max-width:480px){ .menu .botao{font-size:13px;padding:9px 13px;white-space:nowrap} .topo img{height:28px} }
+@media(max-width:560px){
+  .topo .logo{width:150px}
+  .botao-topo{font-size:11px;padding:10px 12px;min-height:38px;gap:0}
+  .rotulo-longo{display:none}
+  .rotulo-curto{display:inline}
+}
 
 /* ---------- herói ---------- */
-.heroi{background:var(--papel);position:relative;overflow:hidden}
-.heroi .wrap{display:grid;grid-template-columns:1.16fr .84fr;gap:clamp(32px,5vw,72px);align-items:center}
-.heroi h1 b{color:var(--ouro-texto);font-weight:700}
-.heroi .linha{font-size:clamp(17px,2vw,19.5px);color:var(--tinta-suave);max-width:52ch;margin:22px 0 30px}
-.acoes{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  font-family:var(--corpo);font-weight:600;font-size:16px;text-decoration:none;
-  padding:15px 26px;border-radius:11px;border:1px solid transparent;
-  transition:transform .12s ease,box-shadow .12s ease,background .14s;
+/* Geometria portada do modelo da casa (app/globals.css do site de origem):
+   o caderno e CSS, nao imagem. Perspectiva, lombada, corte de paginas e
+   arcos sao todos desenhados aqui. */
+.heroi{overflow:hidden;background:var(--papel);padding-left:var(--gut);padding-right:var(--gut-dir)}
+.heroi .wrap{display:grid;grid-template-columns:1.07fr 1fr;min-height:670px;align-items:center;gap:34px}
+.heroi-texto{padding:64px 0 45px;position:relative;z-index:2}
+.heroi-texto>p{max-width:410px;font-size:15px;color:#59656C;line-height:1.85}
+.heroi h1{margin:27px 0 25px}
+.heroi h1 em{color:#9B7C45;font-style:italic}
+.acoes{display:flex;flex-wrap:wrap;align-items:center;gap:24px;margin-top:31px}
+.btn-texto{
+  display:inline-flex;align-items:center;gap:10px;padding:8px 0;
+  font-size:12px;font-weight:600;color:var(--marinho);text-decoration:none;
 }
-.btn:focus-visible{outline:3px solid var(--ouro-claro);outline-offset:3px}
-.btn-primario{background:var(--marinho);color:var(--papel);box-shadow:0 6px 20px rgba(16,40,63,.2)}
-.btn-primario:hover{background:var(--marinho-claro);transform:translateY(-1px)}
-.btn-linha{background:transparent;color:var(--marinho);border-color:var(--linha)}
-.btn-linha:hover{border-color:var(--ouro);background:var(--branco)}
-.btn-ambar{background:var(--ambar);color:#2A1C04;box-shadow:0 6px 20px rgba(228,161,57,.3)}
-.btn-ambar:hover{transform:translateY(-1px)}
+.btn-texto:hover{color:#906E30}
+.frentes{display:flex;align-items:center;gap:16px;margin-top:40px;font-size:9px;letter-spacing:.16em}
+.frentes::before{content:"";width:38px;height:1px;background:var(--ouro);flex:none}
+.frentes i{font-style:normal;padding:0 10px;color:var(--ouro)}
 
-/* O arco dourado do logotipo, virado elemento gráfico da página. */
-.vitrine{position:relative;aspect-ratio:1/1;display:flex;align-items:center;justify-content:center}
-.vitrine .placa{
-  position:relative;z-index:2;background:var(--marinho-fundo);border-radius:20px;
-  padding:clamp(28px,4vw,42px);width:100%;max-width:420px;
-  box-shadow:0 24px 64px rgba(10,26,42,.28);overflow:hidden;
+.arte{position:relative;align-self:stretch;display:flex;align-items:center;justify-content:center;min-width:0}
+.arte::before{content:"";position:absolute;width:510px;height:510px;border-radius:50%;background:#E8E3D8;left:25px;top:90px}
+.orbita{position:absolute;border:1px solid rgba(184,154,99,.2);border-radius:50%;width:620px;height:620px;transform:rotate(-28deg);top:35px;left:-24px}
+.orbita-2{width:475px;height:475px;top:107px;left:49px}
+.arte-indice{position:absolute;top:35px;right:8px;text-align:right;font-size:10px;font-weight:600;letter-spacing:.2em;line-height:1.7}
+.arte-indice span{font-size:7px;color:#7D817B;letter-spacing:.14em}
+.caderno{
+  width:315px;height:440px;position:relative;z-index:1;margin-top:-12px;
+  transform:perspective(1400px) rotateY(-14deg) rotateZ(-9deg);
+  box-shadow:22px 30px 35px rgba(24,48,68,.22),4px 5px 4px rgba(0,0,0,.2);
+  border-radius:3px 7px 7px 3px;
 }
-.vitrine .placa::after{
-  content:"";position:absolute;right:-64px;bottom:-96px;width:260px;height:260px;
-  border:2px solid var(--ouro);border-radius:50%;opacity:.4;
+.caderno::before{
+  content:"";position:absolute;right:-10px;top:6px;width:14px;height:427px;
+  background:repeating-linear-gradient(0deg,#D3CEBF 0 1px,#F5F0E4 1px 3px);
+  transform:skewY(12deg);border-radius:0 5px 5px 0;
 }
-.vitrine .placa img{height:30px;width:auto;margin-bottom:26px}
-.vitrine .placa .frase{
-  font-family:var(--display);font-size:clamp(21px,2.6vw,26px);color:var(--papel);
-  line-height:1.3;margin:0 0 6px;max-width:none;
+.lombada{position:absolute;left:-13px;top:0;width:21px;height:100%;background:linear-gradient(90deg,#081725,#19374F,#091E30);border-radius:6px 0 0 6px;z-index:4}
+.capa{height:100%;background:#112C43;border-radius:3px 5px 5px 3px;padding:31px 30px;position:relative;overflow:hidden}
+.capa::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,rgba(255,255,255,.045),transparent 28%,rgba(0,0,0,.05));pointer-events:none}
+.capa img{width:180px;height:auto;position:relative;z-index:2}
+.capa .risco{width:26px;height:2px;background:var(--ouro);margin:35px 0 14px}
+.capa .selo{font-size:7px;letter-spacing:.27em;color:#C5B18B;margin:0;max-width:none}
+.capa .frase{
+  font-family:var(--display);font-size:36px;line-height:1.06;letter-spacing:-.3px;
+  color:#FAF5E8;margin:15px 0 0;max-width:none;position:relative;z-index:2;
 }
-.vitrine .placa .frase em{color:var(--ouro-claro);font-style:italic}
-.vitrine .placa .nota{font-size:13.5px;color:#A9B6C4;margin:18px 0 0;max-width:none}
-@media(max-width:900px){
-  .heroi .wrap{grid-template-columns:1fr}
-  .vitrine{aspect-ratio:auto;margin-top:8px}
+.capa .frase em{color:#CEB88E}
+.capa .rodape{position:absolute;bottom:36px;left:31px;right:26px;display:flex;align-items:center;justify-content:space-between;color:#D0BD9C;z-index:2}
+.capa .rodape span{font-size:7px;letter-spacing:.17em}
+.curva{position:absolute;width:400px;height:280px;border:1px solid rgba(173,145,90,.47);border-radius:50%;left:100px;bottom:-180px;transform:rotate(-25deg)}
+.curva-2{bottom:-198px;left:86px}
+.nota-flutua{
+  position:absolute;bottom:116px;left:2px;z-index:3;display:flex;align-items:center;gap:13px;
+  background:#FFFDF6;padding:17px 23px;box-shadow:0 10px 25px rgba(21,47,68,.08);
+  font-size:12px;line-height:1.6;border:1px solid #E4DFD3;
+}
+.nota-flutua p{margin:0;max-width:none}
+.nota-flutua b{font-weight:600}
+.icone-nota{color:#987D4B;background:#F3EEE4;padding:9px;display:flex;flex:none}
+.arte-rodape{position:absolute;bottom:37px;right:9px;font-size:8px;letter-spacing:.2em;color:#6E7777}
+
+/* ---------- botões ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:24px;
+  font-family:var(--corpo);font-weight:600;font-size:13px;text-decoration:none;
+  background:var(--marinho);color:#fff;border:1px solid var(--marinho);
+  padding:17px 23px;min-height:54px;
+  transition:background .2s,transform .2s;
+}
+.btn:hover{background:#23445E;border-color:#23445E;transform:translateY(-2px)}
+.btn:focus-visible,.btn-texto:focus-visible{outline:3px solid #B4863D;outline-offset:5px}
+.btn-linha{background:transparent;color:var(--marinho);border-color:var(--linha)}
+.btn-linha:hover{background:var(--branco);border-color:var(--ouro);color:var(--marinho)}
+.btn-ambar{background:var(--ambar);color:#2A1C04;border-color:var(--ambar)}
+.btn-ambar:hover{background:#D59427;border-color:#D59427}
+
+/* ---------- faixa do lema ---------- */
+.faixa-lema{background:var(--marinho);color:var(--papel);padding-left:var(--gut);padding-right:var(--gut-dir)}
+.faixa-lema .wrap{height:74px;display:flex;align-items:center;gap:36px;font-size:11px;letter-spacing:.21em}
+.faixa-lema .losango{color:var(--ouro);font-size:20px}
+.faixa-lema .fim{margin-left:auto;color:var(--ouro);font-family:var(--display);font-size:19px;letter-spacing:.3em}
+
+@media(min-width:1600px){
+  .heroi .wrap{min-height:730px}
+  .arte::before{top:110px}
+  .caderno{width:340px;height:480px}
+  .caderno::before{height:465px}
+  .capa .frase{font-size:41px}
+  .capa .risco{margin-top:42px}
+  .nota-flutua{bottom:138px}
+}
+@media(max-width:1150px){
+  .heroi .wrap{gap:15px}
+  .acoes{gap:12px}
+  .arte{transform:scale(.92);transform-origin:center}
+}
+@media(max-width:860px){
+  .heroi .wrap{grid-template-columns:1fr;gap:0;min-height:0}
+  .heroi-texto{padding:52px 0 12px}
+  .heroi-texto>p{font-size:14px;max-width:450px}
+  .acoes{gap:17px;margin-top:25px}
+  .frentes{margin-top:28px;font-size:8px}
+  .arte{height:490px;transform:none;margin-top:5px;max-width:500px;width:100%;justify-self:center}
+  .arte::before{width:370px;height:370px;left:calc(50% - 185px);top:64px}
+  .orbita{width:470px;height:470px;top:7px;left:calc(50% - 235px)}
+  .orbita-2{width:390px;height:390px;left:calc(50% - 195px);top:47px}
+  .caderno{height:354px;width:258px;margin-top:-5px}
+  .caderno::before{height:343px;right:-8px}
+  .capa{padding:25px}
+  .capa img{width:162px}
+  .capa .frase{font-size:29px}
+  .capa .risco{margin:25px 0 10px}
+  .capa .selo{font-size:6px}
+  .capa .rodape{bottom:26px;left:25px}
+  .capa .rodape span{font-size:6px}
+  .arte-indice{top:22px;right:0;font-size:8px}
+  .arte-indice span{font-size:6px}
+  .nota-flutua{bottom:57px;left:7px;padding:12px 17px;font-size:11px}
+  .arte-rodape{bottom:16px;right:0;font-size:6px}
+  .faixa-lema .wrap{height:auto;padding:22px 0;gap:16px;font-size:8px;letter-spacing:.15em}
+  .faixa-lema .losango{font-size:14px}
+  .faixa-lema .fim{display:none}
+}
+@media(max-width:420px){
+  .heroi-texto{padding-top:40px}
+  .acoes{align-items:flex-start;flex-direction:column;gap:9px}
+  .frentes{letter-spacing:.1em}
+  .frentes i{padding:0 5px}
+  .arte{height:450px}
+  .arte::before{width:330px;height:330px;left:calc(50% - 165px)}
+  .caderno{width:235px;height:333px}
+  .caderno::before{height:322px}
+  .capa .frase{font-size:27px}
+  .capa img{width:155px}
+  .nota-flutua{bottom:45px;left:0}
+  .arte-indice{top:12px}
 }
 
 /* ---------- cartões ---------- */
@@ -235,46 +354,83 @@ footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
 
 <header class="topo">
   <div class="wrap">
-    <a href="#inicio" aria-label="Juris Elite, início">
+    <a class="logo" href="#inicio" aria-label="Juris Elite, início">
       <img src="marca/juris-elite-horizontal.png" alt="Juris Elite, preparação para carreiras jurídicas" width="2003" height="426">
     </a>
-    <nav class="menu">
+    <nav class="menu" id="menu" aria-label="Menu principal">
       <a href="#mentorias">Mentorias</a>
-      <a href="#oab">OAB</a>
-      <a href="#carreiras">Carreiras jurídicas</a>
       <a href="#metodo">Método</a>
-      <a class="botao" href="guarda-maraba.html">Guarda de Marabá 2027</a>
+      <a href="#professores">Professores</a>
+      <a href="#avisos">Dúvidas</a>
     </nav>
+    <a class="botao-topo" href="guarda-maraba.html">
+      <span class="rotulo-longo">Guarda de Marabá 2027</span><span class="rotulo-curto">Guarda 2027</span>
+    </a>
+    <button class="abre-menu" id="abre-menu" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+        <line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="20" y2="12"></line><line x1="4" y1="18" x2="20" y2="18"></line>
+      </svg>
+    </button>
   </div>
 </header>
 
 <!-- HERÓI -->
-<section class="faixa heroi" id="inicio">
+<section class="heroi" id="inicio">
   <div class="wrap">
-    <div>
-      <div class="rot">Preparação para carreiras jurídicas · Marabá, Pará</div>
-      <h1>Conhecimento que prepara.<br><b>Estratégia que aprova.</b></h1>
-      <p class="linha">A maioria dos candidatos não é reprovada por falta de conteúdo.
-        É reprovada por estudar na ordem errada. A Juris Elite existe para corrigir
-        a ordem: método de direção de estudo, mentoria por edital e o material que
-        nenhum curso nacional produz.</p>
+    <div class="heroi-texto">
+      <div class="rot">Preparação para ir além</div>
+      <h1>Seu próximo<br>passo começa<br>com <em>método.</em></h1>
+      <p>Você tem um objetivo. A Juris Elite quer fazer parte do caminho, com
+        conhecimento, direção e uma preparação que faça sentido para você.</p>
       <div class="acoes">
-        <a class="btn btn-primario" href="#mentorias">Conheça as mentorias</a>
-        <a class="btn btn-linha" href="#metodo">Como funciona o método</a>
+        <a class="btn" href="#mentorias">Encontre sua preparação
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+        </a>
+        <a class="btn-texto" href="#metodo">Conheça a proposta
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+        </a>
       </div>
+      <div class="frentes"><span>CONCURSOS <i>·</i> OAB <i>·</i> CARREIRAS JURÍDICAS</span></div>
     </div>
 
-    <div class="vitrine">
-      <div class="placa">
-        <img src="marca/juris-elite-horizontal-negativo.png" alt="Juris Elite" width="2003" height="426">
-        <p class="frase">Não vendemos mais conteúdo.<br>Vendemos <em>direção</em>.</p>
-        <p class="nota">Conteúdo nacional não falta a ninguém. Falta saber o que
-          estudar primeiro, por quanto tempo e quando revisar. E falta o material
-          da sua cidade, que plataforma nenhuma produz.</p>
+    <div class="arte" role="img" aria-label="Caderno de questões da Juris Elite">
+      <div class="orbita" aria-hidden="true"></div>
+      <div class="orbita orbita-2" aria-hidden="true"></div>
+      <div class="arte-indice" aria-hidden="true">JURIS ELITE<br><span>CONHECIMENTO EM MOVIMENTO</span></div>
+      <div class="caderno" aria-hidden="true">
+        <div class="lombada"></div>
+        <div class="capa">
+          <img src="marca/juris-elite-horizontal-negativo.png" alt="" width="2003" height="426">
+          <div class="risco"></div>
+          <p class="selo">PREPARAÇÃO COM DIREÇÃO</p>
+          <p class="frase">O conhecimento<br>é o começo.<br><em>O método<br>é o caminho.</em></p>
+          <div class="rodape">
+            <span>CADERNO DE QUESTÕES</span>
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10"></path><path d="M7 17 17 7"></path></svg>
+          </div>
+          <div class="curva"></div>
+          <div class="curva curva-2"></div>
+        </div>
       </div>
+      <div class="nota-flutua" aria-hidden="true">
+        <span class="icone-nota">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+        </span>
+        <p>Seu objetivo.<br><b>Uma direção.</b></p>
+      </div>
+      <div class="arte-rodape" aria-hidden="true">01 / UMA NOVA FORMA DE SE PREPARAR</div>
     </div>
   </div>
 </section>
+
+<div class="faixa-lema">
+  <div class="wrap">
+    <span>CONHECIMENTO QUE PREPARA.</span>
+    <span class="losango" aria-hidden="true">&#10022;</span>
+    <span>ESTRATÉGIA QUE APROVA.</span>
+    <span class="fim" aria-hidden="true">JURIS ELITE</span>
+  </div>
+</div>
 
 <!-- MÉTODO -->
 <section class="faixa" id="metodo">
@@ -354,7 +510,7 @@ footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
 </section>
 
 <!-- PROFESSORES -->
-<section class="faixa escuro">
+<section class="faixa escuro" id="professores">
   <div class="wrap">
     <div class="rot">Quem ensina</div>
     <h2>Dois juristas que fizeram o caminho</h2>
@@ -428,5 +584,19 @@ footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
   </div>
 </footer>
 
+<script>
+(function(){
+  var b=document.getElementById('abre-menu'), m=document.getElementById('menu');
+  if(!b||!m) return;
+  function alterna(abrir){
+    m.classList.toggle('aberto', abrir);
+    b.setAttribute('aria-expanded', abrir ? 'true' : 'false');
+    b.setAttribute('aria-label', abrir ? 'Fechar menu' : 'Abrir menu');
+  }
+  b.addEventListener('click', function(){ alterna(!m.classList.contains('aberto')); });
+  m.addEventListener('click', function(e){ if(e.target.tagName==='A') alterna(false); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') alterna(false); });
+})();
+</script>
 </body>
 </html>
