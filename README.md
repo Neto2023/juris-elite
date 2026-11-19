@@ -100,8 +100,40 @@ Instalação na VPS, variáveis de ambiente e operação do dia a dia estão em
 
 ## Estado
 
-Em desenvolvimento. A automação roda em VPS, a landing ainda não foi publicada,
-e a instância de WhatsApp ainda não foi conectada à Evolution API.
+> **Último registro:** 18 de novembro de 2026. Atendimento de WhatsApp no ar,
+> landing publicada, funil com o grupo como porta de entrada.
+
+Em operação assistida. A automação roda em VPS, a landing está publicada no
+GitHub Pages e o WhatsApp está conectado à Evolution API, atendendo candidatos
+reais. Falta apontar o domínio próprio e trocar as credenciais expostas.
+
+### Últimas mudanças
+
+**18/11/2026 - Trava do convite por frente.** O convite do grupo virou o
+primeiro passo do atendimento, e isso abriu um buraco: quem chegasse
+perguntando de OAB receberia convite de um grupo da Guarda antes de ser
+ouvido. O agente agora só convida quem veio pela Guarda de Marabá; as outras
+frentes são acolhidas e escaladas para um professor. Tocado:
+`automacao/src/agente.js` (prompt e descrição de `convidar_para_grupo`).
+Validado com `src/validar-ferramentas.js` e `/health`.
+
+**18/11/2026 - O atendente fala primeiro, e com ritmo de gente.** As
+ferramentas deixaram de enviar na hora em que são chamadas: agora enfileiram
+em `pendentes`, e o servidor solta link, PDF e Pix só depois da fala do
+agente. Junto, `espera()` e `digitando()` em `automacao/src/server.js`, com
+pausa proporcional ao tamanho do texto. Tocado: `agente.js`, `server.js`.
+
+**18/11/2026 - O grupo virou a porta de entrada.** Quem se cadastra na landing
+recebe o convite do grupo, e o Mapa de Pontos fica na descrição do grupo,
+porque o WhatsApp esconde o histórico de quem entra depois. O PDF direto
+passou a ser exceção, para quem recusa grupo.
+
+**18/11/2026 - Schema que derrubava o atendimento.** `registrar_interesse`
+declarava `type: [string,null]` junto com um `enum` de strings, o que a
+API recusa sob `strict: true`. Não falhava no boot nem nos testes: falhava no
+meio da primeira conversa, e o candidato ficava sem resposta. Corrigido com
+`anyOf`, e nasceu `src/validar-ferramentas.js` para pegar isso sem gastar
+conversa real.
 
 ## Licença e avisos
 
