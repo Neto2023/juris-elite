@@ -115,7 +115,13 @@ input[type=text]:focus,textarea:focus,select:focus{
   padding:12px var(--gut-dir) calc(12px + env(safe-area-inset-bottom,0px)) var(--gut);
   box-shadow:0 -6px 24px rgba(16,40,63,.08);
 }
-.barra .wrap{display:flex;align-items:center;gap:14px}
+.barra .wrap{display:flex;align-items:center;gap:12px}
+.medida{flex:1;min-width:0;display:flex;align-items:center;gap:10px}
+.bt-barra{
+  flex:none;background:var(--verde);color:#fff;text-decoration:none;
+  font-weight:600;font-size:15px;border-radius:9px;padding:11px 20px;white-space:nowrap;
+}
+.bt-barra:active{transform:translateY(1px)}
 .trilho{flex:1;min-width:0;height:7px;background:var(--linha);border-radius:999px;overflow:hidden}
 .trilho i{display:block;height:100%;width:0;background:var(--ouro);transition:width .25s ease}
 .conta{font-size:13px;color:var(--tinta-suave);font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -153,7 +159,7 @@ input[type=text]:focus,textarea:focus,select:focus{
     <h1>O que o atendimento precisa saber</h1>
     <p>Doutor, o atendente automático do WhatsApp só fala o que estiver escrito aqui. Tudo que ele não sabe, ele devolve para a equipe responder na mão.</p>
     <p>São perguntas curtas, quase todas de um toque. As marcadas com <strong>★</strong> são as que estão travando o atendimento agora. O que o senhor não souber ainda, pode deixar em branco.</p>
-    <p>No fim, um botão monta tudo e abre o WhatsApp na conversa com o Abrahão, com o relatório pronto. É só apertar enviar.</p>
+    <p>O botão verde <strong>Enviar</strong>, ali embaixo na barra, está disponível o tempo todo: ele monta o relatório e abre o WhatsApp na conversa com o Abrahão, com tudo escrito. É só apertar enviar lá.</p>
   </div>
 </header>
 
@@ -452,8 +458,11 @@ input[type=text]:focus,textarea:focus,select:focus{
 
 <div class="barra">
   <div class="wrap">
-    <div class="trilho"><i id="trilho"></i></div>
-    <span class="conta" id="conta">0 de 31</span>
+    <div class="medida">
+      <div class="trilho"><i id="trilho"></i></div>
+      <span class="conta" id="conta">0 de 31</span>
+    </div>
+    <a class="bt-barra" id="enviar-barra" href="#">Enviar</a>
   </div>
 </div>
 
@@ -548,9 +557,10 @@ function atualizar() {
   guardar();
   progresso();
   var texto = encodeURIComponent(relatorio());
-  document.getElementById("enviar").href =
-    DESTINO ? "https://wa.me/" + DESTINO + "?text=" + texto
-            : "https://wa.me/?text=" + texto;
+  var alvo = DESTINO ? "https://wa.me/" + DESTINO + "?text=" + texto
+                     : "https://wa.me/?text=" + texto;
+  document.getElementById("enviar").href = alvo;
+  document.getElementById("enviar-barra").href = alvo;
 }
 
 document.addEventListener("input", atualizar);
