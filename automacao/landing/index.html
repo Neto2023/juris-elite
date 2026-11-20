@@ -102,7 +102,10 @@ p{margin:0 0 16px;max-width:66ch}
   .abre-menu{display:flex}
   .menu{
     display:none;position:absolute;top:79px;
-    left:calc(var(--gut) * -1);right:calc(var(--gut-dir) * -1);
+    /* A caixa de referência de um absoluto é a padding box do .topo, que JÁ
+       inclui a margem lateral. Puxar pela margem de novo somava duas vezes e
+       jogava o menu 40px além da tela, com barra de rolagem horizontal. */
+    left:0;right:0;
     background:var(--papel-claro);padding:24px var(--gut-dir) 24px var(--gut);
     border-bottom:1px solid var(--linha);box-shadow:0 15px 20px rgba(16,40,63,.08);
   }
