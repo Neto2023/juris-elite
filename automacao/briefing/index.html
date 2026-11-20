@@ -1,0 +1,600 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Juris Elite · Briefing do atendimento</title>
+<meta name="description" content="As respostas que o atendimento automático da Juris Elite precisa para parar de chamar a equipe a toda hora.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../landing/marca/juris-elite-icone-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="../landing/marca/juris-elite-icone-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Libre+Caslon+Display&display=swap">
+
+<style>
+/* =====================================================================
+   JURIS ELITE / BRIEFING DO ATENDIMENTO
+   Formulário para o Dr. Walter responder no celular. Não tem servidor:
+   as respostas ficam no aparelho dele e viram uma mensagem de WhatsApp
+   pronta para enviar. Mesma paleta e tipografia da página da casa.
+   ===================================================================== */
+:root{
+  --papel:#F4F0E8; --papel-claro:#FBF9F5; --branco:#FFFFFF;
+  --marinho:#10283F; --marinho-fundo:#0A1A2A; --marinho-claro:#1B3F61;
+  --ouro:#B89A63; --ouro-claro:#D4BC8E; --ouro-texto:#7B6338;
+  --tinta:#24282C; --tinta-suave:#55606B; --linha:#E3DCCD;
+  --verde:#1E7A4D;
+  --display:"Libre Caslon Display",Georgia,"Times New Roman",serif;
+  --corpo:"DM Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --gut:max(20px,env(safe-area-inset-left,0px));
+  --gut-dir:max(20px,env(safe-area-inset-right,0px));
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--papel-claro);color:var(--tinta);
+  font-family:var(--corpo);font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:calc(96px + env(safe-area-inset-bottom,0px));
+}
+img{max-width:100%;height:auto;display:block}
+
+/* ---------- topo ---------- */
+.capa{
+  background:var(--marinho-fundo);color:var(--papel);
+  padding-block:clamp(34px,7vw,56px);
+  padding-left:var(--gut);padding-right:var(--gut-dir);
+  padding-top:calc(clamp(34px,7vw,56px) + env(safe-area-inset-top,0px));
+}
+.wrap{max-width:720px;margin:0 auto}
+.capa img{width:170px;margin-bottom:26px}
+.capa h1{
+  font-family:var(--display);font-weight:400;color:var(--papel);
+  font-size:clamp(38px,8vw,54px);line-height:1.02;letter-spacing:-.025em;
+  margin:0 0 16px;text-wrap:balance;
+}
+.capa p{color:#C9D3DD;margin:0 0 12px;font-size:15.5px;max-width:52ch}
+.capa strong{color:var(--ouro-claro);font-weight:600}
+
+/* ---------- corpo ---------- */
+main{padding-left:var(--gut);padding-right:var(--gut-dir);padding-block:30px}
+.bloco{
+  background:var(--branco);border:1px solid var(--linha);border-radius:14px;
+  padding:22px 20px 8px;margin-bottom:20px;
+}
+.bloco > h2{
+  font-family:var(--display);font-weight:400;color:var(--marinho);
+  font-size:26px;line-height:1.1;letter-spacing:-.015em;margin:0 0 4px;
+}
+.bloco > .sub{
+  font-size:11px;font-weight:600;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--ouro-texto);margin:0 0 20px;
+}
+.q{padding:16px 0;border-top:1px solid var(--linha)}
+.q:first-of-type{border-top:0;padding-top:4px}
+.q > .rot{display:block;font-weight:500;color:var(--marinho);margin-bottom:10px;font-size:16px}
+.q > .rot .n{color:var(--ouro-texto);font-weight:600;margin-right:7px;font-variant-numeric:tabular-nums}
+.q > .rot .star{color:var(--ouro);margin-left:5px}
+.q > .dica{display:block;font-size:13.5px;color:var(--tinta-suave);margin:-6px 0 10px}
+
+input[type=text],textarea,select{
+  width:100%;font:inherit;font-size:16px;color:var(--tinta);
+  background:var(--papel-claro);border:1px solid var(--linha);border-radius:9px;
+  padding:12px 13px;appearance:none;
+}
+textarea{min-height:84px;resize:vertical;line-height:1.5}
+select{
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%2355606B' stroke-width='1.6'/></svg>");
+  background-repeat:no-repeat;background-position:right 13px center;background-size:12px;
+  padding-right:36px;
+}
+input[type=text]:focus,textarea:focus,select:focus{
+  outline:none;border-color:var(--ouro);background:var(--branco);
+  box-shadow:0 0 0 3px rgba(184,154,99,.18);
+}
+
+/* chips de escolha */
+.opcoes{display:flex;flex-wrap:wrap;gap:8px}
+.opcoes label{
+  position:relative;display:inline-flex;align-items:center;
+  border:1px solid var(--linha);background:var(--papel-claro);
+  border-radius:999px;padding:9px 15px;font-size:14.5px;cursor:pointer;
+  line-height:1.3;
+}
+.opcoes input{position:absolute;opacity:0;pointer-events:none}
+.opcoes label:has(input:checked){
+  background:var(--marinho);border-color:var(--marinho);color:var(--papel);font-weight:500;
+}
+.opcoes label:has(input:focus-visible){box-shadow:0 0 0 3px rgba(184,154,99,.35)}
+
+/* ---------- barra de progresso fixa ---------- */
+.barra{
+  position:fixed;left:0;right:0;bottom:0;z-index:20;
+  background:var(--branco);border-top:1px solid var(--linha);
+  padding:12px var(--gut-dir) calc(12px + env(safe-area-inset-bottom,0px)) var(--gut);
+  box-shadow:0 -6px 24px rgba(16,40,63,.08);
+}
+.barra .wrap{display:flex;align-items:center;gap:14px}
+.trilho{flex:1;min-width:0;height:7px;background:var(--linha);border-radius:999px;overflow:hidden}
+.trilho i{display:block;height:100%;width:0;background:var(--ouro);transition:width .25s ease}
+.conta{font-size:13px;color:var(--tinta-suave);font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- botões ---------- */
+.acoes{margin-top:8px}
+.bt{
+  display:block;width:100%;text-align:center;font:inherit;font-size:16.5px;font-weight:600;
+  border-radius:11px;padding:16px 18px;border:1px solid transparent;cursor:pointer;
+  text-decoration:none;margin-bottom:10px;
+}
+.bt-zap{background:var(--verde);color:#fff}
+.bt-2{background:var(--branco);color:var(--marinho);border-color:var(--linha);font-weight:500}
+.bt:active{transform:translateY(1px)}
+.aviso{
+  font-size:14px;color:var(--tinta-suave);margin:16px 0 0;
+  background:var(--papel);border-left:3px solid var(--ouro);padding:12px 14px;border-radius:0 8px 8px 0;
+}
+.feito{color:var(--verde);font-weight:600}
+.pe{
+  padding:28px var(--gut-dir) 10px var(--gut);text-align:center;
+  font-size:12.5px;color:var(--tinta-suave);
+}
+@media(max-width:420px){
+  .bloco{padding:20px 16px 6px;border-radius:12px}
+  .bloco > h2{font-size:23px}
+}
+</style>
+</head>
+<body>
+
+<header class="capa">
+  <div class="wrap">
+    <img src="../landing/marca/juris-elite-horizontal-negativo.png" alt="Juris Elite">
+    <h1>O que o atendimento precisa saber</h1>
+    <p>Doutor, o atendente automático do WhatsApp só fala o que estiver escrito aqui. Tudo que ele não sabe, ele devolve para a equipe responder na mão.</p>
+    <p>São perguntas curtas, quase todas de um toque. As marcadas com <strong>★</strong> são as que estão travando o atendimento agora. O que o senhor não souber ainda, pode deixar em branco.</p>
+    <p>No fim, um botão monta tudo e abre o WhatsApp com o relatório pronto para enviar.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="bloco" data-titulo="QUEM RESPONDEU">
+    <h2>Antes de começar</h2>
+    <p class="sub">Para eu saber de quem veio</p>
+    <div class="q" data-rotulo="Quem respondeu">
+      <span class="rot">Quem está respondendo?</span>
+      <div class="opcoes">
+        <label><input type="radio" name="quem" value="Dr. Walter Ruiz"> Dr. Walter Ruiz</label>
+        <label><input type="radio" name="quem" value="Dr. Diego Souza"> Dr. Diego Souza</label>
+        <label><input type="radio" name="quem" value="Os dois juntos"> Os dois juntos</label>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloco" data-titulo="PASTAS DE LEGISLACAO (R$ 9,99)">
+    <h2>Legislação por Pastas</h2>
+    <p class="sub">Com o banco de questões Fadesp · R$ 9,99</p>
+
+    <div class="q" data-rotulo="Como o aluno recebe">
+      <span class="rot"><span class="n">1</span>Como o aluno recebe o material?<span class="star">★</span></span>
+      <div class="opcoes">
+        <label><input type="radio" name="q1" value="Link do Google Drive"> Link do Drive</label>
+        <label><input type="radio" name="q1" value="PDF enviado no WhatsApp"> PDF no WhatsApp</label>
+        <label><input type="radio" name="q1" value="Area de membros"> Área de membros</label>
+        <label><input type="radio" name="q1" value="Grupo exclusivo"> Grupo exclusivo</label>
+        <label><input type="radio" name="q1" value="Outro jeito"> Outro</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Formato">
+      <span class="rot"><span class="n">2</span>É digital ou impresso?<span class="star">★</span></span>
+      <div class="opcoes">
+        <label><input type="radio" name="q2" value="PDF para baixar"> PDF para baixar</label>
+        <label><input type="radio" name="q2" value="Impresso"> Impresso</label>
+        <label><input type="radio" name="q2" value="Os dois"> Os dois</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Quantas questoes">
+      <span class="rot"><span class="n">3</span>Quantas questões tem o banco?</span>
+      <input type="text" name="q3" inputmode="numeric" placeholder="Ex.: 300">
+    </div>
+
+    <div class="q" data-rotulo="Questoes comentadas">
+      <span class="rot"><span class="n">4</span>As questões são comentadas?</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q4" value="Sim, todas"> Sim, todas</label>
+        <label><input type="radio" name="q4" value="Algumas"> Algumas</label>
+        <label><input type="radio" name="q4" value="Nao"> Não</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Materias cobertas">
+      <span class="rot"><span class="n">5</span>Cobre quais matérias?</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q5" value="Todas as materias do edital"> Todas do edital</label>
+        <label><input type="radio" name="q5" value="So as de direito"> Só as de direito</label>
+        <label><input type="radio" name="q5" value="Outro recorte"> Outro recorte</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Tempo de acesso">
+      <span class="rot"><span class="n">6</span>Por quanto tempo o aluno tem acesso?</span>
+      <input type="text" name="q6" placeholder="Ex.: para sempre, ou até a data da prova">
+    </div>
+
+    <div class="q" data-rotulo="Cobranca">
+      <span class="rot"><span class="n">7</span>Os R$ 9,99 são pagamento único ou mensal?<span class="star">★</span></span>
+      <div class="opcoes">
+        <label><input type="radio" name="q7" value="Pagamento unico"> Pagamento único</label>
+        <label><input type="radio" name="q7" value="Mensal"> Mensal</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Observacoes das pastas">
+      <span class="rot">Quer acrescentar alguma coisa sobre as pastas?</span>
+      <textarea name="obs1" placeholder="Opcional"></textarea>
+    </div>
+  </section>
+
+  <section class="bloco" data-titulo="MENTORIA (R$ 99,99)">
+    <h2>Mentoria de Organização de Estudos</h2>
+    <p class="sub">R$ 99,99</p>
+
+    <div class="q" data-rotulo="Presencial ou online">
+      <span class="rot"><span class="n">8</span>É presencial ou online?<span class="star">★</span></span>
+      <span class="dica">Foi essa pergunta que travou o atendimento no primeiro teste.</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q8" value="Online"> Online</label>
+        <label><input type="radio" name="q8" value="Presencial"> Presencial</label>
+        <label><input type="radio" name="q8" value="Os dois, a pessoa escolhe"> Os dois</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Por onde acontece">
+      <span class="rot"><span class="n">9</span>Se for online, acontece por onde?<span class="star">★</span></span>
+      <div class="opcoes">
+        <label><input type="radio" name="q9" value="WhatsApp"> WhatsApp</label>
+        <label><input type="radio" name="q9" value="Chamada de video"> Chamada de vídeo</label>
+        <label><input type="radio" name="q9" value="Grupo fechado"> Grupo fechado</label>
+        <label><input type="radio" name="q9" value="Mistura de tudo"> Mistura de tudo</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Individual ou turma">
+      <span class="rot"><span class="n">10</span>É individual ou em turma?<span class="star">★</span></span>
+      <div class="opcoes">
+        <label><input type="radio" name="q10" value="Individual"> Individual</label>
+        <label><input type="radio" name="q10" value="Em turma"> Em turma</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Encontros">
+      <span class="rot"><span class="n">11</span>Quantos encontros, de quanto tempo e com que frequência?</span>
+      <input type="text" name="q11" placeholder="Ex.: 4 encontros de 1 hora, um por semana">
+    </div>
+
+    <div class="q" data-rotulo="O que o aluno leva">
+      <span class="rot"><span class="n">12</span>O aluno sai com o quê na mão?</span>
+      <span class="dica">Cronograma escrito, planilha, plano em PDF, nada disso.</span>
+      <input type="text" name="q12" placeholder="Ex.: um cronograma em PDF, feito para ele">
+    </div>
+
+    <div class="q" data-rotulo="Quem atende">
+      <span class="rot"><span class="n">13</span>Quem atende na mentoria?</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q13" value="Dr. Walter"> Dr. Walter</label>
+        <label><input type="radio" name="q13" value="Dr. Diego"> Dr. Diego</label>
+        <label><input type="radio" name="q13" value="Os dois"> Os dois</label>
+        <label><input type="radio" name="q13" value="Depende do caso"> Depende</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Cobranca">
+      <span class="rot"><span class="n">14</span>Os R$ 99,99 são únicos ou mensais?<span class="star">★</span></span>
+      <div class="opcoes">
+        <label><input type="radio" name="q14" value="Pagamento unico"> Pagamento único</label>
+        <label><input type="radio" name="q14" value="Mensal"> Mensal</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Duracao do acompanhamento">
+      <span class="rot"><span class="n">15</span>O acompanhamento dura quanto tempo?</span>
+      <input type="text" name="q15" placeholder="Ex.: um mês, ou até a prova">
+    </div>
+
+    <div class="q" data-rotulo="Inclui as pastas">
+      <span class="rot"><span class="n">16</span>A mentoria já inclui as pastas de legislação?</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q16" value="Sim, ja inclui"> Sim, já inclui</label>
+        <label><input type="radio" name="q16" value="Nao, e a parte"> Não, é à parte</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Observacoes da mentoria">
+      <span class="rot">Quer acrescentar alguma coisa sobre a mentoria?</span>
+      <textarea name="obs2" placeholder="Opcional"></textarea>
+    </div>
+  </section>
+
+  <section class="bloco" data-titulo="DIAGNOSTICO GRATUITO">
+    <h2>Diagnóstico Gratuito de Rotina</h2>
+    <p class="sub">Item 3 do menu</p>
+
+    <div class="q" data-rotulo="O que e na pratica">
+      <span class="rot"><span class="n">17</span>Na prática, o que é?<span class="star">★</span></span>
+      <span class="dica">Hoje o atendente só anota o nome e chama a equipe, porque eu não sei o que é.</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q17" value="Uma conversa no WhatsApp"> Conversa no WhatsApp</label>
+        <label><input type="radio" name="q17" value="Uma ligacao ou chamada de video"> Ligação ou vídeo</label>
+        <label><input type="radio" name="q17" value="Um formulario que a pessoa preenche"> Um formulário</label>
+        <label><input type="radio" name="q17" value="Outra coisa"> Outra coisa</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Duracao">
+      <span class="rot"><span class="n">18</span>Quanto tempo leva?</span>
+      <input type="text" name="q18" placeholder="Ex.: uns 20 minutos">
+    </div>
+
+    <div class="q" data-rotulo="Quem aplica">
+      <span class="rot"><span class="n">19</span>Quem aplica o diagnóstico?</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q19" value="Dr. Walter"> Dr. Walter</label>
+        <label><input type="radio" name="q19" value="Dr. Diego"> Dr. Diego</label>
+        <label><input type="radio" name="q19" value="Os dois"> Os dois</label>
+        <label><input type="radio" name="q19" value="A equipe de atendimento"> A equipe</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Como agenda">
+      <span class="rot"><span class="n">20</span>Como o candidato agenda?</span>
+      <input type="text" name="q20" placeholder="Ex.: a equipe chama, ou tem um link">
+    </div>
+
+    <div class="q" data-rotulo="O que o atendente ja pode perguntar">
+      <span class="rot"><span class="n">21</span>O atendente pode já perguntar alguma coisa antes de passar para vocês?</span>
+      <span class="dica">Por exemplo: quantas horas estuda hoje, se trabalha, há quanto tempo estuda. Escreva as perguntas que ajudariam vocês.</span>
+      <textarea name="q21" placeholder="Opcional"></textarea>
+    </div>
+  </section>
+
+  <section class="bloco" data-titulo="PAGAMENTO">
+    <h2>Pagamento</h2>
+    <p class="sub">Pix, comprovante e liberação</p>
+
+    <div class="q" data-rotulo="O atendente pode mandar o Pix">
+      <span class="rot"><span class="n">22</span>O atendente pode mandar a chave Pix sozinho?<span class="star">★</span></span>
+      <span class="dica">Hoje ele manda nos dois produtos, com o valor escrito junto.</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q22" value="Pode, nos dois produtos"> Pode, nos dois</label>
+        <label><input type="radio" name="q22" value="So nas pastas de R$ 9,99"> Só nas pastas</label>
+        <label><input type="radio" name="q22" value="Nao, so a equipe manda"> Só a equipe</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Favorecido do Pix">
+      <span class="rot"><span class="n">23</span>A chave Pix está em nome de quem?</span>
+      <span class="dica">É o nome que aparece na tela do banco da pessoa. Se não for Juris Elite, ela estranha.</span>
+      <input type="text" name="q23" placeholder="Nome que aparece no banco">
+    </div>
+
+    <div class="q" data-rotulo="Quem confere o comprovante">
+      <span class="rot"><span class="n">24</span>Quem confere o comprovante?</span>
+      <input type="text" name="q24" placeholder="Ex.: a Bruna, durante o dia">
+    </div>
+
+    <div class="q" data-rotulo="Prazo de liberacao">
+      <span class="rot"><span class="n">25</span>Depois do pagamento, em quanto tempo o material é liberado?</span>
+      <input type="text" name="q25" placeholder="Ex.: na hora, ou em até 2 horas">
+    </div>
+
+    <div class="q" data-rotulo="Outras formas de pagamento">
+      <span class="rot"><span class="n">26</span>Tem outra forma de pagamento além do Pix?</span>
+      <input type="text" name="q26" placeholder="Ex.: cartão em 3x, ou só Pix mesmo">
+    </div>
+  </section>
+
+  <section class="bloco" data-titulo="ALCANCE E HORARIO">
+    <h2>Alcance e horário</h2>
+    <p class="sub">Quem a casa atende, e quando</p>
+
+    <div class="q" data-rotulo="Quais concursos">
+      <span class="rot"><span class="n">27</span>A Juris Elite atende só a Guarda de Marabá?<span class="star">★</span></span>
+      <span class="dica">Já começou a chegar gente da OAB pelo Instagram, e hoje o atendente só conhece a Guarda.</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q27" value="So a Guarda de Maraba"> Só a Guarda</label>
+        <label><input type="radio" name="q27" value="Guarda e OAB"> Guarda e OAB</label>
+        <label><input type="radio" name="q27" value="Qualquer concurso juridico"> Qualquer concurso</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Grupo gratuito">
+      <span class="rot"><span class="n">28</span>O grupo gratuito é só dos candidatos da Guarda?</span>
+      <div class="opcoes">
+        <label><input type="radio" name="q28" value="Sim, so da Guarda"> Sim, só da Guarda</label>
+        <label><input type="radio" name="q28" value="Nao, pode entrar qualquer um"> Não, pode qualquer um</label>
+      </div>
+    </div>
+
+    <div class="q" data-rotulo="Horario da equipe">
+      <span class="rot"><span class="n">29</span>Qual o horário de atendimento da equipe?</span>
+      <span class="dica">Hoje o atendente promete que alguém fala "em instantes", inclusive às dez da noite.</span>
+      <input type="text" name="q29" placeholder="Ex.: de segunda a sexta, 8h às 18h">
+    </div>
+
+    <div class="q" data-rotulo="Fora do horario">
+      <span class="rot"><span class="n">30</span>Fora desse horário, o que ele deve dizer?</span>
+      <input type="text" name="q30" placeholder="Ex.: a equipe responde amanhã de manhã">
+    </div>
+  </section>
+
+  <section class="bloco" data-titulo="O QUE ELE ANDA ERRANDO">
+    <h2>Por último</h2>
+    <p class="sub">O que o senhor viu de errado</p>
+    <div class="q" data-rotulo="Erros que o senhor viu">
+      <span class="rot"><span class="n">31</span>Tem alguma coisa que o atendente anda falando errado?</span>
+      <span class="dica">Qualquer coisa que o senhor leu e pensou "não é assim que se fala". É o que mais me ajuda.</span>
+      <textarea name="q31" placeholder="Opcional"></textarea>
+    </div>
+  </section>
+
+  <div class="acoes">
+    <a class="bt bt-zap" id="enviar" href="#">Enviar o relatório no WhatsApp</a>
+    <button class="bt bt-2" id="copiar" type="button">Copiar o texto</button>
+    <button class="bt bt-2" id="baixar" type="button">Baixar como arquivo</button>
+    <p class="aviso" id="aviso">O que o senhor digita fica guardado neste aparelho, então pode fechar e voltar depois. Nada é enviado antes de o senhor apertar o botão e confirmar no WhatsApp.</p>
+  </div>
+
+  <p class="pe">Juris Elite · briefing do atendimento automático</p>
+</main>
+
+<div class="barra">
+  <div class="wrap">
+    <div class="trilho"><i id="trilho"></i></div>
+    <span class="conta" id="conta">0 de 31</span>
+  </div>
+</div>
+
+<script>
+// ---------------------------------------------------------------------
+// Para onde vai o relatorio.
+// Vazio: o WhatsApp abre a lista de contatos e o Dr. Walter escolhe quem
+// recebe. Com um numero aqui (so digitos, com o 55 na frente) o envio vai
+// direto, mas o numero fica visivel para qualquer um que abrir esta pagina,
+// porque o repositorio e publico.
+// ---------------------------------------------------------------------
+var DESTINO = "";
+
+var CHAVE = "juris-elite-briefing";
+var campos = Array.prototype.slice.call(document.querySelectorAll(".q"));
+var numeradas = campos.filter(function (q) { return q.querySelector(".n"); });
+
+function controles(q) {
+  return Array.prototype.slice.call(q.querySelectorAll("input, textarea, select"));
+}
+
+function valorDe(q) {
+  var marcado = q.querySelector("input[type=radio]:checked");
+  if (marcado) return marcado.value;
+  var livre = q.querySelector("input[type=text], textarea, select");
+  if (livre && livre.value.trim()) return livre.value.trim();
+  return "";
+}
+
+// ---- guarda e recupera o que foi digitado, sem depender de servidor ----
+function guardar() {
+  var dados = {};
+  campos.forEach(function (q, i) {
+    var v = valorDe(q);
+    if (v) dados["c" + i] = v;
+  });
+  try { localStorage.setItem(CHAVE, JSON.stringify(dados)); } catch (e) {}
+}
+
+function recuperar() {
+  var dados;
+  try { dados = JSON.parse(localStorage.getItem(CHAVE) || "{}"); } catch (e) { return; }
+  campos.forEach(function (q, i) {
+    var v = dados["c" + i];
+    if (!v) return;
+    var radio = q.querySelector('input[type=radio][value="' + v.replace(/"/g, "") + '"]');
+    if (radio) { radio.checked = true; return; }
+    var livre = q.querySelector("input[type=text], textarea, select");
+    if (livre) livre.value = v;
+  });
+}
+
+function progresso() {
+  var feitas = numeradas.filter(function (q) { return valorDe(q); }).length;
+  var total = numeradas.length;
+  document.getElementById("trilho").style.width = (feitas / total * 100) + "%";
+  var conta = document.getElementById("conta");
+  conta.textContent = feitas + " de " + total;
+  conta.className = "conta" + (feitas === total ? " feito" : "");
+}
+
+// ---- o relatorio: curto, com rotulo em vez da pergunta inteira ----
+function relatorio() {
+  var hoje = new Date().toLocaleDateString("pt-BR");
+  var linhas = ["*BRIEFING DO ATENDIMENTO - JURIS ELITE*", hoje, ""];
+  var faltando = [];
+
+  Array.prototype.forEach.call(document.querySelectorAll(".bloco"), function (bloco) {
+    var partes = [];
+    Array.prototype.forEach.call(bloco.querySelectorAll(".q"), function (q) {
+      var v = valorDe(q);
+      if (v) {
+        partes.push(q.dataset.rotulo + ": " + v);
+      } else {
+        var n = q.querySelector(".n");
+        if (n) faltando.push(n.textContent);
+      }
+    });
+    if (partes.length) {
+      linhas.push("*" + bloco.dataset.titulo + "*");
+      linhas = linhas.concat(partes);
+      linhas.push("");
+    }
+  });
+
+  if (faltando.length) {
+    linhas.push("*Ficou sem responder*");
+    linhas.push("Perguntas " + faltando.join(", ") + ".");
+    linhas.push("");
+  }
+  return linhas.join("\n").trim();
+}
+
+function atualizar() {
+  guardar();
+  progresso();
+  var texto = encodeURIComponent(relatorio());
+  document.getElementById("enviar").href =
+    DESTINO ? "https://wa.me/" + DESTINO + "?text=" + texto
+            : "https://wa.me/?text=" + texto;
+}
+
+document.addEventListener("input", atualizar);
+document.addEventListener("change", atualizar);
+
+document.getElementById("copiar").addEventListener("click", function () {
+  var texto = relatorio();
+  var aviso = document.getElementById("aviso");
+  function deuCerto() { aviso.textContent = "Texto copiado. Agora e so colar no WhatsApp."; }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(texto).then(deuCerto, function () { selecionar(texto); });
+  } else {
+    selecionar(texto);
+  }
+});
+
+function selecionar(texto) {
+  var area = document.createElement("textarea");
+  area.value = texto;
+  area.style.position = "fixed";
+  area.style.opacity = "0";
+  document.body.appendChild(area);
+  area.select();
+  try { document.execCommand("copy"); } catch (e) {}
+  document.body.removeChild(area);
+  document.getElementById("aviso").textContent = "Texto copiado. Agora e so colar no WhatsApp.";
+}
+
+document.getElementById("baixar").addEventListener("click", function () {
+  var blob = new Blob([relatorio()], { type: "text/plain;charset=utf-8" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "briefing-juris-elite.txt";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+});
+
+recuperar();
+atualizar();
+</script>
+</body>
+</html>
