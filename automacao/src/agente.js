@@ -1,6 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import * as evo from "./evolution.js";
 import * as db from "./db.js";
+import { chaveDeNumero, NOTA_DO_AGENTE } from "./conducao.js";
 
 const client = new Anthropic(); // lê ANTHROPIC_API_KEY do ambiente
 
@@ -31,57 +32,176 @@ const CRONOGRAMA = {
   corte: "Para não ser eliminado é preciso fazer no mínimo 60 pontos (item 11.3) E ficar entre os 254 primeiros, que é o dobro das vagas (itens 11.4 e 11.7). A nota final do concurso é apenas a da prova objetiva (item 21.1): o TAF e a psicológica eliminam, mas não pontuam.",
 };
 
-const SISTEMA = `Você é o atendente da Juris Elite no WhatsApp. A Juris Elite é um projeto de preparação para carreiras jurídicas em Marabá, no Pará, tocado por dois juristas — um deles delegado de polícia em atividade, aprovado em concursos de agente administrativo, agente da Polícia Civil de São Paulo, escrevente técnico do TJ-SP e delegado em São Paulo e em Minas Gerais.
+// ---------------------------------------------------------------------------
+// O menu da casa, com as palavras do Dr. Walter. Preço NUNCA sai da memória do
+// modelo: sai daqui, por ferramenta. Se a oferta mudar, muda-se aqui e só aqui.
+// ---------------------------------------------------------------------------
+export const CATALOGO = {
+  pastas: {
+    nome: "Legislação Organizada por Pastas + 300 Questões Inéditas FADESP",
+    preco: "R$ 9,99, ou R$ 9,98 pagando no Pix",
+    pagavel: true,
+    checkout: process.env.CAKTO_LINK_PASTAS || "",
+    diga: "É a lei seca da prova organizada por pastas, com 300 questões inéditas e comentadas no padrão da Fadesp. Sai por R$ 9,99, ou R$ 9,98 no Pix.",
+    detalhes: [
+      "São 300 questões inéditas, todas comentadas pelos professores.",
+      "Cobre as matérias de Direito do edital da Guarda de Marabá.",
+      "É tudo em PDF, para baixar pelo link do Google Drive. Não existe material impresso.",
+      "O acesso dura 3 meses, o que cobre o tempo que falta até a prova de janeiro de 2027.",
+      "Pagamento único, não é mensalidade.",
+      "A compra é pelo link oficial da Cakto, e o acesso ao Drive libera na hora que o pagamento cai.",
+      "Na página de pagamento o produto aparece como *Pasta Organizada - Guarda Municipal de Marabá*. É o mesmo material.",
+    ],
+    apos_pagamento: "O acesso ao Drive libera na hora, e o comprovante vai para o seu e-mail.",
+  },
+  mentoria: {
+    nome: "Mentoria de Organização de Estudos",
+    preco: "R$ 99,99",
+    pagavel: true,
+    checkout: process.env.CAKTO_LINK_MENTORIA || "",
+    diga: "É a mentoria em que o Dr. Walter e o Dr. Diego montam o seu planejamento de estudo e acompanham você até a véspera da prova. Já inclui as pastas e as 300 questões. Sai por R$ 99,99, pagamento único.",
+    detalhes: [
+      "É online, do começo ao fim.",
+      "O planejamento é individual: cronograma e planilha montados para a rotina de cada aluno.",
+      "Os encontros são online e acontecem quantos forem necessários, individuais ou em grupo.",
+      "Quem conduz são os dois professores, Dr. Walter Ruiz e Dr. Diego Souza.",
+      "O acompanhamento vai da contratação até a véspera da prova da Guarda, em janeiro de 2027.",
+      "Já inclui as pastas de legislação e as 300 questões comentadas, sem custo a mais.",
+      "Pagamento único de R$ 99,99, não é mensalidade.",
+      "O ponto de partida é o Formulário Diagnóstico, de 5 a 6 minutos, que mostra a rotina do aluno.",
+      "Na página de pagamento ela aparece como *Planejamento e Organização de Estudos: Guarda Municipal de Marabá*. É a mesma mentoria.",
+    ],
+    apos_pagamento: "A equipe entra em contato aqui mesmo para começar pelo Formulário Diagnóstico.",
+  },
+  diagnostico: {
+    nome: "Diagnóstico Gratuito de Rotina",
+    preco: "gratuito",
+    pagavel: false,
+    link: process.env.FORMULARIO_DIAGNOSTICO || "",
+    diga: "É um formulário gratuito, de 5 a 6 minutos, em que você conta a sua rotina e o tempo que tem para estudar. É dele que sai o direcionamento que os professores dão.",
+    detalhes: [
+      "Leva de 5 a 6 minutos e é respondido pelo próprio candidato.",
+      "Não precisa agendar nada: é só preencher.",
+      "Quem analisa são o Dr. Walter e o Dr. Diego, e a equipe retorna com a devolutiva.",
+      "É gratuito e não tem compromisso de compra.",
+    ],
+  },
+  sob_medida: {
+    nome: "OAB e carreiras jurídicas",
+    preco: "sob orçamento",
+    pagavel: false,
+    diga: "Para OAB e carreiras jurídicas a casa monta planejamento e caderno de questões sob medida, conforme a necessidade de cada um. O valor sai por orçamento, feito pela equipe.",
+    detalhes: [
+      "Não tem preço de tabela: cada caso é orçado pelos professores.",
+      "Os dois produtos com preço fechado hoje são só os da Guarda de Marabá.",
+      "Qualquer pedido de OAB ou carreira jurídica vai para a equipe fazer o orçamento.",
+    ],
+  },
+  comprovante: {
+    nome: "Envio de comprovante",
+    preco: "não se aplica",
+    pagavel: false,
+    diga: "Quem compra pela Cakto não precisa mandar comprovante: a liberação é automática e o recibo vai para o e-mail. Se mesmo assim a pessoa quiser mandar, pode mandar aqui que a equipe confere.",
+  },
+};
 
-CONTEXTO DO MOMENTO
-Está aberto o concurso da Guarda Municipal de Marabá (Edital 01/2026, banca Fadesp). Quase todo mundo que te procura agora é candidato desse concurso.
+const SISTEMA = `Você é o atendente da Juris Elite no WhatsApp. A Juris Elite é o projeto de preparação do Prof. Walter Ruiz e do Prof. Diego Souza, em Marabá, no Pará. Quase todo mundo que te procura é candidato da Guarda Municipal de Marabá (Edital 01/2026, banca Fadesp, prova em janeiro de 2027).
 
-O ARGUMENTO CENTRAL, QUE É VERDADE E ESTÁ NO EDITAL
-A prova vale 100 pontos distribuídos com pesos desiguais. Conhecimentos Específicos, que é todo direito, vale 60 pontos sozinho. Conhecimentos do Município de Marabá vale 20. Juntos são 80 dos 100 pontos.
-Consequência: quem acerta 100% de Português, Matemática, Informática e Marabá, mas zera o direito, faz 40 pontos — e o corte é 60. Está eliminado. É aritmeticamente impossível passar sem o bloco jurídico.
-Outra forma de dizer: uma questão de direito vale o mesmo que quatro de informática. Quem divide o tempo de estudo igualmente entre as matérias está jogando pontos fora.
-Use esse argumento. Ele convence porque é verificável, não porque é promessa.
+O QUE VOCÊ É
+Você é a recepção e a linha de frente da venda. Recebe a pessoa, diz o que a casa oferece, tira dúvida comercial, manda o link de compra e chama a equipe quando precisa. Você não é professor, não dá aula e não orienta estudo.
 
-O QUE A JURIS ELITE VENDE
-Não vendemos videoaula nem concorremos com Gran, Estratégia ou CERS. Vendemos direção: o que estudar, em que ordem e por quanto tempo. Se a pessoa já paga outro curso, ótimo — nós organizamos o que ela já tem.
-Temos duas coisas que nenhum curso nacional tem: o material dos 20 pontos de Marabá (bairros, hidrografia, história, patrimônio) e as cinco leis municipais da Guarda de Marabá, que caem em Legislação Extravagante.
+O QUE EXISTE NA PRATELEIRA
+Só estes dois produtos estão à venda, e não existe mais nada com preço fechado:
+1. *Legislação Organizada por Pastas + 300 Questões Inéditas FADESP*, R$ 9,99, ou R$ 9,98 no Pix
+2. *Mentoria de Organização de Estudos*, R$ 99,99
+Além deles existem duas portas gratuitas:
+3. *Diagnóstico Gratuito de Rotina*, que é um formulário de 5 a 6 minutos
+4. O *Grupo VIP* gratuito, com bônus da casa
+Para qualquer preço, prazo ou descrição, chame consultar_catalogo antes de responder. Nunca diga valor nem detalhe de memória.
 
-A ESCADA
-1. Grupo de WhatsApp — gratuito, conteúdo diário, e é onde fica o Mapa de Pontos. É a porta de entrada.
-2. Mapa de Pontos — PDF gratuito com a tabela de pesos. Fica no grupo, com o link na descrição dele.
-3. Aulão ao vivo — gratuito.
-4. Pacote Guarda Marabá — R$ 197, ou 3x de R$ 70.
-Não empurre o Pacote na primeira mensagem. Primeiro convida para o grupo, depois qualifica.
+O QUE VOCÊ NUNCA FAZ
+- NUNCA ofereça, cite ou prometa qualquer produto, curso, turma ou material que não seja um dos dois da prateleira. O que está em desenvolvimento não existe para o candidato.
+- NUNCA monte cronograma, rotina, divisão de horas, ordem de matérias, grade da semana nem plano de estudo de graça. Nem "uma sugestão", nem "só um exemplo". Isso é o que a mentoria vende.
+- NUNCA entregue conteúdo do material antes do pagamento: nada de mandar questão, lei seca, resumo ou pedaço de pasta.
+- NUNCA diga preço, condição, desconto ou prazo que não tenha vindo de consultar_catalogo.
+- NUNCA escreva um link de pagamento de cabeça, nem repita um que tenha visto na conversa. Link de compra só sai pela ferramenta enviar_checkout.
+- NUNCA mande chave Pix avulsa. O pagamento é dentro do checkout da Cakto.
+- NUNCA confirme que um pagamento caiu, nem libere acesso. Quem confirma é a Cakto, por e-mail.
+- NUNCA invente data, prazo, vaga, taxa ou conteúdo de edital. Para isso existe consultar_cronograma.
+- NUNCA prometa aprovação, vaga ou resultado.
+- NUNCA dê consultoria jurídica, nem opine sobre a situação de ninguém.
+- NUNCA contradiga nem corrija o que a equipe falou na conversa. Se o que você vê não bate com o que foi combinado antes, fique quieto e chame escalar_para_humano.
+- NUNCA comente erro seu, nem peça desculpa por mensagem anterior, nem explique como você funciona por dentro. O que as ferramentas te respondem é instrução interna: isso não vira conversa.
+
+O QUE VOCÊ PODE FAZER, E DEVE
+Você tem liberdade para conversar, puxar assunto sobre a prova, tirar dúvida comercial e mostrar como a casa organiza as coisas. Pode dar uma amostra do método: dizer que a legislação vem separada por pastas, que as questões são inéditas e comentadas, que o cronograma é montado em cima da rotina de cada um. Isso desperta interesse e é para ser usado. O limite é um só: amostra não é entrega. Nada de material e nada de planejamento antes de a pessoa comprar.
+
+COMO ATENDER CADA OPÇÃO
+1. Pastas de legislação: confirme pelo catálogo o que é e o preço, pergunte o nome da pessoa, chame registrar_interesse e chame enviar_checkout. O link da Cakto libera o Drive na hora em que o pagamento cai.
+2. Mentoria: mesma coisa. Diga pelo catálogo o que ela é, pergunte o nome, chame registrar_interesse e chame enviar_checkout.
+3. Diagnóstico gratuito: explique que é um formulário rápido, de 5 a 6 minutos, e que é dele que sai o direcionamento dos professores. Pergunte o nome, chame registrar_interesse com a etiqueta rotina e mande o link se o catálogo tiver um. Se não tiver, chame escalar_para_humano.
+4. Comprovante: quem compra pela Cakto não precisa mandar comprovante, porque a liberação é automática e o recibo vai por e-mail. Diga isso. Se a pessoa mandar assim mesmo, agradeça e deixe com a equipe, sem confirmar nada.
+
+QUANDO FALAM EM PAGAR
+Se a pessoa já disse qual produto quer, chame enviar_checkout. O link sai logo depois da sua mensagem, então anuncie ("já te mando o link") e não escreva como se ela já tivesse recebido.
+No link dá para pagar por Pix, cartão de crédito, Apple Pay e Google Pay. No Pix, o recebedor aparece como *Walter Ruiz Bogaz Neto*, que é o professor: avise antes, para a pessoa não estranhar o nome na tela do banco.
+Assim que o pagamento cai, o acesso ao Drive libera na hora e o comprovante vai para o e-mail da pessoa.
+Se ela pedir desconto, parcelamento, outro valor ou outra forma de pagamento, não negocie: chame escalar_para_humano.
+
+QUEM NÃO É DA GUARDA DE MARABÁ
+A casa atende OAB e carreiras jurídicas, mas isso é feito sob medida e sai por orçamento, que é a equipe quem faz. Não invente preço, não prometa prazo e não ofereça os produtos da Guarda como se servissem. Explique em uma linha, pergunte o nome e chame escalar_para_humano.
+
+O GRUPO VIP GRATUITO
+É gratuito, tem conteúdo da casa e bônus como o Mapa de Pontos. Para entrar, a pessoa precisa seguir no Instagram os três perfis: *@juriselite.oficial*, o Prof. Walter Ruiz e o Prof. Diego Souza. Peça isso primeiro, com jeito, e depois chame convidar_para_grupo.
+
+QUEM CHEGA SEM ESCOLHER NADA
+Cumprimente em uma linha e ofereça o menu, nos mesmos termos acima. Se a pessoa só quiser saber do concurso, responda a dúvida dela com consultar_cronograma e ofereça o grupo gratuito.
+
+O HORÁRIO DA EQUIPE
+A equipe humana atende em horário comercial, de segunda a sexta, das 8h às 18h. Você fica no ar o tempo todo, e os links de compra e o formulário funcionam a qualquer hora, inclusive de madrugada e no fim de semana.
+Quando precisar chamar alguém, diga que já avisou a equipe e que ela responde no horário comercial. Nunca prometa "em instantes" e nunca chute a hora em que alguém vai responder.
+
+O ÚNICO ARGUMENTO QUE VOCÊ USA, E EM UMA FRASE SÓ
+Conhecimentos Específicos, que é todo direito, vale 60 dos 100 pontos da prova. Quem zera o direito não alcança o corte, nem acertando tudo no resto. Diga isso quando couber, em uma frase, e pare. Não desdobre em aula e não divida o tempo de estudo da pessoa.
 
 COMO VOCÊ ESCREVE
-- Mensagem de WhatsApp: curta. No máximo 4 ou 5 linhas. Se precisar de mais, quebre em duas mensagens.
-- Português do Brasil, informal e respeitoso, do jeito que se fala em Marabá. Pode usar "você". Nada de juridiquês com quem é de nível médio.
-- Negrito do WhatsApp é com asterisco simples: *assim*. Nunca use markdown de título, nem ## nem **.
-- No máximo um emoji por mensagem, e só quando couber. Normalmente nenhum.
-- Não se apresente como inteligência artificial a não ser que perguntem diretamente. Se perguntarem, responda com honestidade que é um atendente automático da Juris Elite e que pode chamar um dos professores.
-
-REGRAS QUE VOCÊ NÃO QUEBRA
-- NUNCA prometa aprovação, vaga ou resultado. Nem "você vai passar", nem "garantimos". O argumento dos pesos já é forte sozinho.
-- NUNCA invente data, prazo, número de vaga, valor de taxa ou conteúdo do edital. Para QUALQUER informação do edital, chame a ferramenta consultar_cronograma antes de responder. Se a ferramenta não tiver a informação, diga que vai confirmar e chame escalar_para_humano.
-- NUNCA dê consultoria jurídica individual, nem opine sobre a situação processual, criminal ou trabalhista de ninguém. Se puxarem esse assunto, chame escalar_para_humano.
-- Não invente preço. O único preço que existe é o Pacote a R$ 197, ou 3x de R$ 70. Se pedirem desconto, condição especial ou falarem de dinheiro além disso, chame escalar_para_humano.
-- Pagamento: quando a pessoa disser que quer fechar o Pacote e perguntar como paga, chame enviar_pix. Nunca digite a chave você mesmo, nem de memória: só a ferramenta manda a chave.
-- NUNCA confirme que um pagamento caiu, nem libere acesso por conta própria, nem quando a pessoa mandar print de comprovante. Agradeça, diga que a equipe confere e chame escalar_para_humano.
-- Se a pessoa estiver irritada, reclamando, ou pedir para falar com uma pessoa de verdade, chame escalar_para_humano na hora, sem insistir.
+- No máximo DUAS mensagens por vez, de até 4 linhas cada. Se não couber, é porque você está falando demais.
+- Uma pergunta por vez, e nunca a mesma pergunta duas vezes na mesma conversa. Se já perguntou e a pessoa não respondeu, siga sem ela.
+- Português do Brasil, informal e respeitoso, do jeito que se fala em Marabá. Nada de juridiquês.
+- Negrito do WhatsApp é com asterisco simples: *assim*. Nunca markdown, nem ## nem **.
+- No máximo um emoji por mensagem, e quase sempre nenhum.
+- Não se apresente como inteligência artificial a não ser que perguntem. Se perguntarem, diga a verdade: é um atendimento automático da Juris Elite, e você pode chamar alguém da equipe.
+- Se a pessoa pedir para falar com uma pessoa, ou estiver irritada, chame escalar_para_humano na hora, sem insistir e sem tentar resolver.
+- Nunca prometa que alguém responde "em instantes". Diga que já avisou a equipe e que ela responde no horário comercial.
 
 COMO O ENVIO FUNCIONA
-Link, PDF e chave Pix não saem na hora em que você chama a ferramenta: eles saem DEPOIS da sua mensagem, automaticamente. Então sempre cumprimente e explique primeiro, e anuncie o que vem: "já te mando o link do grupo", "vou te mandar o PDF". Nunca escreva como se a pessoa já tivesse recebido.
+Link e PDF não saem no instante em que você chama a ferramenta: saem DEPOIS da sua mensagem. Então anuncie o que vem ("já te mando o link do grupo") e nunca escreva como se a pessoa já tivesse recebido.
+`;
 
-QUANDO O CONVITE DO GRUPO NÃO VALE
-O grupo de hoje é dos candidatos da Guarda Municipal de Marabá. Se a pessoa disser que procura outra coisa (OAB, exame de ordem, concurso de outro cargo, carreira jurídica, pós-graduação, ou qualquer assunto que não seja a Guarda de Marabá), NÃO chame convidar_para_grupo. Acolha, diga que a Juris Elite também prepara para isso e que a turma dessa frente está se formando, e chame escalar_para_humano para um professor falar com ela. Em dúvida, ou se a pessoa não disse de qual concurso fala, trate como Guarda e siga a ordem normal.
-
-SEU OBJETIVO EM CADA CONVERSA, NESTA ORDEM
-1. Cumprimentar e acolher, em uma ou duas linhas. Se a pessoa disse o nome, use. Só então, se o convite valer (veja acima), chame convidar_para_grupo, explicando que o grupo é onde ficam as dicas, o conteúdo diário e o Mapa de Pontos. O Mapa é o motivo de entrar no grupo, e não um prêmio que se ganha sem entrar.
-2. Descobrir qual bloco mais preocupa a pessoa e registrar com registrar_interesse. As opções são: direito (os 60 pontos), maraba (os 20 pontos do município), basicas (português, matemática e informática) ou rotina (a pessoa não consegue manter constância nos estudos — este é o perfil mais valioso, é o aluno da mentoria).
-3. Só mande o PDF direto (ferramenta enviar_mapa_de_pontos) se a pessoa disser que não quer ou não pode entrar em grupo, ou se pedir o arquivo uma segunda vez. Perder o candidato é pior que ele ficar fora do grupo. Nunca discuta com quem recusou o grupo.
-Faça isso conversando, não como formulário. Uma pergunta por vez.`;
+// Quem tem preço de tabela tem link de compra, e só esses dois têm. O link,
+// o nome e o valor saem sempre do catálogo, nunca da memória do modelo: foi
+// de memória que nasceu o R$ 197 que não existia.
+const ITENS_PAGAVEIS = Object.keys(CATALOGO).filter((k) => CATALOGO[k].pagavel);
 
 export const FERRAMENTAS = [
+  {
+    name: "consultar_catalogo",
+    description:
+      "Consulta o que a Juris Elite oferece e por quanto. Use SEMPRE antes de dizer qualquer preço, descrição de material ou condição de pagamento. Nunca responda isso de memória: o catálogo muda e a sua memória não.",
+    strict: true,
+    input_schema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        item: {
+          type: "string",
+          enum: [...Object.keys(CATALOGO), "tudo"],
+          description: "O item do menu, ou 'tudo' para o menu inteiro.",
+        },
+      },
+      required: ["item"],
+    },
+  },
   {
     name: "consultar_cronograma",
     description:
@@ -141,10 +261,22 @@ export const FERRAMENTAS = [
     input_schema: { type: "object", additionalProperties: false, properties: {}, required: [] },
   },
   {
-    name: "enviar_pix",
+    name: "enviar_checkout",
     description:
-      "Envia a chave Pix da Juris Elite para quem JÁ decidiu fechar o Pacote Guarda Marabá e perguntou como pagar. Use somente depois de a pessoa dizer, com clareza, que quer comprar. NÃO use com quem está só perguntando o preço, pedindo desconto, negociando condição ou ainda decidindo: nesses casos use escalar_para_humano. Nunca cite valor diferente do preço oficial do Pacote.",
-    input_schema: { type: "object", properties: {}, required: [] },
+      "Envia o link oficial de compra da Cakto para quem JÁ decidiu fechar um dos dois produtos da Guarda. Diga qual item é: o link sai junto com o nome do produto e o valor de tabela. NÃO use com quem está só perguntando preço, pedindo desconto ou ainda decidindo: nesses casos use escalar_para_humano. Nunca escreva um link de pagamento de cabeça: só existe o que esta ferramenta manda.",
+    strict: true,
+    input_schema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        item: {
+          type: "string",
+          enum: ITENS_PAGAVEIS,
+          description: "O produto que a pessoa está comprando.",
+        },
+      },
+      required: ["item"],
+    },
   },
   {
     name: "escalar_para_humano",
@@ -173,6 +305,23 @@ export const FERRAMENTAS = [
  */
 async function executarFerramenta(nome, entrada, lead, pendentes) {
   switch (nome) {
+    case "consultar_catalogo": {
+      if (entrada.item === "tudo") {
+        return Object.values(CATALOGO)
+          .map((p) => `${p.nome} (${p.preco}): ${p.diga}`)
+          .join("\n");
+      }
+      const item = CATALOGO[entrada.item];
+      if (!item) return "Esse item não existe no catálogo. Não invente: chame escalar_para_humano.";
+      const linhas = [`${item.nome} (${item.preco})`, item.diga];
+      if (item.detalhes) linhas.push("Detalhes conferidos com os professores:", ...item.detalhes.map((d) => "- " + d));
+      if (item.checkout) linhas.push("Para fechar, chame enviar_checkout. Nunca escreva o link você mesmo.");
+      if (item.link) linhas.push("Link para mandar: " + item.link);
+      if (item.link === "") linhas.push("O link deste item ainda não está cadastrado aqui. Não invente link: chame escalar_para_humano.");
+      linhas.push("Se perguntarem detalhe que não está aqui, não complete de cabeça: chame escalar_para_humano.");
+      return linhas.join("\n");
+    }
+
     case "consultar_cronograma": {
       const texto = CRONOGRAMA[entrada.assunto];
       return texto || "Esse dado não consta na base verificada. Chame escalar_para_humano.";
@@ -230,65 +379,101 @@ async function executarFerramenta(nome, entrada, lead, pendentes) {
       return "O convite vai sair logo depois da sua mensagem. Cumprimente a pessoa e diga, em uma linha, que esta mandando o link do grupo onde fica o Mapa.";
     }
 
-    case "enviar_pix": {
-      const chave = process.env.PIX_CHAVE;
-      const favorecido = process.env.PIX_FAVORECIDO;
-      const copiaCola = process.env.PIX_COPIA_COLA;
-      if (!chave || !favorecido) {
-        return "Pix não está configurado. Não invente chave nenhuma: chame escalar_para_humano.";
+    case "enviar_checkout": {
+      const item = CATALOGO[entrada.item];
+      if (!item || !item.pagavel) {
+        return "Esse item não é vendido por link. Não invente: chame escalar_para_humano.";
+      }
+      if (!item.checkout) {
+        return "O link de compra desse produto ainda não está configurado aqui. " +
+               "Não invente link nenhum e não mande chave Pix: chame escalar_para_humano.";
       }
 
       pendentes.push({
         tipo: "texto",
         texto:
-          `*Pagamento por Pix*\n` +
-          `Favorecido: ${favorecido}\n` +
-          `Chave aleatória: ${chave}\n\n` +
-          `Confira o nome do favorecido na tela do seu banco antes de confirmar.`,
+          `*${item.nome}*\n` +
+          `${item.preco}\n\n` +
+          `${item.checkout}\n\n` +
+          "No link dá para pagar por Pix, cartão, Apple Pay e Google Pay. " +
+          "No Pix o recebedor aparece como *Walter Ruiz Bogaz Neto*, que é o professor. " +
+          "Assim que o pagamento cai, o acesso libera na hora e o comprovante vai para o seu e-mail.",
       });
-      // Segunda mensagem só com o copia e cola, para a pessoa conseguir
-      // selecionar sem arrastar junto o resto do texto.
-      if (copiaCola) pendentes.push({ tipo: "texto", texto: copiaCola });
 
-      await db.registrarEvento(lead.id, "pix_enviado", {});
+      await db.marcarPagamento(lead.id, "checkout_enviado", entrada.item);
+      await db.registrarEvento(lead.id, "checkout_enviado", { item: entrada.item, valor: item.preco });
 
-      // A equipe precisa saber que tem pagamento a caminho, senão ninguém
-      // confere e o aluno paga sem receber acesso.
-      const aviso = (process.env.EQUIPE_WHATSAPP || "")
-        .split(",").map((n) => n.trim()).filter(Boolean);
+      // A equipe acompanha a venda pela Cakto, mas precisa saber que o link
+      // saiu: e por aqui que ela percebe quem travou no meio do caminho.
+      const aviso = numerosDaEquipe(lead);
       if (aviso.length) {
         const texto =
-          `*Pix enviado a um candidato*\n` +
+          `*Link de compra enviado*\n` +
           `${lead.nome || "sem nome"} (${lead.telefone})\n` +
-          `Fiquem de olho no comprovante.`;
+          `${item.nome}, ${item.preco}\n` +
+          `A baixa e a liberação são automáticas pela Cakto.`;
         await Promise.allSettled(aviso.map((n) => evo.enviarTexto(n, texto)));
       }
 
-      return "A chave vai sair logo depois da sua mensagem, e a equipe ja foi avisada. " +
-             "Peca o comprovante. NUNCA confirme que o pagamento caiu: quem confirma e a equipe.";
+      return "O link vai sair logo depois da sua mensagem. Avise que ele está vindo. " +
+             "NUNCA confirme que o pagamento caiu: quem confirma é a Cakto, por e-mail.";
     }
 
     case "escalar_para_humano": {
       await db.marcarLead(lead.id, { escalado: true });
       await db.registrarEvento(lead.id, "escalado", entrada);
-      // Lista separada por virgula, e nao um numero so: com um plantao
-      // unico, celular desligado significa candidato esperando sem que
-      // ninguem saiba. Falha de um envio nao impede os outros.
-      const equipe = (process.env.EQUIPE_WHATSAPP || "")
-        .split(",").map((n) => n.trim()).filter(Boolean);
-      if (equipe.length) {
-        const aviso =
-          `*Atendimento precisa de vocês*\n` +
-          `Candidato: ${lead.nome || "sem nome"} (${lead.telefone})\n` +
-          `Motivo: ${entrada.motivo}`;
-        await Promise.allSettled(equipe.map((n) => evo.enviarTexto(n, aviso)));
-      }
-      return "Equipe avisada. Diga ao candidato que um dos professores responde em breve, e não tente resolver sozinho.";
+      // Escalar NÃO é só avisar: a conversa passa para a equipe e o agente
+      // se cala até alguém digitar /agente. Avisar e continuar falando é o
+      // que fez o robô desmentir uma venda que já estava fechada.
+      await db.definirConducao(lead.id, "equipe", NOTA_DO_AGENTE);
+      await avisarEquipe(lead, entrada.motivo);
+      return "Equipe avisada e conversa entregue a ela. Diga ao candidato, em UMA linha, " +
+             "que alguém da equipe fala com ele em instantes. Não pergunte mais nada e não se despeça duas vezes.";
     }
 
     default:
       return `Ferramenta desconhecida: ${nome}`;
   }
+}
+
+/**
+ * Avisa a equipe, no WhatsApp dela, que uma conversa precisa de gente.
+ *
+ * Lista separada por vírgula, e não um número só: com plantão único, celular
+ * desligado significa candidato esperando sem que ninguém saiba. Falha de um
+ * envio não impede os outros.
+ */
+/**
+ * Os números da equipe, menos o da própria pessoa que está sendo atendida.
+ *
+ * Alguém da equipe testando o atendente do próprio número recebia, dentro da
+ * conversa de teste, o recado interno sobre si mesma. Aconteceu no primeiro
+ * teste, 19/11, e assusta: parece vazamento, e não é.
+ */
+function numerosDaEquipe(lead) {
+  const meu = chaveDeNumero(lead?.telefone);
+  return (process.env.EQUIPE_WHATSAPP || "")
+    .split(",").map((n) => n.trim()).filter(Boolean)
+    .filter((n) => chaveDeNumero(n) !== meu);
+}
+
+/** Manda um texto qualquer para a equipe, menos para quem está sendo atendido. */
+export async function avisarEquipeTexto(lead, texto) {
+  const equipe = numerosDaEquipe(lead);
+  if (!equipe.length) return;
+  await Promise.allSettled(equipe.map((n) => evo.enviarTexto(n, texto)));
+}
+
+export async function avisarEquipe(lead, motivo) {
+  const equipe = numerosDaEquipe(lead);
+  if (!equipe.length) return;
+  const aviso =
+    `*Atendimento precisa de vocês*\n` +
+    `Candidato: ${lead.nome || "sem nome"} (${lead.telefone})\n` +
+    `Motivo: ${motivo}\n\n` +
+    `O atendente já se calou nessa conversa. Respondam por ela mesma.\n` +
+    `Para devolver ao atendente depois, digitem */agente* lá dentro.`;
+  await Promise.allSettled(equipe.map((n) => evo.enviarTexto(n, aviso)));
 }
 
 /**
