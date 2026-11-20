@@ -53,6 +53,8 @@ export const CATALOGO = {
       "Na página de pagamento o produto aparece como *Pasta Organizada - Guarda Municipal de Marabá*. É o mesmo material.",
     ],
     apos_pagamento: "O acesso ao Drive libera na hora, e o comprovante vai para o seu e-mail.",
+    pede_diagnostico:
+      "Aproveita e responde este formulário, leva uns 5 minutos. É com ele que o Dr. Walter e o Dr. Diego veem a sua rotina e te dizem por onde começar nas pastas.",
   },
   mentoria: {
     nome: "Mentoria de Organização de Estudos",
@@ -71,7 +73,9 @@ export const CATALOGO = {
       "O ponto de partida é o Formulário Diagnóstico, de 5 a 6 minutos, que mostra a rotina do aluno.",
       "Na página de pagamento ela aparece como *Planejamento e Organização de Estudos: Guarda Municipal de Marabá*. É a mesma mentoria.",
     ],
-    apos_pagamento: "A equipe entra em contato aqui mesmo para começar pelo Formulário Diagnóstico.",
+    apos_pagamento: "A equipe entra em contato aqui mesmo para começar.",
+    pede_diagnostico:
+      "O primeiro passo da mentoria é este formulário, de uns 5 minutos. É dele que sai o seu cronograma, montado em cima da sua rotina.",
   },
   diagnostico: {
     nome: "Diagnóstico Gratuito de Rotina",
@@ -417,7 +421,10 @@ async function executarFerramenta(nome, entrada, lead, pendentes) {
           `*Link de compra enviado*\n` +
           `${lead.nome || "sem nome"} (${lead.telefone})\n` +
           `${item.nome}, ${item.preco}\n` +
-          `A baixa e a liberação são automáticas pela Cakto.`;
+          `A baixa e a liberação do material são automáticas pela Cakto.` +
+          "\n\n" +
+          "Quando a venda cair, digitem */confirmado* aqui dentro da conversa: " +
+          "o atendente parabeniza a pessoa e manda o Formulário Diagnóstico para ela.";
         await Promise.allSettled(aviso.map((n) => evo.enviarTexto(n, texto)));
       }
 

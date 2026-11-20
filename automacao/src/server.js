@@ -154,6 +154,17 @@ async function pagamentoConfirmado(lead, quem) {
 
   await espera(900, 1800);
   await enviarAoCandidato(lead, linhas.join("\n"));
+  // O formulário não atravessa a venda, vem logo depois dela. Quem acabou
+  // de pagar responde, e é dele que os professores tiram a rotina para
+  // direcionar o aluno. Atravessar a compra com formulário perde a venda.
+  const formulario = CATALOGO.diagnostico && CATALOGO.diagnostico.link;
+  if (formulario && item && item.pede_diagnostico) {
+    await espera(1400, 2200);
+    await enviarAoCandidato(lead, item.pede_diagnostico + "\n\n" + formulario);
+    await db.marcarLead(lead.id, { etiqueta: "rotina" });
+    await db.registrarEvento(lead.id, "diagnostico_enviado", { depois_de: lead.pagamento_item });
+  }
+
   console.log(`[pagamento] ${lead.telefone} confirmado${quem ? ` por ${quem}` : ""}`);
 }
 
