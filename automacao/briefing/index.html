@@ -153,7 +153,7 @@ input[type=text]:focus,textarea:focus,select:focus{
     <h1>O que o atendimento precisa saber</h1>
     <p>Doutor, o atendente automático do WhatsApp só fala o que estiver escrito aqui. Tudo que ele não sabe, ele devolve para a equipe responder na mão.</p>
     <p>São perguntas curtas, quase todas de um toque. As marcadas com <strong>★</strong> são as que estão travando o atendimento agora. O que o senhor não souber ainda, pode deixar em branco.</p>
-    <p>No fim, um botão monta tudo e abre o WhatsApp com o relatório pronto para enviar.</p>
+    <p>No fim, um botão monta tudo e abre o WhatsApp na conversa com o Abrahão, com o relatório pronto. É só apertar enviar.</p>
   </div>
 </header>
 
@@ -441,10 +441,10 @@ input[type=text]:focus,textarea:focus,select:focus{
   </section>
 
   <div class="acoes">
-    <a class="bt bt-zap" id="enviar" href="#">Enviar o relatório no WhatsApp</a>
+    <a class="bt bt-zap" id="enviar" href="#">Enviar o relatório para o Abrahão</a>
     <button class="bt bt-2" id="copiar" type="button">Copiar o texto</button>
     <button class="bt bt-2" id="baixar" type="button">Baixar como arquivo</button>
-    <p class="aviso" id="aviso">O que o senhor digita fica guardado neste aparelho, então pode fechar e voltar depois. Nada é enviado antes de o senhor apertar o botão e confirmar no WhatsApp.</p>
+    <p class="aviso" id="aviso">O que o senhor digita fica guardado neste aparelho, então pode fechar e voltar depois. O botão abre o WhatsApp já na conversa com o Abrahão, com o relatório escrito. Nada sai antes de o senhor apertar enviar lá.</p>
   </div>
 
   <p class="pe">Juris Elite · briefing do atendimento automático</p>
@@ -459,13 +459,10 @@ input[type=text]:focus,textarea:focus,select:focus{
 
 <script>
 // ---------------------------------------------------------------------
-// Para onde vai o relatorio.
-// Vazio: o WhatsApp abre a lista de contatos e o Dr. Walter escolhe quem
-// recebe. Com um numero aqui (so digitos, com o 55 na frente) o envio vai
-// direto, mas o numero fica visivel para qualquer um que abrir esta pagina,
-// porque o repositorio e publico.
+// Para onde vai o relatorio: o numero do Abrahao, direto, sem o Dr. Walter
+// ter que escolher contato nenhum. So digitos, com o 55 na frente.
 // ---------------------------------------------------------------------
-var DESTINO = "";
+var DESTINO = "94991089454";
 
 var CHAVE = "juris-elite-briefing";
 var campos = Array.prototype.slice.call(document.querySelectorAll(".q"));
