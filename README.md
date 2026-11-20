@@ -59,11 +59,12 @@ embutidas no PDF e avisa se alguma caiu em fonte de fallback.
 ### Automação de captação
 
 ```
-Landing ──POST /api/cadastro──▶ juris-agent ──▶ Postgres
-                                     │
-Candidato no WhatsApp ──webhook──────┤──▶ API Anthropic (claude-haiku-5-5)
-                                     │
-                              Evolution API ──▶ Mapa de Pontos + convite
+juriselite.com.br ──nginx──┬──▶ site estático
+                           └──/api/──▶ juris-agent ──▶ Postgres
+                                            │
+Candidato no WhatsApp ──webhook─────────────┤──▶ API Anthropic (claude-haiku-5-5)
+                                            │
+                                     Evolution API ──▶ checkout, formulário, convite
 ```
 
 O formulário da landing colhe nome, WhatsApp, e-mail e qual bloco do edital mais
@@ -71,10 +72,23 @@ preocupa o candidato, com aceite de LGPD guardado junto com a data e o texto
 exato que foi aceito. O telefone é a chave do lead: quem se cadastra no site e
 depois chama no WhatsApp cai na mesma linha da tabela.
 
-O agente tem cinco ferramentas (`consultar_cronograma`, `enviar_mapa_de_pontos`,
-`registrar_interesse`, `convidar_para_grupo`, `escalar_para_humano`) e **nunca
-tira data de edital da memória do modelo**: tudo sai de uma tabela fixa em
-`src/agente.js`.
+O agente tem sete ferramentas (`consultar_catalogo`, `consultar_cronograma`,
+`enviar_mapa_de_pontos`, `registrar_interesse`, `convidar_para_grupo`,
+`enviar_checkout`, `escalar_para_humano`) e **nunca tira preço nem data da
+memória do modelo**: catálogo e cronograma saem de tabelas fixas em
+`src/agente.js`. Foi de memória que nasceu um preço de R$ 197 que não existia,
+dito a uma candidata que já tinha fechado por R$ 9,99.
+
+O papel dele é recepção de vendas, não professor: oferta os dois produtos da
+prateleira, manda o link de checkout da Cakto e chama a equipe. É proibido de
+montar cronograma de graça, de entregar material antes do pagamento e de
+confirmar que um pagamento caiu.
+
+**A equipe assume a conversa de dentro dela**, como no atendimento do cartório:
+`/assumir` cala o agente ali, `/agente` devolve, `/confirmado` libera o aluno
+depois de a equipe conferir um comprovante. Responder na mão, sem comando
+nenhum, também cala o agente naquela conversa. A regra de quem fala está
+isolada em `src/conducao.js`, que é puro e tem teste.
 
 Testes da validação, sem Docker e sem banco:
 
@@ -100,14 +114,46 @@ Instalação na VPS, variáveis de ambiente e operação do dia a dia estão em
 
 ## Estado
 
-> **Último registro:** 18 de novembro de 2026. Atendimento de WhatsApp no ar,
-> landing publicada, funil com o grupo como porta de entrada.
+> **Último registro:** 20 de novembro de 2026. Site no domínio próprio com
+> HTTPS, atendente vendendo pelo checkout da Cakto, em bancada de teste.
 
-Em operação assistida. A automação roda em VPS, a landing está publicada no
-GitHub Pages e o WhatsApp está conectado à Evolution API, atendendo candidatos
-reais. Falta apontar o domínio próprio e trocar as credenciais expostas.
+Em operação assistida. O site está em **https://juriselite.com.br**, servido
+por nginx na VPS com certificado Let's Encrypt e renovação automática, e o
+formulário da campanha fala com o agente pelo mesmo domínio.
+
+O atendente está **em bancada de teste**: responde só aos cinco números da
+equipe, por `NUMEROS_LIBERADOS`. A liberação geral depende de a equipe passar
+a rodada de testes. Falta trocar as credenciais expostas.
 
 ### Últimas mudanças
+
+**20/11/2026 - O domínio entrou, e o site saiu do GitHub Pages.** nginx na
+VPS servindo `juriselite.com.br` e `www`, certificado Let's Encrypt com
+renovação automática, `http` redirecionando para `https`, e `/api/` passando
+para o `juris-agent` com `X-Forwarded-For`. Sem esse cabeçalho o freio por IP
+do cadastro trataria o mundo inteiro como um visitante só, e o quinto cadastro
+do dia travaria todos os outros. Junto, o menu do celular: a caixa de
+referência de um absoluto já inclui a margem lateral do pai, e a regra puxava
+pela margem de novo, somando duas vezes e jogando o menu 40px além da tela.
+Medido antes e depois. Tocado: `automacao/landing/index.html`.
+
+**20/11/2026 - Pagamento vira checkout da Cakto, e o catálogo vira o dos
+professores.** Briefing respondido pelo Dr. Walter e pelo Dr. Diego virou
+tabela: os dois produtos da prateleira, com prazo de acesso, formato, quem
+atende e o que o aluno leva. `enviar_pix` saiu e entrou `enviar_checkout`, que
+manda o link da Cakto com o nome do produto e o valor. A chave Pix avulsa
+acabou. O agente avisa antes que no Pix o recebedor aparece como o professor,
+e que o nome do produto na tela de pagamento é outro: as duas coisas derrubam
+venda quando a pessoa descobre na hora de pagar. Tocado: `agente.js`.
+
+**19/11/2026 - A equipe entra na conversa, e o comprovante não se perde.**
+`/assumir`, `/agente` e `/confirmado`, digitados dentro da conversa. Imagem
+sem legenda era descartada por um `return` silencioso: a pessoa pagava,
+mandava o print e ninguém via. Agora o arquivo chega, a equipe é avisada com o
+produto e o valor, e o agente só volta a falar depois do `/confirmado`. A
+trava que cala o agente no meio da resposta passou a distinguir gente
+assumindo de escalação dele mesmo, que engolia a própria frase de despedida.
+Tocado: `conducao.js`, `server.js`, `db.js`, `agente.js`. 16 testes.
 
 **18/11/2026 - Trava do convite por frente.** O convite do grupo virou o
 primeiro passo do atendimento, e isso abriu um buraco: quem chegasse
