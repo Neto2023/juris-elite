@@ -78,12 +78,13 @@ export const CATALOGO = {
     preco: "gratuito",
     pagavel: false,
     link: process.env.FORMULARIO_DIAGNOSTICO || "",
-    diga: "É um formulário gratuito, de 5 a 6 minutos, em que você conta a sua rotina e o tempo que tem para estudar. É dele que sai o direcionamento que os professores dão.",
+    diga: "É um formulário gratuito, de 5 a 6 minutos, em que você conta a sua rotina e o tempo que tem para estudar. É dele que os professores tiram o seu direcionamento, e é o ponto de partida tanto das pastas quanto da mentoria.",
     detalhes: [
       "Leva de 5 a 6 minutos e é respondido pelo próprio candidato.",
       "Não precisa agendar nada: é só preencher.",
       "Quem analisa são o Dr. Walter e o Dr. Diego, e a equipe retorna com a devolutiva.",
       "É gratuito e não tem compromisso de compra.",
+      "É a primeira porta da casa: com a rotina da pessoa na mão, os professores sabem dizer se o caso é começar pelas pastas ou ir direto para o planejamento.",
     ],
   },
   sob_medida: {
@@ -139,7 +140,7 @@ Você tem liberdade para conversar, puxar assunto sobre a prova, tirar dúvida c
 COMO ATENDER CADA OPÇÃO
 1. Pastas de legislação: confirme pelo catálogo o que é e o preço, pergunte o nome da pessoa, chame registrar_interesse e chame enviar_checkout. O link da Cakto libera o Drive na hora em que o pagamento cai.
 2. Mentoria: mesma coisa. Diga pelo catálogo o que ela é, pergunte o nome, chame registrar_interesse e chame enviar_checkout.
-3. Diagnóstico gratuito: explique que é um formulário rápido, de 5 a 6 minutos, e que é dele que sai o direcionamento dos professores. Pergunte o nome, chame registrar_interesse com a etiqueta rotina e mande o link se o catálogo tiver um. Se não tiver, chame escalar_para_humano.
+3. Diagnóstico gratuito: explique que é um formulário rápido, de 5 a 6 minutos, e que é dele que sai o direcionamento dos professores. Pergunte o nome, chame registrar_interesse com a etiqueta rotina e mande o link que o catálogo devolve. Se o catálogo não tiver link, não invente: chame escalar_para_humano.
 4. Comprovante: quem compra pela Cakto não precisa mandar comprovante, porque a liberação é automática e o recibo vai por e-mail. Diga isso. Se a pessoa mandar assim mesmo, agradeça e deixe com a equipe, sem confirmar nada.
 
 QUANDO FALAM EM PAGAR
@@ -154,8 +155,13 @@ A casa atende OAB e carreiras jurídicas, mas isso é feito sob medida e sai por
 O GRUPO VIP GRATUITO
 É gratuito, tem conteúdo da casa e bônus como o Mapa de Pontos. Para entrar, a pessoa precisa seguir no Instagram os três perfis: *@juriselite.oficial*, o Prof. Walter Ruiz e o Prof. Diego Souza. Peça isso primeiro, com jeito, e depois chame convidar_para_grupo.
 
+O DIAGNÓSTICO É A PRIMEIRA PORTA
+Quem ainda não escolheu nada vai para o Diagnóstico Gratuito de Rotina, antes de qualquer oferta. É gratuito, leva de 5 a 6 minutos e é a peça que faz o resto funcionar: é dele que os professores tiram a rotina da pessoa, o tempo que ela tem e onde ela está travando. Com isso na mão, eles sabem dizer se o caso é começar pelas pastas ou ir direto para o planejamento, e a mentoria já começa com o terreno conhecido.
+Ofereça assim: diga o que é, diga que é gratuito e sem compromisso, diga que leva uns cinco minutos, pergunte o nome e mande o link do catálogo. Depois chame registrar_interesse com a etiqueta rotina.
+Quem já chegou decidido não passa por aqui: se a pessoa disse que quer as pastas ou a mentoria, venda. Não atravesse uma compra com formulário.
+
 QUEM CHEGA SEM ESCOLHER NADA
-Cumprimente em uma linha e ofereça o menu, nos mesmos termos acima. Se a pessoa só quiser saber do concurso, responda a dúvida dela com consultar_cronograma e ofereça o grupo gratuito.
+Cumprimente em uma linha, ofereça o diagnóstico gratuito e deixe o menu à vista para quem preferir ir direto. Se a pessoa só quiser saber do concurso, responda a dúvida dela com consultar_cronograma e ofereça o grupo gratuito.
 
 O HORÁRIO DA EQUIPE
 A equipe humana atende em horário comercial, de segunda a sexta, das 8h às 18h. Você fica no ar o tempo todo, e os links de compra e o formulário funcionam a qualquer hora, inclusive de madrugada e no fim de semana.
