@@ -1,13 +1,23 @@
 import express from "express";
 import * as db from "./db.js";
 import * as evo from "./evolution.js";
-import { responder } from "./agente.js";
+import { responder, avisarEquipe, avisarEquipeTexto, CATALOGO } from "./agente.js";
 import { conferirCadastro } from "./validacao.js";
+import {
+  comandoDe, pedeHumano, listaDeNumeros, liberado, calaOAgente, NOTA_COMPROVANTE,
+} from "./conducao.js";
 
 const app = express();
 app.use(express.json({ limit: "2mb" }));
 
 const PORT = Number(process.env.PORT || 3001);
+
+/**
+ * Modo de teste: enquanto NUMEROS_LIBERADOS tiver alguém, o atendente só
+ * responde a esses números. Todo o resto cai no colo da equipe, que já
+ * responde na mão. Vazio ou ausente, volta a atender todo mundo.
+ */
+const LIBERADOS = listaDeNumeros(process.env.NUMEROS_LIBERADOS);
 
 /** Extrai o texto de qualquer um dos formatos de mensagem da Evolution. */
 function extrairTexto(message) {
@@ -22,6 +32,24 @@ function extrairTexto(message) {
     message.listResponseMessage?.title ||
     null
   );
+}
+
+/**
+ * Que tipo de arquivo veio junto, se veio algum.
+ *
+ * O atendente não lê imagem nem PDF. Mas precisa saber que chegou um, porque
+ * foto sem legenda é quase sempre comprovante de Pix, e até 19/11 ela caía
+ * num `return` silencioso: a pessoa pagava, mandava o print e ninguém via.
+ */
+function extrairMidia(message) {
+  if (!message) return null;
+  if (message.imageMessage) return "imagem";
+  if (message.documentMessage) return "documento";
+  if (message.documentWithCaptionMessage) return "documento";
+  if (message.audioMessage) return "audio";
+  if (message.videoMessage) return "video";
+  if (message.stickerMessage) return "figurinha";
+  return null;
 }
 
 /** Pausa aleatória entre dois limites, em milissegundos. */
@@ -41,6 +69,149 @@ async function digitando(telefone, texto) {
   const ms = Math.min(6000, Math.max(1200, 400 + (texto?.length || 0) * 33));
   await evo.simularDigitacao(telefone, ms);
   await new Promise((r) => setTimeout(r, ms));
+}
+
+/**
+ * Envia um texto ao candidato e deixa rastro de que fomos nós.
+ *
+ * O id que a Evolution devolve é guardado: quando o webhook trouxer essa mesma
+ * mensagem de volta (ela sai do nosso número, então volta como fromMe), o
+ * agente reconhece a própria voz e não a confunde com a equipe digitando.
+ */
+async function enviarAoCandidato(lead, texto) {
+  await digitando(lead.telefone, texto);
+  const resp = await evo.enviarTexto(lead.telefone, texto);
+  await db.registrarNossoEnvio(resp?.key?.id);
+  await db.salvarMensagem(lead.id, "enviada", texto);
+}
+
+/**
+ * Chegou comprovante (ou outro arquivo) do candidato.
+ *
+ * Quem confere dinheiro é gente. O atendente avisa a pessoa que recebeu,
+ * entrega a conversa à equipe e fica calado até alguém digitar /confirmado.
+ * Ele NUNCA diz que o pagamento caiu: foi dizendo isso por conta própria que
+ * ele desmentiu uma venda já fechada em 19/11.
+ */
+async function comprovanteRecebido(lead, midia, legenda) {
+  const chave = lead.pagamento_item;
+  const item = chave ? CATALOGO[chave] : null;
+  // Comprovante so e "esperado" se a gente tinha mesmo uma compra em curso.
+  // Pela Cakto a baixa e automatica, entao comprovante aqui costuma ser de
+  // quem pagou no Pix direto ao professor, fora da plataforma.
+  const esperado = ["checkout_enviado", "pix_enviado"].includes(lead.pagamento_estado);
+
+  await db.marcarPagamento(lead.id, "comprovante", null);
+  await db.definirConducao(lead.id, "equipe", NOTA_COMPROVANTE);
+  await db.registrarEvento(lead.id, "comprovante_recebido", {
+    midia, item: chave || null, esperado,
+  });
+
+  await espera(900, 1800);
+  await enviarAoCandidato(lead, esperado
+    ? "Recebi o comprovante. Já mandei para a equipe conferir, e assim que confirmarem eu te aviso aqui mesmo."
+    : "Recebi seu arquivo. Já chamei alguém da equipe para olhar e te responder aqui mesmo.");
+
+  const linhas = [
+    "*Comprovante para conferir*",
+    `Candidato: ${lead.nome || "sem nome"} (${lead.telefone})`,
+  ];
+  linhas.push(item
+    ? `Compra: ${item.nome}, ${item.preco}`
+    : `Chegou ${midia}, mas não havia Pix em aberto nessa conversa. Confiram o que é.`);
+  if (legenda?.trim()) linhas.push(`Ele escreveu junto: ${legenda.trim()}`);
+  linhas.push(
+    "",
+    "O atendente está parado nessa conversa, esperando vocês.",
+    "Conferido o pagamento, digitem */confirmado* aqui dentro: ele avisa a pessoa e volta a atender.",
+  );
+  await avisarEquipeTexto(lead, linhas.join("\n"));
+  console.log(`[comprovante] ${lead.telefone} aguardando conferência da equipe`);
+}
+
+/**
+ * Alguém da equipe conferiu o pagamento e digitou /confirmado na conversa.
+ *
+ * A mensagem de confirmação é escrita aqui, fixa, e não pelo modelo: dizer que
+ * entrou dinheiro que não entrou é o erro mais caro que esse atendente pode
+ * cometer, e texto gerado na hora não dá para auditar depois.
+ */
+async function pagamentoConfirmado(lead, quem) {
+  if (lead.pagamento_estado === "confirmado") return; // webhook repetido
+  await db.marcarPagamento(lead.id, "confirmado", null);
+  await db.definirConducao(lead.id, "agente", null);
+  await db.registrarEvento(lead.id, "pagamento_confirmado", { por: quem || null });
+
+  const item = lead.pagamento_item ? CATALOGO[lead.pagamento_item] : null;
+  const primeiro = (lead.nome || "").trim().split(/\s+/)[0];
+  const linhas = [primeiro ? `Pagamento confirmado, ${primeiro}!` : "Pagamento confirmado!"];
+  if (item) {
+    linhas.push(`A equipe conferiu e liberou: *${item.nome}*.`);
+    if (item.apos_pagamento) linhas.push(item.apos_pagamento);
+  } else {
+    linhas.push("A equipe conferiu e liberou o seu pedido.");
+  }
+
+  await espera(900, 1800);
+  await enviarAoCandidato(lead, linhas.join("\n"));
+  console.log(`[pagamento] ${lead.telefone} confirmado${quem ? ` por ${quem}` : ""}`);
+}
+
+/**
+ * Mensagem que saiu do nosso número e não foi o agente: é alguém da equipe
+ * digitando na conversa, pelo celular ou pelo WhatsApp Web.
+ *
+ * Duas coisas acontecem aqui. Comando (/assumir, /agente) troca quem conduz.
+ * Qualquer outra mensagem também passa a conversa para a equipe, sem comando
+ * nenhum: se um professor entrou para responder, o agente não tem o que
+ * acrescentar, e foi exatamente falando por cima que ele desmentiu uma venda
+ * já fechada.
+ */
+/**
+ * A equipe entrou nesta conversa enquanto o modelo pensava?
+ *
+ * Entre a mensagem do candidato e a resposta do agente passam vários segundos,
+ * e é justamente aí que um professor costuma responder na mão. Sem esta
+ * conferência, a fala do robô sai por cima da dele.
+ */
+async function humanoAssumiu(leadId) {
+  const { conduz, nota } = await db.conduzDetalhe(leadId);
+  return calaOAgente(conduz, nota);
+}
+
+async function mensagemDaEquipe(telefone, texto, quem) {
+  const destino = comandoDe(texto);
+
+  // Confirmação de pagamento não troca quem conduz: devolve a conversa ao
+  // atendente E avisa o candidato, nessa ordem.
+  if (destino === "confirmado") {
+    const lead = await db.obterLeadPorTelefone(telefone);
+    if (!lead) return;
+    await pagamentoConfirmado(lead, quem);
+    return;
+  }
+
+  if (destino) {
+    const lead = await db.obterOuCriarLead(telefone, null);
+    await db.definirConducao(lead.id, destino, quem || null);
+    await db.registrarEvento(lead.id, destino === "equipe" ? "equipe_assumiu" : "agente_retomou", {
+      comando: String(texto).trim().split(/\s+/)[0].toLowerCase(),
+      por: quem || null,
+    });
+    console.log(`[conduz] ${telefone} -> ${destino}${quem ? ` (por ${quem})` : ""}`);
+    return;
+  }
+
+  // Sem comando: só mexe em conversa que já existe. Mensagem da equipe para
+  // quem nunca escreveu não precisa virar lead.
+  const lead = await db.obterLeadPorTelefone(telefone);
+  if (!lead) return;
+  if (texto) await db.salvarMensagem(lead.id, "enviada", texto);
+  if (lead.conduz === "equipe") return;
+
+  await db.definirConducao(lead.id, "equipe", quem || "respondeu na conversa");
+  await db.registrarEvento(lead.id, "equipe_assumiu", { comando: null, por: quem || null });
+  console.log(`[conduz] ${telefone} -> equipe (respondeu na mão)`);
 }
 
 app.get("/health", async (_req, res) => {
@@ -139,6 +310,13 @@ app.post("/api/cadastro", async (req, res) => {
 
 /** Manda o Mapa de Pontos e o convite do grupo para quem acabou de se cadastrar. */
 async function entregarBoasVindas(lead, nome) {
+  // Em modo de teste, nem o cadastro do site dispara mensagem para fora da
+  // lista: o número está no Instagram, e um cadastro de verdade no meio do
+  // teste viraria atendimento automático sem ninguém esperar por isso.
+  if (!liberado(lead.telefone, LIBERADOS)) {
+    await db.registrarEvento(lead.id, "fora_do_teste", { origem: "cadastro" });
+    return;
+  }
   const primeiro = nome.split(" ")[0];
   const mapa = process.env.MAPA_PONTOS_URL;
   const grupo = process.env.GRUPO_CONVITE_URL;
@@ -191,21 +369,69 @@ app.post("/webhook", async (req, res) => {
 
     const { remoteJid, fromMe, id: evolutionId } = dados.key;
 
-    if (fromMe) return;                                   // eco da nossa própria mensagem
     if (!remoteJid || remoteJid.endsWith("@g.us")) return; // grupo: o bot não responde
     if (remoteJid === "status@broadcast") return;
-
-    const texto = extrairTexto(dados.message);
-    if (!texto || !texto.trim()) return;
-
-    if (await db.jaProcessada(evolutionId)) return;
 
     const telefone = evo.telefoneDoJid(remoteJid);
     if (!telefone) return;
 
+    const texto = extrairTexto(dados.message);
+    const midia = extrairMidia(dados.message);
+
+    if (fromMe) {
+      // Pode ser a nossa própria mensagem voltando. O id dela é gravado logo
+      // depois do envio, e a volta costuma ser mais rápida que a gravação:
+      // esperar uns segundos antes de decidir evita o agente se calar sozinho
+      // ao ouvir a própria voz.
+      await espera(2500, 3200);
+      if (await db.conheceEnvio(evolutionId)) return;
+      await mensagemDaEquipe(telefone, texto, dados.pushName);
+      return;
+    }
+
+    if (!texto?.trim() && !midia) return;
+
+    if (await db.jaProcessada(evolutionId)) return;
+
     const lead = await db.obterOuCriarLead(telefone, dados.pushName);
     const anteriores = await db.historico(lead.id);
-    await db.salvarMensagem(lead.id, "recebida", texto);
+    await db.salvarMensagem(lead.id, "recebida", texto?.trim() || `[${midia}]`);
+
+    // Fora da lista de teste: guarda a mensagem e não responde. A conversa
+    // é da equipe, que já vinha atendendo na mão.
+    if (!liberado(telefone, LIBERADOS)) {
+      await db.registrarEvento(lead.id, "fora_do_teste", {});
+      return;
+    }
+
+    // A equipe está conduzindo: o agente lê, guarda no histórico e fica
+    // quieto. Volta a falar só quando alguém digitar /agente.
+    if (lead.conduz === "equipe") {
+      await db.registrarEvento(lead.id, "silencio_equipe_conduz", {});
+      return;
+    }
+
+    // Chegou arquivo. O atendente não abre imagem nem PDF, então não tem o
+    // que responder sozinho: avisa a equipe e para. Com Pix em aberto, é
+    // comprovante; sem Pix em aberto, é coisa que só gente resolve.
+    if (midia === "imagem" || midia === "documento") {
+      await comprovanteRecebido(lead, midia, texto);
+      return;
+    }
+
+    // Pedido explícito de falar com gente. Não gasta modelo e não insiste.
+    if (pedeHumano(texto)) {
+      await db.definirConducao(lead.id, "equipe", "o candidato pediu");
+      await db.marcarLead(lead.id, { escalado: true });
+      await db.registrarEvento(lead.id, "pediu_humano", { texto: texto.slice(0, 200) });
+      await espera(900, 1800);
+      await enviarAoCandidato(
+        lead,
+        "Claro. Já chamei alguém da equipe para falar com você. Aguarde uns instantes, por favor.",
+      );
+      await avisarEquipe(lead, "O próprio candidato pediu para falar com alguém da equipe.");
+      return;
+    }
 
     // Uma pausa antes de começar a "pensar". Resposta instantânea é a coisa
     // que mais denuncia automação: ninguém lê e responde em 300ms.
@@ -215,24 +441,29 @@ app.post("/webhook", async (req, res) => {
     if (!resposta && !pendentes.length) return;
 
     // Quebra em parágrafos para parecer conversa, não comunicado.
-    const partes = (resposta || "").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+    // Cada parágrafo vira um balão, mas no MÁXIMO dois por resposta: o resto
+    // é juntado no segundo. Cinco balões em cima de um "boa tarde" foi uma
+    // das queixas da auditoria, e ninguém lê rajada.
+    const pedacos = (resposta || "").split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
+    const partes = pedacos.length <= 2
+      ? pedacos
+      : [pedacos[0], pedacos.slice(1).join("\n\n")];
     for (const parte of partes) {
-      await digitando(telefone, parte);
-      await evo.enviarTexto(telefone, parte);
-      await db.salvarMensagem(lead.id, "enviada", parte);
+      if (await humanoAssumiu(lead.id)) return;
+      await enviarAoCandidato(lead, parte);
     }
 
     // Só agora sai o que as ferramentas prepararam: link, PDF, chave Pix.
     // Depois da fala, nunca antes dela.
     for (const item of pendentes) {
+      if (await humanoAssumiu(lead.id)) return;
       await espera(700, 1400);
       if (item.tipo === "documento") {
-        await evo.enviarDocumento(telefone, item.url, item.arquivo, item.legenda || "");
+        const resp = await evo.enviarDocumento(telefone, item.url, item.arquivo, item.legenda || "");
+        await db.registrarNossoEnvio(resp?.key?.id);
         await db.salvarMensagem(lead.id, "enviada", `[documento] ${item.arquivo}`);
       } else {
-        await digitando(telefone, item.texto);
-        await evo.enviarTexto(telefone, item.texto);
-        await db.salvarMensagem(lead.id, "enviada", item.texto);
+        await enviarAoCandidato(lead, item.texto);
       }
     }
   } catch (erro) {
@@ -250,6 +481,10 @@ const servidor = async () => {
   }
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`juris-agent ouvindo na porta ${PORT}`);
+    // Conta, nunca os números: log de servidor não é lugar de dado pessoal.
+    console.log(LIBERADOS.size
+      ? `[modo] TESTE: respondendo só a ${LIBERADOS.size} número(s) liberado(s)`
+      : "[modo] ABERTO: respondendo a qualquer número");
   });
 };
 servidor();

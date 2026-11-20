@@ -26,6 +26,15 @@ export async function garantirEsquema() {
     ALTER TABLE leads ADD COLUMN IF NOT EXISTS email               TEXT;
     ALTER TABLE leads ADD COLUMN IF NOT EXISTS consentimento_em    TIMESTAMPTZ;
     ALTER TABLE leads ADD COLUMN IF NOT EXISTS consentimento_texto TEXT;
+    -- Quem está conduzindo ESTA conversa: 'agente' ou 'equipe'. Enquanto
+    -- estiver com a equipe, o atendente automático não fala, nem para
+    -- cumprimentar. Volta só com /agente, digitado dentro da conversa.
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS conduz       TEXT NOT NULL DEFAULT 'agente';
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS conduz_desde TIMESTAMPTZ;
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS conduz_nota  TEXT;
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS pagamento_item   TEXT;
+    ALTER TABLE leads ADD COLUMN IF NOT EXISTS pagamento_estado TEXT;
+    CREATE INDEX IF NOT EXISTS leads_conduz_idx ON leads (conduz);
     CREATE INDEX IF NOT EXISTS leads_origem_idx ON leads (origem);
     CREATE INDEX IF NOT EXISTS leads_email_idx  ON leads (lower(email)) WHERE email IS NOT NULL;
   `);
@@ -79,6 +88,10 @@ const COLUNAS = new Set([
   "mapa_enviado",
   "convite_enviado",
   "escalado",
+  "conduz",
+  "conduz_nota",
+  "pagamento_item",
+  "pagamento_estado",
   "observacoes",
 ]);
 
@@ -89,6 +102,82 @@ export async function marcarLead(leadId, campos) {
   await pool.query(
     `UPDATE leads SET ${sets} WHERE id = $1`,
     [leadId, ...entradas.map(([, v]) => v)],
+  );
+}
+
+/**
+ * Passa a conversa para 'equipe' ou devolve para 'agente'.
+ *
+ * Não há expiração automática de propósito: conversa que a equipe assumiu só
+ * volta quando alguém digitar /agente. Devolver sozinho, depois de um prazo,
+ * seria o robô voltando a falar no meio de uma negociação que ele não viu.
+ */
+export async function definirConducao(leadId, quem, nota = null) {
+  const valor = quem === "equipe" ? "equipe" : "agente";
+  await pool.query(
+    "UPDATE leads SET conduz = $2, conduz_desde = now(), conduz_nota = $3 WHERE id = $1",
+    [leadId, valor, nota],
+  );
+  return valor;
+}
+
+/** Quem conduz a conversa agora: 'agente' ou 'equipe'. Leitura fresca. */
+/**
+ * Em que pé está a compra: qual item e qual estado.
+ *
+ * "pix_enviado" a chave saiu, "comprovante" chegou o print e a equipe precisa
+ * conferir, "confirmado" alguém da equipe conferiu e liberou o material.
+ */
+export async function marcarPagamento(leadId, estado, item) {
+  const campos = { pagamento_estado: estado };
+  if (item) campos.pagamento_item = item;
+  await marcarLead(leadId, campos);
+}
+
+/** Quem conduz a conversa agora, junto da nota de quem assumiu. */
+export async function conduzDetalhe(leadId) {
+  const { rows } = await pool.query(
+    "SELECT conduz, conduz_nota FROM leads WHERE id = $1",
+    [leadId],
+  );
+  return {
+    conduz: rows[0]?.conduz || "agente",
+    nota: rows[0]?.conduz_nota || null,
+  };
+}
+
+export async function conduzAtual(leadId) {
+  const { rows } = await pool.query("SELECT conduz FROM leads WHERE id = $1", [leadId]);
+  return rows[0]?.conduz || "agente";
+}
+
+/** Lê o lead pelo telefone sem criar linha nova. */
+export async function obterLeadPorTelefone(telefone) {
+  const { rows } = await pool.query("SELECT * FROM leads WHERE telefone = $1", [telefone]);
+  return rows[0] || null;
+}
+
+/**
+ * Guarda o id de uma mensagem que NÓS enviamos.
+ *
+ * A Evolution devolve pelo webhook tudo que sai do número, inclusive o que o
+ * próprio agente mandou. Sem isto, o agente leria a própria fala como se
+ * fosse a equipe digitando e se calaria sozinho na primeira resposta.
+ */
+export async function conheceEnvio(evolutionId) {
+  if (!evolutionId) return false;
+  const { rowCount } = await pool.query(
+    "SELECT 1 FROM mensagens_processadas WHERE evolution_id = $1",
+    [evolutionId],
+  );
+  return rowCount > 0;
+}
+
+export async function registrarNossoEnvio(evolutionId) {
+  if (!evolutionId) return;
+  await pool.query(
+    "INSERT INTO mensagens_processadas (evolution_id) VALUES ($1) ON CONFLICT DO NOTHING",
+    [evolutionId],
   );
 }
 
