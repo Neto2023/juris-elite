@@ -98,3 +98,30 @@ export function liberado(telefone, lista) {
   if (!lista || lista.size === 0) return true;
   return lista.has(chaveDeNumero(telefone));
 }
+
+/**
+ * Extrai um primeiro nome usável do nome que o WhatsApp manda (o pushName do
+ * contato), para o atendente poder cumprimentar a pessoa pelo nome. Devolve ""
+ * quando não dá para confiar: contato sem nome, nome que é só o próprio número,
+ * ou coisa sem letra nenhuma (só emoji, só pontuação). Assim, sem nome o
+ * atendente não inventa nem cumprimenta por nome; com nome, cumprimenta.
+ */
+export function primeiroNome(nome, telefone = "") {
+  const bruto = String(nome || "").trim();
+  if (!bruto) return "";
+  // Nome que é o próprio número não é nome.
+  if (/^[\d\s().+-]+$/.test(bruto)) return "";
+  const digitos = bruto.replace(/\D/g, "");
+  if (digitos.length >= 6 && chaveDeNumero(digitos) === chaveDeNumero(telefone)) return "";
+  // Primeira palavra que tenha pelo menos uma letra.
+  for (const pedaco of bruto.split(/\s+/)) {
+    const limpo = pedaco.replace(/[^\p{L}\p{M}'-]/gu, "");
+    if (limpo && /\p{L}/u.test(limpo)) {
+      return (
+        limpo.charAt(0).toLocaleUpperCase("pt-BR") +
+        limpo.slice(1).toLocaleLowerCase("pt-BR")
+      );
+    }
+  }
+  return "";
+}

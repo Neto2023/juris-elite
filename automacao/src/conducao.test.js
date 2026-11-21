@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   comandoDe, pedeHumano, listaDeNumeros, liberado, calaOAgente, NOTA_DO_AGENTE,
-  NOTA_COMPROVANTE,
+  NOTA_COMPROVANTE, primeiroNome,
 } from "./conducao.js";
 
 test("/assumir tira o agente da conversa", () => {
@@ -111,4 +111,20 @@ test("confirmar pagamento nao se confunde com conversa normal", () => {
 
 test("comprovante em conferencia tambem cala o agente", () => {
   assert.equal(calaOAgente("equipe", NOTA_COMPROVANTE), true);
+});
+
+test("primeiroNome usa a primeira palavra e normaliza", () => {
+  assert.equal(primeiroNome("João Silva"), "João");
+  assert.equal(primeiroNome("MARIA DAS DORES"), "Maria");
+  assert.equal(primeiroNome("  ana  "), "Ana");
+  assert.equal(primeiroNome("Zé 💛", "5594999990000"), "Zé");
+});
+
+test("primeiroNome devolve vazio quando nao da para confiar", () => {
+  assert.equal(primeiroNome(""), "");
+  assert.equal(primeiroNome(null), "");
+  assert.equal(primeiroNome("💛🔥"), "");
+  assert.equal(primeiroNome("+55 94 99999-0000"), "");
+  // pushName que é o próprio número do contato
+  assert.equal(primeiroNome("5594999990000", "94999990000"), "");
 });

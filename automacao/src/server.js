@@ -73,6 +73,34 @@ async function digitando(telefone, texto) {
 }
 
 /**
+ * Transcreve um áudio do WhatsApp usando o serviço whisper local. Busca o áudio
+ * em base64 na própria Evolution e manda para o juris-whisper, que roda só na
+ * rede interna. Devolve o texto, ou "" se não der. Tem teto de tempo para não
+ * prender a conversa se o modelo estiver demorando demais.
+ */
+const WHISPER_URL = (process.env.WHISPER_URL || "http://juris-whisper:8090").replace(/\/$/, "");
+async function transcreverAudio(key) {
+  const midia = await evo.pegarMidiaBase64(key);
+  const base64 = midia?.base64 || midia?.media || "";
+  if (!base64) return "";
+  const ctrl = new AbortController();
+  const limite = setTimeout(() => ctrl.abort(), 120000);
+  try {
+    const r = await fetch(`${WHISPER_URL}/transcrever`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ base64, mimetype: midia?.mimetype || "audio/ogg" }),
+      signal: ctrl.signal,
+    });
+    if (!r.ok) throw new Error(`whisper HTTP ${r.status}`);
+    const j = await r.json();
+    return (j.texto || "").trim();
+  } finally {
+    clearTimeout(limite);
+  }
+}
+
+/**
  * Envia um texto ao candidato e deixa rastro de que fomos nós.
  *
  * O id que a Evolution devolve é guardado: quando o webhook trouxer essa mesma
@@ -524,7 +552,7 @@ app.post("/webhook", async (req, res) => {
     const telefone = evo.telefoneDoJid(remoteJid);
     if (!telefone) return;
 
-    const texto = extrairTexto(dados.message);
+    let texto = extrairTexto(dados.message);
     const midia = extrairMidia(dados.message);
 
     if (fromMe) {
@@ -544,7 +572,14 @@ app.post("/webhook", async (req, res) => {
 
     const lead = await db.obterOuCriarLead(telefone, dados.pushName);
     const anteriores = await db.historico(lead.id);
-    await db.salvarMensagem(lead.id, "recebida", texto?.trim() || `[${midia}]`);
+    // Audio sem legenda so entra no historico depois de transcrever (mais
+    // abaixo). Gravar "[audio]" aqui faria o historico guardar o marcador no
+    // lugar do que a pessoa falou, e o modelo ficaria se desculpando por ele
+    // nas mensagens seguintes.
+    const salvarDepois = midia === "audio" && !texto?.trim();
+    if (!salvarDepois) {
+      await db.salvarMensagem(lead.id, "recebida", texto?.trim() || `[${midia}]`);
+    }
 
     // Fora da lista de teste: guarda a mensagem e não responde. A conversa
     // é da equipe, que já vinha atendendo na mão.
@@ -565,6 +600,53 @@ app.post("/webhook", async (req, res) => {
     // comprovante; sem Pix em aberto, é coisa que só gente resolve.
     if (midia === "imagem" || midia === "documento") {
       await comprovanteRecebido(lead, midia, texto);
+      return;
+    }
+
+    // Áudio, vídeo ou figurinha sem legenda: por enquanto o atendente não
+    // transcreve, então mandar isso para o modelo seria um conteúdo vazio, que
+    // a API recusa e deixa a pessoa sem resposta. Enquanto a transcrição não
+    // entra, ele reconhece o recibo e pede por texto, sem travar.
+    // Áudio sem legenda: transcreve com o Whisper local e segue como se a
+    // pessoa tivesse digitado. Se não der para ouvir, pede por texto, mas nunca
+    // manda conteúdo vazio para o modelo (a API recusa e a pessoa fica sem resposta).
+    if (midia === "audio" && !texto?.trim()) {
+      await evo.simularDigitacao(lead.telefone, 2500);
+      let transcrito = "";
+      try {
+        transcrito = await transcreverAudio(dados.key);
+      } catch (e) {
+        console.error("[whisper] falhou:", e.message);
+      }
+      if (transcrito && transcrito.trim()) {
+        texto = transcrito.trim();
+        await db.salvarMensagem(lead.id, "recebida", texto);
+        await db.registrarEvento(lead.id, "audio_transcrito", { chars: texto.length });
+        // daqui pra baixo o fluxo é o mesmo de uma mensagem de texto.
+      } else {
+        await db.salvarMensagem(lead.id, "recebida", "[audio]");
+        await espera(600, 1200);
+        await enviarAoCandidato(
+          lead,
+          "Recebi seu áudio aqui! Mas não consegui ouvir direito agora. " +
+          "Me manda por texto o que você precisa? Assim te respondo na hora.",
+        );
+        await db.registrarEvento(lead.id, "audio_sem_transcricao", {});
+        return;
+      }
+    }
+
+    // Vídeo ou figurinha sem legenda: o atendente não lê isso, então reconhece
+    // e pede por texto, sem travar.
+    if (midia && midia !== "audio" && !texto?.trim()) {
+      const oque = midia === "video" ? "seu vídeo" : "sua mensagem";
+      await espera(900, 1800);
+      await enviarAoCandidato(
+        lead,
+        `Recebi ${oque} aqui! Por mensagem escrita eu consigo te ajudar bem mais rápido. ` +
+        `Me conta por texto o que você precisa?`,
+      );
+      await db.registrarEvento(lead.id, "midia_sem_texto", { midia });
       return;
     }
 

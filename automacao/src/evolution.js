@@ -48,6 +48,18 @@ export async function enviarDocumento(numero, url, nomeArquivo, legenda = "") {
   });
 }
 
+/**
+ * Baixa a mídia de uma mensagem (áudio, no nosso caso) em base64, pela própria
+ * Evolution. Recebe a key da mensagem que veio no webhook. O áudio do WhatsApp
+ * costuma vir como ogg/opus.
+ */
+export async function pegarMidiaBase64(key) {
+  return chamar(`/chat/getBase64FromMediaMessage/${INSTANCE}`, {
+    message: { key },
+    convertToMp4: false,
+  });
+}
+
 /** Mostra "digitando..." — a conversa fica bem menos robótica. */
 export async function simularDigitacao(numero, ms = 1200) {
   try {

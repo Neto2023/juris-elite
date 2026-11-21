@@ -82,9 +82,26 @@ services:
         condition: service_healthy
     command: ["node", "src/server.js"]
 
+  # Transcricao local de audio (faster-whisper). So na rede interna: nenhum
+  # audio sai do servidor. O modelo medium baixa no primeiro boot e fica no
+  # volume, entao so baixa uma vez.
+  juris-whisper:
+    build: ./whisper
+    image: juris-whisper:local
+    container_name: juris-whisper
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      WHISPER_MODELO: ${WHISPER_MODELO:-medium}
+      WHISPER_COMPUTE: ${WHISPER_COMPUTE:-int8}
+      WHISPER_IDIOMA: ${WHISPER_IDIOMA:-pt}
+    volumes:
+      - juris_whisper_models:/models
+
 volumes:
   juris_postgres_data:
   juris_redis_data:
+  juris_whisper_models:
 
 networks:
   default:
