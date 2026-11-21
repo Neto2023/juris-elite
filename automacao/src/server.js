@@ -5,6 +5,7 @@ import { responder, avisarEquipe, avisarEquipeTexto, CATALOGO } from "./agente.j
 import { conferirCadastro } from "./validacao.js";
 import {
   comandoDe, pedeHumano, listaDeNumeros, liberado, calaOAgente, NOTA_COMPROVANTE,
+  chaveDeNumero,
 } from "./conducao.js";
 
 const app = express();
@@ -365,6 +366,122 @@ async function entregarBoasVindas(lead, nome) {
     console.warn("[cadastro] entrega incompleta para lead", lead.id, falhas);
   }
 }
+
+/**
+ * Procura, em qualquer canto do corpo do webhook, o que parece telefone.
+ *
+ * O formato exato do payload da Cakto nao esta documentado campo a campo, so
+ * por exemplo. Em vez de apostar num caminho fixo que quebra calado, varre a
+ * arvore atras de chaves com cara de telefone e deixa a comparacao decidir.
+ */
+function telefonesDe(obj, achados = []) {
+  if (!obj || typeof obj !== "object" || achados.length > 20) return achados;
+  for (const [chave, valor] of Object.entries(obj)) {
+    if (typeof valor === "string") {
+      if (/(phone|telefone|celular|whats)/i.test(chave) && /[0-9]{8}/.test(valor)) {
+        achados.push(valor);
+      }
+    } else if (typeof valor === "object") {
+      telefonesDe(valor, achados);
+    }
+  }
+  return achados;
+}
+
+/** O mesmo, para o nome do produto, que diz qual dos dois foi vendido. */
+function produtosDe(obj, achados = []) {
+  if (!obj || typeof obj !== "object" || achados.length > 20) return achados;
+  for (const [chave, valor] of Object.entries(obj)) {
+    if (typeof valor === "string" && /(product|produto|offer|oferta|name|nome|title)/i.test(chave)) {
+      achados.push(valor);
+    } else if (typeof valor === "object") {
+      produtosDe(valor, achados);
+    }
+  }
+  return achados;
+}
+
+function itemDoProduto(nomes) {
+  const texto = nomes.join(" ").toLowerCase();
+  if (/pasta|legisla|quest/.test(texto)) return "pastas";
+  if (/planejamento|organiza|mentoria/.test(texto)) return "mentoria";
+  return null;
+}
+
+/**
+ * Webhook da Cakto: a venda cai la e precisa chegar aqui.
+ *
+ * A Cakto trata QUALQUER resposta como entregue, inclusive erro, e nao tenta
+ * de novo. Entao isto responde 200 na hora e trabalha depois, e toda falha
+ * vira evento no banco em vez de sumir sem deixar rastro.
+ */
+app.post("/api/cakto", async (req, res) => {
+  res.status(200).json({ recebido: true });
+
+  try {
+    const corpo = req.body || {};
+    // Aceita mais de um segredo, separado por virgula. O arquivo de
+    // credenciais traz dois candidatos e eu nao posso abri-lo para escolher:
+    // a conferencia decide no primeiro evento real, e o log diz qual bateu
+    // pela posicao, nunca pelo valor. Depois disso, sobra um so aqui.
+    const segredos = (process.env.CAKTO_WEBHOOK_SECRET || "")
+      .split(",").map((x) => x.trim()).filter(Boolean);
+    if (!segredos.length) {
+      console.warn("[cakto] CAKTO_WEBHOOK_SECRET vazio: chamada ignorada");
+      return;
+    }
+    const qual = segredos.indexOf(String(corpo.secret || ""));
+    if (qual < 0) {
+      console.warn("[cakto] segredo nao confere, chamada ignorada");
+      return;
+    }
+    console.log(`[cakto] segredo confere (o ${qual + 1}o da lista)`);
+
+    const evento = corpo.event || corpo.evento || "";
+    if (evento !== "purchase_approved") {
+      console.log(`[cakto] evento ${evento || "sem nome"}, nada a fazer`);
+      return;
+    }
+
+    const finais = telefonesDe(corpo).map(chaveDeNumero).filter((n) => n.length === 8);
+    let lead = null;
+    for (const final of finais) {
+      lead = await db.acharLeadPorFinal(final);
+      if (lead) break;
+    }
+
+    const item = itemDoProduto(produtosDe(corpo));
+
+    if (!lead) {
+      // Comprou sem passar pelo atendente, ou com outro numero. A venda esta
+      // feita e a Cakto ja liberou o material: o que falta e o diagnostico,
+      // e so gente consegue alcancar essa pessoa.
+      await db.registrarEvento(null, "cakto_sem_lead", { item, campos: Object.keys(corpo) });
+      console.log("[cakto] venda aprovada sem conversa correspondente");
+      const equipe = (process.env.EQUIPE_WHATSAPP || "").split(",").map((n) => n.trim()).filter(Boolean);
+      if (equipe.length) {
+        const texto =
+          "*Venda aprovada na Cakto*" + "\n" +
+          (item ? `Produto: ${CATALOGO[item]?.nome || item}` + "\n" : "") +
+          "Não achei essa pessoa em nenhuma conversa do WhatsApp. " +
+          "Mandem o Formulário Diagnóstico para ela.";
+        await Promise.allSettled(equipe.map((n) => evo.enviarTexto(n, texto)));
+      }
+      return;
+    }
+
+    if (item && lead.pagamento_item !== item) {
+      await db.marcarPagamento(lead.id, lead.pagamento_estado || "checkout_enviado", item);
+      lead.pagamento_item = item;
+    }
+
+    await db.registrarEvento(lead.id, "cakto_aprovado", { item: item || lead.pagamento_item });
+    console.log(`[cakto] venda aprovada de ${lead.telefone}`);
+    await pagamentoConfirmado(lead, "Cakto");
+  } catch (erro) {
+    console.error("[cakto] falhou:", erro);
+  }
+});
 
 app.post("/webhook", async (req, res) => {
   // Responde imediatamente: a Evolution não deve esperar o modelo.

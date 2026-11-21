@@ -151,6 +151,22 @@ export async function conduzAtual(leadId) {
   return rows[0]?.conduz || "agente";
 }
 
+/**
+ * Acha o lead pelos 8 últimos dígitos do telefone.
+ *
+ * O nono dígito entra e sai conforme a idade do contato, e o telefone que a
+ * Cakto manda no webhook não vem no mesmo formato do que a Evolution entrega.
+ * Comparar pelo fim é o que faz os dois baterem.
+ */
+export async function acharLeadPorFinal(final) {
+  if (!final || final.length < 8) return null;
+  const { rows } = await pool.query(
+    "SELECT * FROM leads WHERE right(telefone, 8) = $1 ORDER BY atualizado_em DESC LIMIT 1",
+    [final],
+  );
+  return rows[0] || null;
+}
+
 /** Lê o lead pelo telefone sem criar linha nova. */
 export async function obterLeadPorTelefone(telefone) {
   const { rows } = await pool.query("SELECT * FROM leads WHERE telefone = $1", [telefone]);
