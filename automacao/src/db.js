@@ -37,7 +37,31 @@ export async function garantirEsquema() {
     CREATE INDEX IF NOT EXISTS leads_conduz_idx ON leads (conduz);
     CREATE INDEX IF NOT EXISTS leads_origem_idx ON leads (origem);
     CREATE INDEX IF NOT EXISTS leads_email_idx  ON leads (lower(email)) WHERE email IS NOT NULL;
+    -- Guarda valores de configuracao que nascem em producao e precisam
+    -- sobreviver a reinicio do container, como o segredo do webhook da Cakto,
+    -- que o receptor aprende na primeira entrega e que nunca passa pela
+    -- maquina local. Chave e valor, nada mais.
+    CREATE TABLE IF NOT EXISTS config (
+      chave         TEXT PRIMARY KEY,
+      valor         TEXT,
+      atualizado_em TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
   `);
+}
+
+/** Le um valor da tabela config, ou null se nao existir. */
+export async function lerConfig(chave) {
+  const { rows } = await pool.query("SELECT valor FROM config WHERE chave = $1", [chave]);
+  return rows[0] ? rows[0].valor : null;
+}
+
+/** Grava (ou atualiza) um valor na tabela config. */
+export async function gravarConfig(chave, valor) {
+  await pool.query(
+    `INSERT INTO config (chave, valor, atualizado_em) VALUES ($1, $2, now())
+     ON CONFLICT (chave) DO UPDATE SET valor = EXCLUDED.valor, atualizado_em = now()`,
+    [chave, valor],
+  );
 }
 
 /**

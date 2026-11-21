@@ -420,17 +420,38 @@ app.post("/api/cakto", async (req, res) => {
 
   try {
     const corpo = req.body || {};
-    // Aceita mais de um segredo, separado por virgula. O arquivo de
-    // credenciais traz dois candidatos e eu nao posso abri-lo para escolher:
-    // a conferencia decide no primeiro evento real, e o log diz qual bateu
-    // pela posicao, nunca pelo valor. Depois disso, sobra um so aqui.
+    const recebido = String(corpo.secret || "");
+
+    // Aprendizado travado do segredo. O webhook foi criado no painel da Cakto
+    // e o segredo nasce la; para ele nunca precisar passar pela minha mao, o
+    // receptor aprende na PRIMEIRA entrega autentica e grava no banco. A trava
+    // CAKTO_APRENDER_SEGREDO=1 so fica ligada na janela de segundos em que eu
+    // disparo o "Testar" do painel; depois disso a propria gravacao a desliga.
+    if (
+      process.env.CAKTO_APRENDER_SEGREDO === "1" &&
+      !(process.env.CAKTO_WEBHOOK_SECRET || "").trim() &&
+      recebido
+    ) {
+      try {
+        await db.gravarConfig("cakto_webhook_secret", recebido);
+        process.env.CAKTO_WEBHOOK_SECRET = recebido;
+        process.env.CAKTO_APRENDER_SEGREDO = "";
+        console.log("[cakto] segredo aprendido na primeira entrega e gravado no banco");
+      } catch (e) {
+        console.error("[cakto] falhei ao gravar o segredo aprendido:", e.message);
+      }
+    }
+
+    // Aceita mais de um segredo, separado por virgula, por seguranca; na
+    // pratica o banco guarda um so. A conferencia compara pelo valor e o log
+    // diz apenas que bateu, nunca o segredo em si.
     const segredos = (process.env.CAKTO_WEBHOOK_SECRET || "")
       .split(",").map((x) => x.trim()).filter(Boolean);
     if (!segredos.length) {
       console.warn("[cakto] CAKTO_WEBHOOK_SECRET vazio: chamada ignorada");
       return;
     }
-    const qual = segredos.indexOf(String(corpo.secret || ""));
+    const qual = segredos.indexOf(recebido);
     if (qual < 0) {
       console.warn("[cakto] segredo nao confere, chamada ignorada");
       return;
@@ -606,6 +627,20 @@ const servidor = async () => {
     // Base indisponível no boot não deve impedir o processo de subir: o
     // /health já denuncia, e o Docker reinicia.
     console.error("[boot] nao consegui garantir o esquema:", e.message);
+  }
+  // O segredo do webhook da Cakto vive no banco, nao no .env: ele foi
+  // aprendido em producao, na primeira entrega, e nunca passou pela maquina
+  // local. Se o ambiente nao trouxe um, busca o guardado.
+  if (!process.env.CAKTO_WEBHOOK_SECRET) {
+    try {
+      const guardado = await db.lerConfig("cakto_webhook_secret");
+      if (guardado) {
+        process.env.CAKTO_WEBHOOK_SECRET = guardado;
+        console.log("[boot] segredo do webhook da Cakto carregado do banco");
+      }
+    } catch (e) {
+      console.error("[boot] nao consegui ler o segredo da Cakto:", e.message);
+    }
   }
   app.listen(PORT, "0.0.0.0", () => {
     console.log(`juris-agent ouvindo na porta ${PORT}`);
