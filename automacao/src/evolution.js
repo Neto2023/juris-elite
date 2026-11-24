@@ -37,6 +37,18 @@ export async function enviarTexto(numero, texto) {
   });
 }
 
+/**
+ * Manda texto para um GRUPO. O destino e o JID do grupo (termina em @g.us) e
+ * NAO passa por normalizarNumero: aquilo tira tudo que nao e digito e apagaria
+ * o sufixo @g.us, deixando o Evolution sem saber que o destino e um grupo.
+ */
+export async function enviarParaGrupo(jidGrupo, texto) {
+  return chamar(`/message/sendText/${INSTANCE}`, {
+    number: String(jidGrupo || "").trim(),
+    text: texto,
+  });
+}
+
 export async function enviarDocumento(numero, url, nomeArquivo, legenda = "") {
   return chamar(`/message/sendMedia/${INSTANCE}`, {
     number: normalizarNumero(numero),

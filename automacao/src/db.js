@@ -262,3 +262,35 @@ export async function resumoFunil() {
   const { rows } = await pool.query("SELECT * FROM funil");
   return rows;
 }
+
+/**
+ * Contagem do DIA (fuso America/Belem) para o resumo que vai ao grupo da
+ * equipe. Le a trilha de eventos e os leads criados hoje. So numeros: nada de
+ * nome ou telefone de ninguem.
+ */
+export async function resumoDoDia() {
+  const tz = "America/Belem";
+  const [leads, eventos] = await Promise.all([
+    pool.query(
+      `SELECT count(*)::int AS n FROM leads
+       WHERE (criado_em AT TIME ZONE $1)::date = (now() AT TIME ZONE $1)::date`,
+      [tz],
+    ),
+    pool.query(
+      `SELECT tipo, count(*)::int AS n FROM eventos
+       WHERE (criado_em AT TIME ZONE $1)::date = (now() AT TIME ZONE $1)::date
+       GROUP BY tipo`,
+      [tz],
+    ),
+  ]);
+  const c = {};
+  for (const r of eventos.rows) c[r.tipo] = r.n;
+  return {
+    leadsNovos: leads.rows[0].n,
+    vendas: (c.cakto_aprovado || 0) + (c.cakto_sem_lead || 0),
+    comprovantes: c.comprovante_recebido || 0,
+    escalados: (c.escalado || 0) + (c.pediu_humano || 0),
+    duvidas: c.duvida_para_equipe || 0,
+    diagnosticos: c.diagnostico_enviado || 0,
+  };
+}

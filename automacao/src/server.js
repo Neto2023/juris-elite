@@ -1,7 +1,7 @@
 import express from "express";
 import * as db from "./db.js";
 import * as evo from "./evolution.js";
-import { responder, avisarEquipe, avisarEquipeTexto, CATALOGO } from "./agente.js";
+import { responder, avisarEquipe, avisarEquipeTexto, avisarGrupo, CATALOGO } from "./agente.js";
 import { conferirCadastro } from "./validacao.js";
 import {
   comandoDe, pedeHumano, listaDeNumeros, liberado, calaOAgente, NOTA_COMPROVANTE,
@@ -363,14 +363,16 @@ async function entregarBoasVindas(lead, nome) {
   const falhas = [];
 
   try {
-    await evo.enviarTexto(lead.telefone,
+    await enviarAoCandidato(lead,
       `${primeiro}, aqui é da Juris Elite. Recebi seu cadastro e já te mando o Mapa de Pontos.`);
   } catch (e) { falhas.push("saudacao: " + e.message); }
 
   if (mapa) {
     try {
-      await evo.enviarDocumento(lead.telefone, mapa, "Mapa-de-Pontos-Juris-Elite.pdf",
+      const resp = await evo.enviarDocumento(lead.telefone, mapa, "Mapa-de-Pontos-Juris-Elite.pdf",
         "O Mapa de Pontos da Guarda de Marabá: onde estão os 100 pontos da sua prova.");
+      await db.registrarNossoEnvio(resp?.key?.id);
+      await db.salvarMensagem(lead.id, "enviada", "[documento] Mapa-de-Pontos-Juris-Elite.pdf");
       await db.marcarLead(lead.id, { mapa_enviado: true });
       await db.registrarEvento(lead.id, "mapa_enviado", { origem: "landing" });
     } catch (e) { falhas.push("mapa: " + e.message); }
@@ -380,7 +382,7 @@ async function entregarBoasVindas(lead, nome) {
 
   if (grupo) {
     try {
-      await evo.enviarTexto(lead.telefone,
+      await enviarAoCandidato(lead,
         `Entra também no grupo da mentoria, é onde eu aviso de prazo, retificação e aula: ${grupo}`);
       await db.marcarLead(lead.id, { convite_enviado: true, estagio: "no_grupo" });
       await db.registrarEvento(lead.id, "convite_enviado", { origem: "landing" });
@@ -500,6 +502,15 @@ app.post("/api/cakto", async (req, res) => {
     }
 
     const item = itemDoProduto(produtosDe(corpo));
+
+    // Acompanhamento: toda venda aprovada vira um aviso leve no grupo da
+    // equipe, com ou sem conversa casada. A acao (mandar o diagnostico) segue
+    // na notificacao direta de quem atende; aqui e so a casa ver o resultado.
+    await avisarGrupo(
+      `*Venda aprovada*\n` +
+      `Produto: ${item ? CATALOGO[item]?.nome || item : "material"}` +
+      (lead ? `\nAluno: ${lead.nome || lead.telefone}` : "\n(Sem conversa casada no WhatsApp.)"),
+    );
 
     if (!lead) {
       // Comprou sem passar pelo atendente, ou com outro numero. A venda esta
@@ -702,6 +713,58 @@ app.post("/webhook", async (req, res) => {
   }
 });
 
+// ---- Resumo diario para o grupo da equipe --------------------------------
+// Uma vez por dia, no horario configurado (fuso America/Belem), o atendente
+// posta no grupo da equipe o fechamento do dia. E a camada de acompanhamento
+// que o Dr. Walter pediu: a casa ve o movimento sem abrir conversa nenhuma.
+const RESUMO_HORA = Number(process.env.RESUMO_HORA ?? 20);
+const RESUMO_MIN = Number(process.env.RESUMO_MIN ?? 0);
+let ultimoResumoDia = null;
+
+function partesBelem(data) {
+  const fmt = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Belem",
+    year: "numeric", month: "2-digit", day: "2-digit",
+    hour: "2-digit", minute: "2-digit", hourCycle: "h23",
+  });
+  const p = {};
+  for (const parte of fmt.formatToParts(data)) p[parte.type] = parte.value;
+  return p;
+}
+
+function formatarResumoDiario(r) {
+  return [
+    "*Resumo do dia - Juris Elite*",
+    `Leads novos: ${r.leadsNovos}`,
+    `Vendas aprovadas: ${r.vendas}`,
+    `Comprovantes recebidos: ${r.comprovantes}`,
+    `Escalados para a equipe: ${r.escalados}`,
+    `Duvidas marcadas: ${r.duvidas}`,
+  ].join("\n");
+}
+
+async function enviarResumoDiario() {
+  try {
+    const r = await db.resumoDoDia();
+    await avisarGrupo(formatarResumoDiario(r));
+    console.log("[resumo] enviado ao grupo da equipe");
+  } catch (e) {
+    console.error("[resumo] falhou:", e.message);
+  }
+}
+
+function iniciarResumoDiario() {
+  setInterval(() => {
+    const p = partesBelem(new Date());
+    const dia = `${p.year}-${p.month}-${p.day}`;
+    if (Number(p.hour) === RESUMO_HORA && Number(p.minute) === RESUMO_MIN && ultimoResumoDia !== dia) {
+      ultimoResumoDia = dia;
+      enviarResumoDiario();
+    }
+  }, 60 * 1000);
+  console.log(`[resumo] agendado para ${String(RESUMO_HORA).padStart(2, "0")}:${String(RESUMO_MIN).padStart(2, "0")} (America/Belem)`);
+}
+
 const servidor = async () => {
   try {
     await db.garantirEsquema();
@@ -730,6 +793,7 @@ const servidor = async () => {
     console.log(LIBERADOS.size
       ? `[modo] TESTE: respondendo só a ${LIBERADOS.size} número(s) liberado(s)`
       : "[modo] ABERTO: respondendo a qualquer número");
+    iniciarResumoDiario();
   });
 };
 servidor();

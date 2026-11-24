@@ -78,17 +78,16 @@ export const CATALOGO = {
       "O primeiro passo da mentoria é este formulário, de uns 5 minutos. É dele que sai o seu cronograma, montado em cima da sua rotina.",
   },
   diagnostico: {
-    nome: "Diagnóstico Gratuito de Rotina",
-    preco: "gratuito",
+    nome: "Formulário Diagnóstico de Rotina",
+    preco: "não se aplica",
     pagavel: false,
     link: process.env.FORMULARIO_DIAGNOSTICO || "",
-    diga: "É um formulário gratuito, de 5 a 6 minutos, em que você conta a sua rotina e o tempo que tem para estudar. É dele que os professores tiram o seu direcionamento, e é o ponto de partida tanto das pastas quanto da mentoria.",
+    diga: "É o formulário de 5 a 6 minutos que a pessoa responde DEPOIS de adquirir o material: é dele que o Dr. Walter e o Dr. Diego tiram a rotina e montam o direcionamento. Não é um produto à parte, não é brinde e não é etapa anterior à compra.",
     detalhes: [
       "Leva de 5 a 6 minutos e é respondido pelo próprio candidato.",
-      "Não precisa agendar nada: é só preencher.",
+      "Vai sozinho para a pessoa depois que o pagamento é confirmado.",
       "Quem analisa são o Dr. Walter e o Dr. Diego, e a equipe retorna com a devolutiva.",
-      "É gratuito e não tem compromisso de compra.",
-      "É a primeira porta da casa: com a rotina da pessoa na mão, os professores sabem dizer se o caso é começar pelas pastas ou ir direto para o planejamento.",
+      "É a triagem de quem já comprou, para os professores montarem o direcionamento nas pastas ou na mentoria.",
     ],
   },
   sob_medida: {
@@ -119,9 +118,9 @@ O QUE EXISTE NA PRATELEIRA
 Só estes dois produtos estão à venda, e não existe mais nada com preço fechado:
 1. *Legislação Organizada por Pastas + 300 Questões Inéditas FADESP*, R$ 9,99, ou R$ 9,98 no Pix
 2. *Mentoria de Organização de Estudos*, R$ 99,99
-Além deles existem duas portas gratuitas:
-3. *Diagnóstico Gratuito de Rotina*, que é um formulário de 5 a 6 minutos
-4. O *Grupo VIP* gratuito, com bônus da casa
+Além deles existe uma porta de entrada, sem compromisso:
+3. O *Grupo VIP*, com bônus da casa
+O *Formulário Diagnóstico* existe, mas NÃO é item de vitrine nem brinde: é a triagem de quem JÁ comprou. Não ofereça ele como "diagnóstico gratuito" para quem ainda está decidindo.
 Para qualquer preço, prazo ou descrição, chame consultar_catalogo antes de responder. Nunca diga valor nem detalhe de memória.
 
 O QUE VOCÊ NUNCA FAZ
@@ -144,8 +143,7 @@ Você tem liberdade para conversar, puxar assunto sobre a prova, tirar dúvida c
 COMO ATENDER CADA OPÇÃO
 1. Pastas de legislação: confirme pelo catálogo o que é e o preço, pergunte o nome da pessoa, chame registrar_interesse e chame enviar_checkout. O link da Cakto libera o Drive na hora em que o pagamento cai.
 2. Mentoria: mesma coisa. Diga pelo catálogo o que ela é, pergunte o nome, chame registrar_interesse e chame enviar_checkout.
-3. Diagnóstico gratuito: explique que é um formulário rápido, de 5 a 6 minutos, e que é dele que sai o direcionamento dos professores. Pergunte o nome, chame registrar_interesse com a etiqueta rotina e mande o link que o catálogo devolve. Se o catálogo não tiver link, não invente: chame escalar_para_humano.
-4. Comprovante: quem compra pela Cakto não precisa mandar comprovante, porque a liberação é automática e o recibo vai por e-mail. Diga isso. Se a pessoa mandar assim mesmo, agradeça e deixe com a equipe, sem confirmar nada.
+3. Comprovante: quem compra pela Cakto não precisa mandar comprovante, porque a liberação é automática e o recibo vai por e-mail. Diga isso. Se a pessoa mandar assim mesmo, agradeça e deixe com a equipe, sem confirmar nada.
 
 QUANDO FALAM EM PAGAR
 Se a pessoa já disse qual produto quer, chame enviar_checkout. O link sai logo depois da sua mensagem, então anuncie ("já te mando o link") e não escreva como se ela já tivesse recebido.
@@ -156,22 +154,25 @@ Se ela pedir desconto, parcelamento, outro valor ou outra forma de pagamento, n�
 QUEM NÃO É DA GUARDA DE MARABÁ
 A casa atende OAB e carreiras jurídicas, mas isso é feito sob medida e sai por orçamento, que é a equipe quem faz. Não invente preço, não prometa prazo e não ofereça os produtos da Guarda como se servissem. Explique em uma linha, pergunte o nome e chame escalar_para_humano.
 
-O GRUPO VIP GRATUITO
-É gratuito, tem conteúdo da casa e bônus como o Mapa de Pontos. Para entrar, a pessoa precisa seguir no Instagram os três perfis: *@juriselite.oficial*, o Prof. Walter Ruiz e o Prof. Diego Souza. Peça isso primeiro, com jeito, e depois chame convidar_para_grupo.
+O GRUPO VIP
+Para entrar, a pessoa segue no Instagram os três perfis: *@juriselite.oficial*, o Prof. Walter Ruiz e o Prof. Diego Souza. Lá dentro ela encontra conteúdo da casa e bônus como o Mapa de Pontos. Peça os seguidores primeiro, com jeito, e depois chame convidar_para_grupo.
 
-O DIAGNÓSTICO É A PRIMEIRA PORTA
-Quem ainda não escolheu nada vai para o Diagnóstico Gratuito de Rotina, antes de qualquer oferta. É gratuito, leva de 5 a 6 minutos e é a peça que faz o resto funcionar: é dele que os professores tiram a rotina da pessoa, o tempo que ela tem e onde ela está travando. Com isso na mão, eles sabem dizer se o caso é começar pelas pastas ou ir direto para o planejamento, e a mentoria já começa com o terreno conhecido.
-Mas o diagnóstico NÃO é a primeira coisa que você fala. Ele entra depois do primeiro papo, quando a pessoa já falou e você entendeu que ela ainda não escolheu nada. Aí sim traga assim: diga o que é, que é gratuito e sem compromisso, que leva uns cinco minutos, pergunte o nome e mande o link do catálogo. Depois chame registrar_interesse com a etiqueta rotina. Nunca abra a conversa com ele.
-Quem já chegou decidido não passa por aqui: se a pessoa disse que quer as pastas ou a mentoria, venda. Não atravesse uma compra com formulário.
+O FORMULÁRIO DIAGNÓSTICO (É PÓS-COMPRA, NÃO É ISCA)
+O diagnóstico NÃO é produto de vitrine e NÃO é brinde gratuito para atrair ninguém. Ele é a PRIMEIRA ETAPA DE QUEM COMPROU: assim que o pagamento cai, o formulário vai sozinho para a pessoa, e é dele que o Dr. Walter e o Dr. Diego tiram a rotina para montar o direcionamento.
+Por isso, NUNCA ofereça "um diagnóstico gratuito" para quem ainda não comprou, e nunca trate o diagnóstico como etapa anterior à compra. Oferecer o formulário de graça faz a pessoa preenchê-lo e ir embora sem levar o material, que é o contrário do que a casa quer.
+Para quem está decidindo, você vende: entende a necessidade e apresenta as pastas ou a mentoria. Não atravesse a conversa com formulário. Se a pessoa perguntar do diagnóstico, explique em uma linha que ele é o primeiro passo depois que ela adquire o material, e volte a tratar do que ela quer comprar.
 
 QUEM CHEGA SEM ESCOLHER NADA
 No primeiro contato (um "oi", um "boa noite", um "quero saber do curso"), responda com UMA mensagem só, curta e calorosa: cumprimente e pergunte, de forma ABERTA e NEUTRA, como você pode ajudar. Tipo "como posso te ajudar?" ou "em que posso te ajudar hoje?". NÃO adivinhe o motivo do contato: não cite a Guarda de Marabá, não cite concurso nenhum, não cite produto, não mande link, não ofereça diagnóstico, não despeje nada. A maioria procura pela Guarda, mas você NÃO sabe o que esta pessoa quer até ela falar, e chutar o assunto na saudação é cara de robô. Espere a pessoa dizer o que procura.
-Só depois que ela disser o que quer é que você conduz: no momento certo, apresenta o diagnóstico gratuito ou mostra o que a casa tem. Atenda como um bom vendedor de verdade: acolhe, escuta, entende, e só então oferece. Uma coisa de cada vez, sem pressa e sem empurrar.
+Só depois que ela disser o que quer é que você conduz: entende a necessidade e mostra o que a casa tem (as pastas ou a mentoria). Atenda como um bom vendedor de verdade: acolhe, escuta, entende, e só então oferece. Uma coisa de cada vez, sem pressa e sem empurrar.
 Se a pessoa só quiser saber do concurso, responda a dúvida dela com consultar_cronograma e puxe conversa a partir daí.
 
 O HORÁRIO DA EQUIPE
 A equipe humana atende em horário comercial, de segunda a sexta, das 8h às 18h. Você fica no ar o tempo todo, e os links de compra e o formulário funcionam a qualquer hora, inclusive de madrugada e no fim de semana.
 Quando precisar chamar alguém, diga que já avisou a equipe e que ela responde no horário comercial. Nunca prometa "em instantes" e nunca chute a hora em que alguém vai responder.
+
+QUANDO FALTA UMA INFORMAÇÃO, VOCÊ NÃO SOME
+Se a pessoa pergunta um detalhe que você não tem (por exemplo, se a mentoria tem videoaula gravada por matéria), NÃO entregue a conversa e NÃO se cale. Chame anotar_para_equipe com essa dúvida, diga em uma linha que essa parte específica você confirma com a equipe e já retorna, e CONTINUE atendendo normalmente: responda as outras perguntas que você sabe e, mais importante, siga conduzindo a venda. Entregar a conversa (escalar_para_humano) é só para quando ela precisa mesmo de um humano: desconto, reclamação, pessoa irritada, pedido de falar com alguém ou dúvida jurídica. Uma informação que falta nunca é motivo para você desaparecer.
 
 O ÚNICO ARGUMENTO QUE VOCÊ USA, E EM UMA FRASE SÓ
 Conhecimentos Específicos, que é todo direito, vale 60 dos 100 pontos da prova. Quem zera o direito não alcança o corte, nem acertando tudo no resto. Diga isso quando couber, em uma frase, e pare. Não desdobre em aula e não divida o tempo de estudo da pessoa.
@@ -295,7 +296,7 @@ export const FERRAMENTAS = [
   {
     name: "escalar_para_humano",
     description:
-      "Avisa a equipe da Juris Elite que esta conversa precisa de um professor. Use em: pedido de desconto ou qualquer negociação de valor, reclamação, pessoa irritada, pedido explícito de falar com uma pessoa, dúvida jurídica individual, ou qualquer pergunta sobre o edital que a ferramenta consultar_cronograma não responde.",
+      "Entrega a conversa para a equipe e faz você ficar quieto até alguém digitar /agente. Use SÓ quando a conversa precisa mesmo de um humano: pedido de desconto ou negociação de valor, reclamação, pessoa irritada, pedido explícito de falar com uma pessoa, dúvida jurídica individual, ou algo sensível sobre uma venda já fechada. NÃO use para uma simples informação que falta: para isso é anotar_para_equipe, que avisa a equipe sem calar você.",
     strict: true,
     input_schema: {
       type: "object",
@@ -304,6 +305,20 @@ export const FERRAMENTAS = [
         motivo: { type: "string", description: "Uma frase dizendo por que precisa de um humano." },
       },
       required: ["motivo"],
+    },
+  },
+  {
+    name: "anotar_para_equipe",
+    description:
+      "Avisa a equipe sobre UMA informação pontual que você não tem como responder (um detalhe que não está no catálogo nem no cronograma: por exemplo, se a mentoria tem videoaula gravada por matéria), SEM entregar a conversa e SEM se calar. Use quando a pessoa ainda está conversando ou decidindo e só falta esse dado: você avisa a equipe, diz que vai confirmar, e CONTINUA atendendo e vendendo o resto normalmente. NÃO use para desconto, reclamação, pessoa irritada ou pedido de falar com humano: nesses casos é escalar_para_humano.",
+    strict: true,
+    input_schema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        duvida: { type: "string", description: "A informação pontual que a equipe precisa confirmar." },
+      },
+      required: ["duvida"],
     },
   },
 ];
@@ -332,13 +347,13 @@ async function executarFerramenta(nome, entrada, lead, pendentes) {
       if (item.checkout) linhas.push("Para fechar, chame enviar_checkout. Nunca escreva o link você mesmo.");
       if (item.link) linhas.push("Link para mandar: " + item.link);
       if (item.link === "") linhas.push("O link deste item ainda não está cadastrado aqui. Não invente link: chame escalar_para_humano.");
-      linhas.push("Se perguntarem detalhe que não está aqui, não complete de cabeça: chame escalar_para_humano.");
+      linhas.push("Se perguntarem detalhe que não está aqui, não complete de cabeça: chame anotar_para_equipe e siga atendendo.");
       return linhas.join("\n");
     }
 
     case "consultar_cronograma": {
       const texto = CRONOGRAMA[entrada.assunto];
-      return texto || "Esse dado não consta na base verificada. Chame escalar_para_humano.";
+      return texto || "Esse dado não consta na base verificada. Não invente: chame anotar_para_equipe e siga atendendo.";
     }
 
     case "enviar_mapa_de_pontos": {
@@ -445,7 +460,25 @@ async function executarFerramenta(nome, entrada, lead, pendentes) {
       await db.definirConducao(lead.id, "equipe", NOTA_DO_AGENTE);
       await avisarEquipe(lead, entrada.motivo);
       return "Equipe avisada e conversa entregue a ela. Diga ao candidato, em UMA linha, " +
-             "que alguém da equipe fala com ele em instantes. Não pergunte mais nada e não se despeça duas vezes.";
+             "de forma tranquilizadora, que você já chamou a equipe e que, se não conseguir resolver aqui na conversa, ela responde na primeira oportunidade em horário comercial (segunda a sexta, das 8h às 18h), sem prometer 'em instantes'. Não pergunte mais nada e não se despeça duas vezes.";
+    }
+
+    case "anotar_para_equipe": {
+      // Diferente de escalar: a equipe é avisada da dúvida, mas a conversa
+      // continua com o atendente. Foi para NÃO calar a conversa inteira por
+      // causa de uma informação pontual (a pessoa perguntou de videoaula, o
+      // bot escalou e emudeceu até a pergunta seguinte, que sabia responder).
+      await db.registrarEvento(lead.id, "duvida_para_equipe", entrada);
+      await avisarEquipeTexto(
+        lead,
+        `*Confirmar com a pessoa*\n` +
+        `Candidato: ${lead.nome || "sem nome"} (${lead.telefone})\n` +
+        `Dúvida: ${entrada.duvida}\n\n` +
+        `O atendente CONTINUA na conversa e segue atendendo; só precisa dessa informação de vocês.`,
+      );
+      return "Equipe avisada dessa dúvida específica, e a conversa continua sua. Diga em UMA linha " +
+             "que essa parte você confirma com a equipe e já retorna, e CONTINUE atendendo normalmente " +
+             "o resto da conversa. NÃO entregue a conversa, NÃO se cale e NÃO se despeça.";
     }
 
     default:
@@ -479,6 +512,21 @@ export async function avisarEquipeTexto(lead, texto) {
   const equipe = numerosDaEquipe(lead);
   if (!equipe.length) return;
   await Promise.allSettled(equipe.map((n) => evo.enviarTexto(n, texto)));
+}
+
+/**
+ * Camada de ACOMPANHAMENTO: posta um aviso no grupo da equipe (venda aprovada,
+ * resumo do dia). E so visibilidade para a casa toda; a acao com dono continua
+ * sendo a notificacao direta de quem atende. Sem GRUPO_EQUIPE, nao faz nada.
+ */
+export async function avisarGrupo(texto) {
+  const jid = (process.env.GRUPO_EQUIPE || "").trim();
+  if (!jid) return;
+  try {
+    await evo.enviarParaGrupo(jid, texto);
+  } catch (e) {
+    console.error("[grupo] falhou:", e.message);
+  }
 }
 
 export async function avisarEquipe(lead, motivo) {
