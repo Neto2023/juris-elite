@@ -38,7 +38,7 @@
   --marinho:#10283F; --marinho-fundo:#0A1A2A; --marinho-claro:#1B3F61;
   --ouro:#B89A63; --ouro-claro:#D4BC8E; --ouro-texto:#7B6338;
   --ambar:#E4A139; --ambar-texto:#B87D22;
-  --tinta:#24282C; --tinta-suave:#55606B; --linha:#E3DCCD;
+  --tinta:#24282C; --tinta-suave:#434C56; --linha:#E3DCCD;
   --display:"Libre Caslon Display",Georgia,"Times New Roman",serif;
   --corpo:"DM Sans","Segoe UI",system-ui,-apple-system,sans-serif;
   --gut:max(20px,env(safe-area-inset-left,0px));
@@ -51,7 +51,7 @@ html{scroll-behavior:smooth}
 section[id],div[id]{scroll-margin-top:84px}
 body{
   margin:0;background:var(--papel-claro);color:var(--tinta);
-  font-family:var(--corpo);font-size:16px;line-height:1.72;
+  font-family:var(--corpo);font-size:17px;line-height:1.7;
   -webkit-font-smoothing:antialiased;
 }
 img{max-width:100%;height:auto;display:block}
@@ -67,7 +67,7 @@ h3{font-size:clamp(23px,2.5vw,28px);line-height:1.08;letter-spacing:-.012em}
 p{margin:0 0 16px;max-width:66ch}
 .rot{
   display:flex;align-items:center;gap:10px;
-  font-size:10px;font-weight:600;letter-spacing:.21em;text-transform:uppercase;
+  font-size:12px;font-weight:600;letter-spacing:.17em;text-transform:uppercase;
   color:var(--ouro-texto);margin-bottom:12px;
 }
 .rot::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;flex:none}
@@ -307,14 +307,14 @@ p{margin:0 0 16px;max-width:66ch}
 .escuro{background:var(--marinho-fundo);color:#DCE4EC}
 .escuro h2{color:var(--papel)}
 .escuro .rot{color:var(--ouro-claro)}
-.escuro p{color:#B9CBDC}
+.escuro p{color:#CCDAE8}
 .professor{
   background:rgba(255,255,255,.04);border:1px solid rgba(212,188,142,.26);
   border-radius:16px;padding:28px 26px;
 }
 .professor h3{color:var(--papel);margin-bottom:6px}
 .professor .cargo{font-size:13px;color:var(--ouro-claro);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:14px}
-.professor ul{margin:0;padding-left:18px;font-size:15px;color:#B9CBDC}
+.professor ul{margin:0;padding-left:18px;font-size:16px;color:#CCDAE8}
 .professor li{margin-bottom:6px}
 .prof-cabeca{display:flex;align-items:center;gap:15px;margin-bottom:16px}
 .professor-foto{width:84px;height:84px;border-radius:50%;object-fit:cover;object-position:center 22%;border:2px solid var(--ouro-claro);flex:none;background:#0F2234}
@@ -334,13 +334,13 @@ p{margin:0 0 16px;max-width:66ch}
 
 /* ---------- rodapé ---------- */
 footer{
-  background:var(--marinho-fundo);color:#8C9BAB;font-size:13.5px;
+  background:var(--marinho-fundo);color:#A6B4C3;font-size:13.5px;
   padding:40px var(--gut-dir) calc(34px + env(safe-area-inset-bottom,0px)) var(--gut);
 }
 footer .wrap{display:grid;grid-template-columns:1fr auto;gap:26px;align-items:start}
 footer img{height:30px;width:auto;margin-bottom:16px}
-footer p{max-width:62ch;margin:0 0 9px;color:#8C9BAB}
-footer a{color:#B9CBDC;text-decoration:none;border-bottom:1px solid rgba(185,203,220,.3)}
+footer p{max-width:62ch;margin:0 0 9px;color:#A6B4C3}
+footer a{color:#CCDAE8;text-decoration:none;border-bottom:1px solid rgba(185,203,220,.3)}
 footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
 /* Fecho do rodapé: direitos do cliente e, abaixo, a assinatura de quem
    desenvolveu. Mesmo desenho do site da Estância do Lago. */
@@ -348,7 +348,7 @@ footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
 .direitos{font-size:14px;color:#9FB0C0;margin:0 0 16px;max-width:none}
 .assinatura-dev{display:flex;align-items:center;gap:16px}
 .assinatura-dev img{height:58px;width:auto;flex:none;background:#0F2234;border-radius:14px;padding:8px}
-.assinatura-dev span{font-size:13.5px;line-height:1.6;color:#8C9BAB}
+.assinatura-dev span{font-size:13.5px;line-height:1.6;color:#A6B4C3}
 .assinatura-dev b{color:var(--ouro-claro);font-weight:600}
 .assinatura-dev a{color:#A9B6C4;text-decoration:none;border-bottom:1px solid rgba(169,182,196,.35);padding-bottom:1px;transition:color .14s,border-color .14s}
 .assinatura-dev a:hover{color:var(--ouro-claro);border-bottom-color:var(--ouro-claro)}
@@ -528,7 +528,7 @@ footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
     <div class="grade grade-3" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
       <article class="professor">
         <div class="prof-cabeca">
-          <img class="professor-foto" src="marca/dr-walter-ruiz.jpg" alt="Foto do Dr. Walter Ruiz" width="200" height="200" loading="lazy">
+          <img class="professor-foto" src="marca/dr-walter-ruiz.jpg?v=2" alt="Foto do Dr. Walter Ruiz" width="200" height="200" loading="lazy">
           <div>
             <h3>Dr. Walter Ruiz</h3>
             <div class="cargo">Delegado de polícia em atividade</div>
@@ -540,11 +540,11 @@ footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
           <li>Aprovado em concurso para Agente da Polícia Civil de São Paulo</li>
           <li>Aprovado em concurso para Escrevente Técnico Judiciário do TJ-SP</li>
         </ul>
-        <p style="margin:14px 0 0;font-size:14px;color:#9FB6CB">Penal, Processo Penal e Legislação Extravagante são 9 das 15 questões de Direito da prova. É o expediente de quem lavra o auto.</p>
+        <p style="margin:14px 0 0;font-size:15px;color:#B6C8DA">Penal, Processo Penal e Legislação Extravagante são 9 das 15 questões de Direito da prova. É o expediente de quem lavra o auto.</p>
       </article>
       <article class="professor">
         <div class="prof-cabeca">
-          <img class="professor-foto" src="marca/dr-diego-souza.jpg" alt="Foto do Dr. Diego Souza" width="200" height="200" loading="lazy">
+          <img class="professor-foto" src="marca/dr-diego-souza.jpg?v=2" alt="Foto do Dr. Diego Souza" width="200" height="200" loading="lazy">
           <div>
             <h3>Dr. Diego Souza</h3>
             <div class="cargo">Advogado, professor de Direito e ex guarda municipal</div>
@@ -555,7 +555,7 @@ footer .links{display:flex;flex-direction:column;gap:9px;text-align:right}
           <li>Advogado e professor de Direito</li>
           <li>Conhece a rotina do cargo por dentro, e não só o edital</li>
         </ul>
-        <p style="margin:14px 0 0;font-size:14px;color:#9FB6CB">Serviu na Guarda e ensina Direito. Sabe o que a prova cobra e o que o cargo exige depois dela, que são coisas diferentes.</p>
+        <p style="margin:14px 0 0;font-size:15px;color:#B6C8DA">Serviu na Guarda e ensina Direito. Sabe o que a prova cobra e o que o cargo exige depois dela, que são coisas diferentes.</p>
       </article>
     </div>
   </div>

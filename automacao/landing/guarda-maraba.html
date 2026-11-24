@@ -42,7 +42,7 @@ fbq('init','SEU_PIXEL_ID'); fbq('track','PageView');
 <style>
 :root{
   --bg:#FBF9F5; --surface:#FFFFFF; --surface-2:#F4F0E8;
-  --fg:#24282C; --muted:#55606B; --line:#E3DCCD;
+  --fg:#24282C; --muted:#434C56; --line:#E3DCCD;
   --navy:#15314C; --navy-deep:#0A1A2A; --ouro:#B89A63; --ouro-claro:#D4BC8E;
   --ambar:#E4A139; --brass:#7B6338; --brass-soft:#F7F1E3;
   --good:#1C7A4B; --crit:#A52222; --crit-soft:#FBEBEB;
@@ -52,7 +52,7 @@ fbq('init','SEU_PIXEL_ID'); fbq('track','PageView');
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.68;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:17px;line-height:1.66;-webkit-font-smoothing:antialiased}
 img{max-width:100%}
 h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;font-weight:400;letter-spacing:-.022em;line-height:1.08}
 h1{font-size:clamp(36px,7.6vw,60px)}
@@ -90,7 +90,7 @@ a{color:inherit}
 
 /* placar do herói */
 .placar{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:20px;backdrop-filter:blur(2px)}
-.placar .lbl{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#9FB6CB;margin-bottom:12px}
+.placar .lbl{font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#B6C8DA;margin-bottom:12px}
 .barra{display:flex;flex-direction:column;gap:9px}
 .barra .item{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;font-size:13.5px}
 .barra .trilho{grid-column:1/-1;height:9px;border-radius:99px;background:rgba(255,255,255,.14);overflow:hidden}
@@ -104,7 +104,7 @@ a{color:inherit}
 .cta:hover{transform:translateY(-1px);box-shadow:0 9px 26px rgba(31,168,85,.36)}
 .cta:focus-visible{outline:3px solid var(--ouro-claro);outline-offset:3px}
 .cta svg{flex:none}
-.cta-nota{font-size:13px;color:#9FB6CB;margin-top:11px}
+.cta-nota{font-size:13px;color:#B6C8DA;margin-top:11px}
 .cta-escuro{background:var(--navy)}
 .cta-escuro{box-shadow:0 6px 20px rgba(21,57,91,.25)}
 
@@ -167,14 +167,14 @@ details p{padding-bottom:16px;color:var(--muted);font-size:15px}
 .fechar h2{color:#fff;margin-bottom:12px}
 .fechar p{color:#B9CBDC;max-width:46ch;margin:0 auto 24px}
 
-footer{background:var(--navy-deep);color:#8C9BAB;font-size:13px;padding-block:28px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
-footer a{color:#9FB6CB}
+footer{background:var(--navy-deep);color:#A6B4C3;font-size:13px;padding-block:28px;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
+footer a{color:#B6C8DA}
 footer .fwrap{display:flex;flex-direction:column;gap:9px}
 .rodape-fim{margin-top:18px;padding-top:20px;border-top:1px solid rgba(185,203,220,.16)}
 .direitos{font-size:13.5px;color:#9FB0C0;margin:0 0 14px}
 .assinatura-dev{display:flex;align-items:center;gap:16px}
 .assinatura-dev img{height:58px;width:auto;flex:none;background:#0F2234;border-radius:14px;padding:8px}
-.assinatura-dev span{font-size:13px;line-height:1.6;color:#8C9BAB}
+.assinatura-dev span{font-size:13px;line-height:1.6;color:#A6B4C3}
 .assinatura-dev b{color:var(--ouro-claro);font-weight:600}
 .assinatura-dev a{color:#A9B6C4;text-decoration:none;border-bottom:1px solid rgba(169,182,196,.35);padding-bottom:1px;transition:color .14s,border-color .14s}
 .assinatura-dev a:hover{color:var(--ouro-claro);border-bottom-color:var(--ouro-claro)}
@@ -338,17 +338,17 @@ footer .fwrap{display:flex;flex-direction:column;gap:9px}
       <div class="eyebrow" style="color:var(--ouro-claro)">Quem ensina</div>
       <div class="prof-fotos">
         <figure>
-          <img src="marca/dr-walter-ruiz.jpg" alt="Foto do Dr. Walter Ruiz" width="480" height="640" loading="lazy">
+          <img src="marca/dr-walter-ruiz.jpg?v=2" alt="Foto do Dr. Walter Ruiz" width="480" height="640" loading="lazy">
           <figcaption>Dr. Walter Ruiz</figcaption>
         </figure>
         <figure>
-          <img src="marca/dr-diego-souza.jpg" alt="Foto do Dr. Diego Souza" width="480" height="640" loading="lazy">
+          <img src="marca/dr-diego-souza.jpg?v=2" alt="Foto do Dr. Diego Souza" width="480" height="640" loading="lazy">
           <figcaption>Dr. Diego Souza</figcaption>
         </figure>
       </div>
       <p style="max-width:58ch"><strong>Dr. Walter Ruiz</strong> é delegado de polícia em atividade. Das 15 questões de Direito, 9 são de Penal, Processo Penal e Legislação Extravagante: inquérito, flagrante, cadeia de custódia, busca e apreensão, Lei de Drogas, Maria da Penha, Abuso de Autoridade, Estatuto do Desarmamento, ECA. Não é matéria decorada de apostila, é o expediente de quem lavra o auto.</p>
       <div>
-        <p style="font-size:13.5px;color:#9FB6CB;margin-bottom:8px">Concursos em que o Dr. Walter foi aprovado:</p>
+        <p style="font-size:13.5px;color:#B6C8DA;margin-bottom:8px">Concursos em que o Dr. Walter foi aprovado:</p>
         <div class="aprov">
           <span>Delegado de Polícia Civil — SP</span>
           <span>Delegado de Polícia Civil — MG</span>
