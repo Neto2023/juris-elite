@@ -2,7 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   comandoDe, pedeHumano, listaDeNumeros, liberado, calaOAgente, NOTA_DO_AGENTE,
-  NOTA_COMPROVANTE, primeiroNome,
+  NOTA_COMPROVANTE, primeiroNome, confirmaPagamento,
 } from "./conducao.js";
 
 test("/assumir tira o agente da conversa", () => {
@@ -111,6 +111,25 @@ test("confirmar pagamento nao se confunde com conversa normal", () => {
 
 test("comprovante em conferencia tambem cala o agente", () => {
   assert.equal(calaOAgente("equipe", NOTA_COMPROVANTE), true);
+});
+
+test("confirma pagamento ao responder o aviso, com ou sem barra", () => {
+  assert.equal(confirmaPagamento("confirmado"), true);
+  assert.equal(confirmaPagamento("Confirmado"), true);
+  assert.equal(confirmaPagamento("/confirmado"), true);
+  assert.equal(confirmaPagamento("pago"), true);
+  assert.equal(confirmaPagamento("paguei, pode liberar"), true);
+  assert.equal(confirmaPagamento("caiu agora"), true);
+  assert.equal(confirmaPagamento("pode mandar o material"), true);
+});
+
+test("nao confirma pagamento em negacao, duvida ou vazio", () => {
+  assert.equal(confirmaPagamento("ainda nao caiu"), false);
+  assert.equal(confirmaPagamento("nao confirmado"), false);
+  assert.equal(confirmaPagamento("ainda não"), false);
+  assert.equal(confirmaPagamento("ok obrigada"), false);
+  assert.equal(confirmaPagamento(""), false);
+  assert.equal(confirmaPagamento(null), false);
 });
 
 test("primeiroNome usa a primeira palavra e normaliza", () => {

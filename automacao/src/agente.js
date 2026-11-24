@@ -440,11 +440,25 @@ async function executarFerramenta(nome, entrada, lead, pendentes) {
           `*Link de compra enviado*\n` +
           `${lead.nome || "sem nome"} (${lead.telefone})\n` +
           `${item.nome}, ${item.preco}\n` +
-          `A baixa e a liberação do material são automáticas pela Cakto.` +
+          "Quando o pagamento cair, a Cakto confirma sozinha e o atendente já " +
+          "parabeniza a pessoa e manda o Formulário Diagnóstico. Não precisam " +
+          "fazer nada." +
           "\n\n" +
-          "Quando a venda cair, digitem */confirmado* aqui dentro da conversa: " +
-          "o atendente parabeniza a pessoa e manda o Formulário Diagnóstico para ela.";
-        await Promise.allSettled(aviso.map((n) => evo.enviarTexto(n, texto)));
+          "Só se por acaso não confirmar sozinho: confiram o pagamento na conta " +
+          "e *respondam esta mensagem* com *confirmado*, que o atendente faz o resto.";
+        // Guarda o id de cada aviso ligado a esta venda: quando a equipe
+        // responder o aviso confirmando, é por aqui que o atendente acha o
+        // candidato certo. E registra o envio para não ouvir a própria voz.
+        const envios = await Promise.allSettled(
+          aviso.map((n) => evo.enviarTexto(n, texto)),
+        );
+        for (const e of envios) {
+          const id = e.status === "fulfilled" ? e.value?.key?.id : null;
+          if (id) {
+            await db.registrarNossoEnvio(id);
+            await db.registrarAvisoVenda(id, lead.id);
+          }
+        }
       }
 
       return "O link vai sair logo depois da sua mensagem. Avise que ele está vindo. " +

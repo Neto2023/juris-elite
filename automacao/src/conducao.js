@@ -55,6 +55,24 @@ export function comandoDe(texto) {
 }
 
 /**
+ * A equipe está confirmando um pagamento ao RESPONDER o aviso de "link
+ * enviado"?
+ *
+ * Como a resposta já aponta para a venda certa, aqui a barra do /confirmado
+ * não é obrigatória: basta uma palavra clara de que o dinheiro entrou. Mas
+ * qualquer negação ("ainda não caiu", "não confirmado") nunca confirma, e na
+ * dúvida ele não confirma: dizer que entrou dinheiro que não entrou é o erro
+ * mais caro que esse atendente pode cometer. Falhar para o lado de não
+ * confirmar só custa a equipe repetir; falhar para o outro lado custa a venda.
+ */
+export function confirmaPagamento(texto) {
+  const t = String(texto || "").trim().toLowerCase();
+  if (!t) return false;
+  if (/\b(n[ãa]o|nao)\b/.test(t)) return false;
+  return /\b(confirmad[oa]|confirmar|confirmo|confirma|pago|paguei|pagou|caiu|liberad[oa]|libera|pode liberar|pode mandar)\b/.test(t);
+}
+
+/**
  * Quem pede para falar com gente.
  *
  * De propósito é generoso. Entregar para um humano sem precisar custa um

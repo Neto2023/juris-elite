@@ -46,6 +46,15 @@ export async function garantirEsquema() {
       valor         TEXT,
       atualizado_em TIMESTAMPTZ NOT NULL DEFAULT now()
     );
+    -- Liga o aviso "Link de compra enviado" (uma mensagem que mandamos para a
+    -- equipe) ao candidato dono da venda. Quando alguem da equipe RESPONDE esse
+    -- aviso confirmando o pagamento, e por aqui que o atendente descobre de quem
+    -- e a venda, sem ninguem precisar abrir a conversa do candidato.
+    CREATE TABLE IF NOT EXISTS avisos_venda (
+      evolution_id TEXT PRIMARY KEY,
+      lead_id      BIGINT NOT NULL REFERENCES leads(id) ON DELETE CASCADE,
+      criado_em    TIMESTAMPTZ NOT NULL DEFAULT now()
+    );
   `);
 }
 
@@ -195,6 +204,37 @@ export async function acharLeadPorFinal(final) {
 export async function obterLeadPorTelefone(telefone) {
   const { rows } = await pool.query("SELECT * FROM leads WHERE telefone = $1", [telefone]);
   return rows[0] || null;
+}
+
+/** Lê o lead pelo id, sem criar linha nova. */
+export async function obterLeadPorId(id) {
+  if (!id) return null;
+  const { rows } = await pool.query("SELECT * FROM leads WHERE id = $1", [id]);
+  return rows[0] || null;
+}
+
+/**
+ * Guarda que ESTE aviso de "link enviado" (uma mensagem que mandamos para a
+ * equipe) é da venda de tal lead. É o que deixa a equipe confirmar o pagamento
+ * só respondendo o aviso, sem abrir a conversa do candidato.
+ */
+export async function registrarAvisoVenda(evolutionId, leadId) {
+  if (!evolutionId || !leadId) return;
+  await pool.query(
+    `INSERT INTO avisos_venda (evolution_id, lead_id) VALUES ($1, $2)
+     ON CONFLICT (evolution_id) DO UPDATE SET lead_id = EXCLUDED.lead_id`,
+    [evolutionId, leadId],
+  );
+}
+
+/** De qual venda é o aviso com este id de mensagem? Devolve o lead_id, ou null. */
+export async function avisoVendaDe(evolutionId) {
+  if (!evolutionId) return null;
+  const { rows } = await pool.query(
+    "SELECT lead_id FROM avisos_venda WHERE evolution_id = $1",
+    [evolutionId],
+  );
+  return rows[0] ? rows[0].lead_id : null;
 }
 
 /**

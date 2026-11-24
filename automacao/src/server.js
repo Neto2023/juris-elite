@@ -4,8 +4,8 @@ import * as evo from "./evolution.js";
 import { responder, avisarEquipe, avisarEquipeTexto, avisarGrupo, CATALOGO } from "./agente.js";
 import { conferirCadastro } from "./validacao.js";
 import {
-  comandoDe, pedeHumano, listaDeNumeros, liberado, calaOAgente, NOTA_COMPROVANTE,
-  chaveDeNumero,
+  comandoDe, confirmaPagamento, pedeHumano, listaDeNumeros, liberado, calaOAgente,
+  NOTA_COMPROVANTE, chaveDeNumero,
 } from "./conducao.js";
 
 const app = express();
@@ -51,6 +51,24 @@ function extrairMidia(message) {
   if (message.videoMessage) return "video";
   if (message.stickerMessage) return "figurinha";
   return null;
+}
+
+/**
+ * Id da mensagem que esta sendo RESPONDIDA (citada), ou null.
+ *
+ * E o que liga a resposta da equipe ao aviso de venda que mandamos: a equipe
+ * responde o aviso, e o id citado aqui e o mesmo que guardamos em avisos_venda.
+ */
+function extrairCitacao(message) {
+  if (!message) return null;
+  const ctx =
+    message.extendedTextMessage?.contextInfo ||
+    message.imageMessage?.contextInfo ||
+    message.videoMessage?.contextInfo ||
+    message.documentMessage?.contextInfo ||
+    message.conversation?.contextInfo ||
+    null;
+  return ctx?.stanzaId || ctx?.stanzaID || null;
 }
 
 /** Pausa aleatória entre dois limites, em milissegundos. */
@@ -565,6 +583,30 @@ app.post("/webhook", async (req, res) => {
 
     let texto = extrairTexto(dados.message);
     const midia = extrairMidia(dados.message);
+
+    // A equipe confirma o pagamento RESPONDENDO o aviso de "link enviado". A
+    // mensagem respondida ja diz de quem e a venda, entao ninguem precisa abrir
+    // a conversa do candidato. So quem responde o NOSSO aviso chega aqui (o
+    // candidato nunca recebe esse aviso), e so uma palavra clara de pagamento
+    // confirma; qualquer outra coisa e ignorada em silencio. Se nao der para
+    // identificar a venda, nao confirma nada: nunca o candidato errado.
+    const citado = extrairCitacao(dados.message);
+    if (citado) {
+      const leadId = await db.avisoVendaDe(citado);
+      if (leadId) {
+        if (await db.jaProcessada(evolutionId)) return;
+        if (confirmaPagamento(texto)) {
+          const leadVenda = await db.obterLeadPorId(leadId);
+          if (leadVenda) {
+            await pagamentoConfirmado(leadVenda, dados.pushName || "equipe");
+            console.log(`[pagamento] ${leadVenda.telefone} confirmado por resposta ao aviso${dados.pushName ? ` (por ${dados.pushName})` : ""}`);
+          }
+        } else {
+          console.log(`[aviso-venda] resposta ao aviso sem confirmacao clara, ignorada`);
+        }
+        return;
+      }
+    }
 
     if (fromMe) {
       // Pode ser a nossa própria mensagem voltando. O id dela é gravado logo
